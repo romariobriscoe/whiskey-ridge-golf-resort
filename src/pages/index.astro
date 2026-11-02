@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site, contact, course, rates, bristol, booking, experience } from '../data/site';
+import { site, contact, course, rates, bristol, booking, experience, featuredExperience, partner } from '../data/site';
 
 import heroImg from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
 import fogImg from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
@@ -10,6 +10,7 @@ import celebrationImg from '../assets/photos/groups_outings_foursome_celebration
 import walkingImg from '../assets/photos/gallery_02_foursome_walking_long_shadows.jpg';
 import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
 import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
+import whiskeyImg from '../assets/photos/clubhouse_the_whiskey_wall_warm_light.jpg';
 
 const ways = [
   { n: '01', kicker: 'A round', title: 'Walk on, play fast',
@@ -67,6 +68,10 @@ const stats = [
         <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
         <a class="btn btn--ghost" href="/groups/">Plan a group trip</a>
       </div>
+      <p class="hero__partner">
+        <span class="hero__partner-rule" aria-hidden="true"></span>
+        {partner.credit} <span aria-hidden="true">·</span> Est. {partner.established}
+      </p>
     </div>
 
     <ul class="stats shell" aria-label="Course at a glance">
@@ -118,6 +123,24 @@ const stats = [
           sizes="(max-width: 900px) 100vw, 45vw"
           quality={72}
         />
+      </div>
+
+      <div class="exp__feature">
+        <Image
+          class="exp__feature-img"
+          src={whiskeyImg}
+          alt="The back bar lit warm, shelves of Tennessee whiskey running the full height of the wall"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 900px) 100vw, 42vw"
+          quality={72}
+        />
+        <div class="exp__feature-body">
+          <p class="label exp__kicker">{featuredExperience.kicker}</p>
+          <h3 class="heading exp__feature-h">{featuredExperience.title}</h3>
+          <p class="prose">{featuredExperience.body}</p>
+          <a class="link-arrow exp__feature-cta" href="/clubhouse/">See the clubhouse &amp; bar</a>
+          <p class="meta exp__note">{featuredExperience.note}</p>
+        </div>
       </div>
 
       <ul class="exp__list">
@@ -320,8 +343,30 @@ const stats = [
     border-top: 1px dashed var(--wr-mauve); font-size: 0.75rem;
   }
 
+  .hero__partner {
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    margin-top: var(--space-4);
+    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--wr-brass);
+  }
+  .hero__partner-rule { width: 2rem; height: 1px; background: var(--wr-brass); flex: none; }
+
+  /* The co-brand gets a block of its own, not one card among three. */
+  .exp__feature {
+    display: grid; gap: var(--space-3);
+    margin-top: var(--space-6); padding-top: var(--space-4);
+    border-top: 1px solid var(--wr-line);
+  }
+  .exp__feature-img { width: 100%; height: 100%; min-height: 220px; object-fit: cover; border-radius: var(--radius-md); }
+  .exp__feature-body { display: flex; flex-direction: column; gap: 0.75rem; }
+  .exp__feature-h { font-size: var(--text-h3); }
+  .exp__feature-cta { align-self: start; }
+
   @media (min-width: 700px) {
-    .exp__list { grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+    .exp__list { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  }
+  @media (min-width: 1000px) {
+    .exp__feature { grid-template-columns: 0.85fr 1fr; gap: var(--space-6); align-items: center; }
   }
   @media (min-width: 1000px) {
     .exp__top { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }

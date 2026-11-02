@@ -1,6 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
-import { nav, contact, course } from '../data/site';
+import { nav, contact, course, partner } from '../data/site';
 const half = Math.ceil(nav.length / 2);
 const cols = [nav.slice(0, half), nav.slice(half)];
 ---
@@ -26,6 +26,11 @@ const cols = [nav.slice(0, half), nav.slice(half)];
     <div>
       <p class="eyebrow ftr__h">Hours</p>
       <p class="ftr__muted">Tee sheet and clubhouse hours {contact.hours} with ownership.</p>
+
+      <p class="eyebrow ftr__h">Poured here</p>
+      <p class="ftr__muted">
+        <a href={partner.url} rel="noopener">{partner.name}</a>, est. {partner.established}.
+      </p>
       <p class="ftr__fine">
         {`Whiskey Ridge Golf Resort is the new name of the course at ${contact.street}, formerly Cedars Golf Course. ${course.ratingsNote} Rates shown are placeholders pending confirmation.`}
       </p>
@@ -46,6 +51,7 @@ const cols = [nav.slice(0, half), nav.slice(half)];
   .ftr__links a { color: var(--wr-line); min-height: 24px; }
   .ftr__h { margin-bottom: 0.75rem; }
   .ftr__muted { color: var(--wr-line); font-size: var(--text-ui); margin-bottom: var(--space-3); }
+  .ftr__muted a { color: var(--wr-brass); }
   .ftr__fine { color: var(--wr-mauve-text); font-size: 0.75rem; line-height: 1.7; }
   /* Room for the docked ticker on small screens. */
   @media (max-width: 640px) { .ftr__inner { padding-bottom: 6.5rem; } }

@@ -109,25 +109,40 @@ export const bristol = [
 export const positioning = {
   category: 'Experiential golf',
   theme: 'Tennessee Hills',
-  /* What is safe to say today. The resort is Tennessee Hills *themed* —
-     nothing here claims an on-site distillery, a tasting licence or a
-     signed partnership. Confirm the nature of the relationship before
-     any of that language goes further. */
-  themeScope: TBD, // TBD: licensed / partnered / owned — and what that permits us to say
+  /* Confirmed: a partnership. The copy may name Tennessee Hills as a
+     partner and treat the pour as a co-brand. It still may NOT claim an
+     on-site distillery, a tasting licence, a barrel programme or any
+     specific product line — none of that is settled. */
+  themeScope: 'partnership',
+} as const;
+
+/* The named partner. This is the one thing on the site no other public
+   course in the Tri-Cities can copy, so it is credited plainly rather
+   than hinted at. Name and founding year are the distillery's own. */
+export const partner = {
+  name: 'Tennessee Hills Distillery',
+  shortName: 'Tennessee Hills',
+  established: 2014,
+  url: 'https://tennesseehills.com', // confirm the link target before launch
+  credit: 'In partnership with Tennessee Hills Distillery',
+  /* Still open — do not write these as fact: */
+  programme: TBD,   // TBD: tastings, barrel programme, exclusive pours, events
+  licence: TBD,     // TBD: liquor licence status and what it permits on site
+  onSite: TBD,      // TBD: whether any distilling or tasting happens at the ridge
 } as const;
 
 /* The experience layer. Items marked `confirmed` are supported by the
    existing property; the rest are slots the build is designed to take
    once ownership signs them off. Nothing unconfirmed is described as
    though it exists. */
+export const featuredExperience = {
+  kicker: 'The pour',
+  title: 'Tennessee Hills pours the nineteenth',
+  body: 'The whiskey is not an afterthought stocked behind the register. Tennessee Hills Distillery is a partner in this place, which is half the reason it is called what it is — poured honestly, priced like a handshake, and waiting the moment you walk off eighteen.',
+  note: 'Tastings, barrel programme and the bar\u2019s own name are still being settled.',
+} as const;
+
 export const experience = [
-  {
-    kicker: 'The pour',
-    title: 'Tennessee Hills on the back bar',
-    body: 'The whiskey is not an afterthought stocked behind the register. It is half the reason the place is called what it is — poured honestly, priced like a handshake, and waiting the moment you walk off eighteen.',
-    confirmed: false,
-    note: 'Programme, tastings and barrel detail TBD.',
-  },
   {
     kicker: 'The range',
     title: 'Three tees and no agenda',
