@@ -24,6 +24,11 @@ import { teeSheet, booking } from '../data/site';
     </p>
   </div>
   <a class="ticker__cta" href={booking.href}>Book</a>
+  <button class="ticker__x" type="button" data-ticker-dismiss aria-label="Hide the tee sheet">
+    <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+      <path d="M1 1 11 11 M11 1 1 11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" />
+    </svg>
+  </button>
 </aside>
 
 <script is:inline define:vars={{ entries: teeSheet }}>
@@ -67,6 +72,22 @@ import { teeSheet, booking } from '../data/site';
 
     reduce.addEventListener('change', () => (reduce.matches ? stop() : start()));
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
+    // It follows without nagging: a floating pill that overlays body text has
+    // to be dismissible. Remembered for the session only, so it returns on
+    // the next visit rather than disappearing for good.
+    const KEY = 'wr-ticker-hidden';
+    const read = () => { try { return sessionStorage.getItem(KEY) === '1'; } catch { return false; } };
+    const write = () => { try { sessionStorage.setItem(KEY, '1'); } catch { /* private mode */ } };
+
+    if (read()) { root.hidden = true; return; }
+
+    root.querySelector('[data-ticker-dismiss]')?.addEventListener('click', () => {
+      stop();
+      root.hidden = true;
+      write();
+    });
+
     start();
   })();
 </script>
@@ -81,6 +102,7 @@ import { teeSheet, booking } from '../data/site';
     box-shadow: var(--shadow-dock);
     right: var(--gutter); bottom: var(--gutter);
   }
+  .ticker__body { padding-right: 2.25rem; }
   .ticker__body { padding: 0.75rem 1.25rem; display: flex; flex-direction: column; gap: 3px; min-width: 13rem; }
   .ticker__head {
     display: flex; align-items: center; gap: 0.4375rem;
@@ -101,6 +123,18 @@ import { teeSheet, booking } from '../data/site';
     transition: background-color var(--duration-base) var(--ease-out);
   }
   .ticker__cta:hover { background: var(--wr-amber-hover); color: var(--wr-char); }
+  .ticker[hidden] { display: none; }
+
+  /* 44px touch target, 10px glyph — the chrome stays quiet. */
+  .ticker__x {
+    position: absolute; top: 0; right: 0;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding: 0.625rem 0.625rem 0 0;
+    color: var(--wr-mauve-text);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+  .ticker__x:hover { color: #fff; }
 
   .is-a, .is-b { animation: wr-rise var(--duration-slow) var(--ease-out); }
   @keyframes wr-rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
@@ -114,7 +148,16 @@ import { teeSheet, booking } from '../data/site';
       padding-bottom: env(safe-area-inset-bottom);
       align-items: center; gap: 0.875rem;
     }
-    .ticker__body { flex: 1; min-width: 0; padding: 0.75rem 0 0.75rem var(--gutter); }
+    .ticker__body { flex: 1; min-width: 0; padding: 0.75rem 0 0.75rem 0.875rem; }
+    /* On the docked bar the close control gets its own column on the left.
+       Overlaying the top-right corner put it on top of the Book button,
+       so a thumb aiming to book could dismiss instead. */
+    .ticker__x {
+      position: static; order: -1;
+      width: 44px; height: auto; align-self: stretch;
+      justify-content: center; padding: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+    }
     .ticker__when { font-size: 0.9375rem; }
     .ticker__cta { align-self: stretch; margin: 0.5rem var(--gutter) 0.5rem 0; padding-inline: 1.5rem;
       border-radius: var(--radius-sm); min-height: 44px; }

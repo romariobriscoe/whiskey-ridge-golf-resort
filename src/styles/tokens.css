@@ -19,7 +19,8 @@
   --wr-amber:         #AD813C;  /* Whiskey Amber — the only filled button */
   --wr-amber-hover:   #C59A57;  /* Honey Amber — hover lift */
   --wr-brass:         #C6A65B;  /* Brass Gold — eyebrows/rules on dark */
-  --wr-gold-deep:     #A9893E;  /* Deep Gold — rules on light */
+  --wr-gold-deep:     #A9893E;  /* Deep Gold — rules and borders on light (non-text) */
+  --wr-gold-text:     #86661B;  /* text-safe gold: 4.90:1 on soft grey, 5.34:1 on white */
   --wr-gold-tint:     #E3D3A8;  /* italic emphasis on dark only */
 
   --wr-white:         #FFFFFF;
@@ -88,7 +89,8 @@
   --band-meta:   var(--wr-plum);
   --band-accent: var(--wr-emerald);
   --band-rule:   var(--wr-line);
-  --band-mark:   var(--wr-gold-deep);
+  --band-mark:   var(--wr-gold-deep);      /* borders, dots */
+  --band-mark-text: var(--wr-gold-text); /* the same accent, as text */
 }
 
 /* ------------------------------------------------------------------
@@ -100,7 +102,9 @@
 .band--soft      { --band-bg: var(--wr-soft); }
 .band--char      { --band-bg: var(--wr-char);   --band-text: #fff; --band-muted: var(--wr-line);
                    --band-meta: var(--wr-mauve-text); --band-accent: var(--wr-brass);
-                   --band-rule: var(--wr-line-dark); --band-mark: var(--wr-brass); }
+                   --band-rule: var(--wr-line-dark); --band-mark: var(--wr-brass);
+                   --band-mark-text: var(--wr-brass); }
 .band--forest    { --band-bg: var(--wr-forest); --band-text: #fff; --band-muted: var(--wr-line);
                    --band-meta: #9FB8AC; --band-accent: var(--wr-brass);
-                   --band-rule: var(--wr-slate-green); --band-mark: var(--wr-brass); }
+                   --band-rule: var(--wr-slate-green); --band-mark: var(--wr-brass);
+                   --band-mark-text: var(--wr-brass); }

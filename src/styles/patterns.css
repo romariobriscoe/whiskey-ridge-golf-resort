@@ -111,7 +111,7 @@
 .check input { width: 18px; height: 18px; accent-color: var(--wr-emerald); flex: none; }
 
 /* ---------- misc shared bits ---------- */
-.card__n { color: var(--band-mark); }
+.card__n { color: var(--band-mark-text); }
 .split__fine { margin-top: var(--space-2); }
 .locator {
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem;
@@ -121,5 +121,5 @@
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--band-muted);
 }
 .locator .link-arrow { font-family: var(--font-body); letter-spacing: 0; text-transform: none; }
-.locator span[aria-hidden] { color: var(--band-mark); }
+.locator span[aria-hidden] { color: var(--band-mark-text); }
 .lede { margin: var(--space-2) 0 var(--space-6); }

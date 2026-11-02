@@ -70,8 +70,15 @@ const shots = [
               class="gal__img"
               src={s.src}
               alt={s.alt}
-              widths={[400, 640, 900]}
-              sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+              widths={[400, 640, 900, 1280]}
+              sizes={
+                /* Tall tiles span two rows, so object-fit: cover scales a
+                   landscape source up to fill the height. They need roughly
+                   double the pixels `33vw` would imply. */
+                s.tall
+                  ? '(max-width: 700px) 100vw, (max-width: 1100px) 90vw, 70vw'
+                  : '(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw'
+              }
               loading={i === 0 ? 'eager' : 'lazy'}
               quality={70}
             />

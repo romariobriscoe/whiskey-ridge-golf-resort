@@ -84,9 +84,16 @@ keyboard focus, announces through `aria-live`, and holds still under `prefers-re
 
 ## Accessibility
 
-WCAG AA by construction. All 17 token text pairs are verified at AA or better (the mauve used
-for metadata on charcoal is `--wr-mauve-text`, a lightened variant; the Tennessee Hills
-`--wr-mauve` remains for borders, which carry no contrast requirement). Focus rings read on
+WCAG AA by construction. Every token text pair is verified at AA or better. Two brand colours
+needed text-safe variants, because the brand values measured below 4.5:1 as small text:
+
+| Brand value | Used for | Text variant |
+| --- | --- | --- |
+| `--wr-mauve` `#8E8083` | borders, dashed rules | `--wr-mauve-text` `#96888B` (4.81:1 on charcoal) |
+| `--wr-gold-deep` `#A9893E` | 2px rules, dots, markers | `--wr-gold-text` `#86661B` (4.90:1 on soft grey) |
+
+Bands expose both: `--band-mark` for decorative marks and `--band-mark-text` for the same accent
+as type. On dark bands both resolve to Brass Gold, which already passes. Focus rings read on
 both charcoal and white. Skip link, labelled mobile drawer with Escape-to-close, 44px minimum
 touch targets, 16px minimum form text so iOS does not zoom on focus.
 
