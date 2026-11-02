@@ -1,8 +1,13 @@
 ---
 import Wordmark from './Wordmark.astro';
-import { nav, contact, booking } from '../data/site';
+import { nav, contact, booking, url } from '../data/site';
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+/* Astro.url.pathname carries the base path; nav hrefs do not, so compare
+   against the resolved URL or every link looks inactive on project pages. */
+const isCurrent = (href: string) => {
+  const target = url(href);
+  return path === target || (href !== '/' && path.startsWith(target));
+};
 ---
 <header class="hdr band band--char">
   <div class="hdr__inner shell">
@@ -10,12 +15,12 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
     <nav class="hdr__nav" aria-label="Main">
       {nav.map((item) => (
-        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+        <a href={url(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
       ))}
     </nav>
 
     <a class="hdr__phone" href={contact.phoneHref}>{contact.phone}</a>
-    <a class="btn btn--primary hdr__book" href={booking.href}>Book a tee time</a>
+    <a class="btn btn--primary hdr__book" href={url(booking.href)}>Book a tee time</a>
 
     <button
       class="hdr__menu"
@@ -33,11 +38,11 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   <div class="drawer" id="site-drawer" data-drawer hidden>
     <nav class="drawer__nav" aria-label="Main (mobile)">
       {nav.map((item) => (
-        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+        <a href={url(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
       ))}
     </nav>
     <div class="drawer__foot">
-      <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
+      <a class="btn btn--primary" href={url(booking.href)}>Book a tee time</a>
       <a class="drawer__phone" href={contact.phoneHref}>Call {contact.phone}</a>
     </div>
   </div>

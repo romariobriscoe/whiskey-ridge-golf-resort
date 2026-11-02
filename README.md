@@ -52,6 +52,34 @@ npm run build    # -> dist/
 npm run preview  # serve the production build
 ```
 
+## Deploying
+
+The site publishes to GitHub Pages from `.github/workflows/deploy.yml` on every push to `main`.
+
+**One manual step is required, once:** in **Settings → Pages → Build and deployment**, set
+**Source** to **GitHub Actions**. While it is left on *Deploy from a branch*, GitHub runs its
+built-in **Jekyll** builder instead, which cannot build an Astro project — that is what the
+failing `pages build and deployment` run was.
+
+### Base path
+
+Project pages serve from `https://<user>.github.io/<repo>/`, so the build carries a base path
+and every internal link goes through `url()` in `src/data/site.ts`. Astro rewrites asset URLs
+for `base` but not `href`s, so a bare `href="/course/"` would resolve to the account root
+and 404.
+
+Moving to the real domain is a config change, not a code change:
+
+```bash
+SITE_URL=https://whiskeyridgegolf.com BASE_PATH=/ npm run build
+```
+
+Set those two as repository variables (or edit the defaults in `astro.config.mjs`), add the
+domain under Settings → Pages → Custom domain, and `url()` becomes a no-op.
+
+`public/.nojekyll` is insurance: if Pages ever falls back to a branch deploy, Jekyll would
+strip Astro's `/_astro/` directory because the name begins with an underscore.
+
 ## Design system
 
 Direction A ("dark-led"), locked in Phase 0. Everything keys off `src/styles/tokens.css`.

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { rates, rateCard, experientialTiers, booking, contact } from '../data/site';
+import { rates, rateCard, experientialTiers, booking, contact, url } from '../data/site';
 
 /* Sample availability for the front-end stub. `state` drives the visual:
    open / selected / low (urgency) / booked (disabled). */
@@ -169,7 +169,7 @@ const label: Record<string, string> = {
           bar held afterwards — the group desk builds it with you in one call or one form.
         </p>
       </div>
-      <a class="btn btn--primary" href="/groups/">Go to Groups &amp; Outings</a>
+      <a class="btn btn--primary" href={url('/groups/')}>Go to Groups &amp; Outings</a>
     </div>
   </section>
 

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { contact } from '../data/site';
+import { contact, url } from '../data/site';
 
 import celebrationImg from '../assets/photos/groups_outings_foursome_celebration.jpg';
 import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
@@ -169,7 +169,7 @@ const addons = [
           partnership we do not have — and your rounds and rooms still land on one confirmation.
         </p>
         <div class="phero__cta">
-          <a class="btn btn--ghost" href="/stay/">See stay options</a>
+          <a class="btn btn--ghost" href={url('/stay/')}>See stay options</a>
           <a class="btn btn--ghost" href={contact.phoneHref}>Call {contact.phone}</a>
         </div>
       </div>

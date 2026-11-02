@@ -6,6 +6,19 @@
 
 export const TBD = '[TBD]' as const;
 
+/* ------------------------------------------------------------------
+   Internal links must carry the deploy base path. On GitHub project
+   pages the site lives at /<repo>/, so a bare href="/course/" would
+   resolve to the account root and 404. Astro rewrites asset URLs for
+   `base` but not hrefs, so every internal link goes through here.
+   Returns the path unchanged when base is "/" (custom domain).
+   ------------------------------------------------------------------ */
+export function url(path = '/'): string {
+  if (!path.startsWith('/')) return path;
+  const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+  return `${base}${path}`;
+}
+
 export const site = {
   name: 'Whiskey Ridge Golf Resort',
   shortName: 'Whiskey Ridge',

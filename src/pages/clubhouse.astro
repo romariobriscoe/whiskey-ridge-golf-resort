@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { partner, contact } from '../data/site';
+import { partner, contact, url } from '../data/site';
 
 import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
 import whiskeyImg from '../assets/photos/clubhouse_the_whiskey_wall_warm_light.jpg';
@@ -103,7 +103,7 @@ const menu = [
               A private room for outings, rehearsal dinners and the poker game nobody admits to.
               Seats [40]. Books through the events desk.
             </p>
-            <a class="link-arrow card__cta" href="/events/">Ask about private events</a>
+            <a class="link-arrow card__cta" href={url('/events/')}>Ask about private events</a>
           </div>
         </div>
       </div>
@@ -120,8 +120,8 @@ const menu = [
           enjoy it. Book a round, or just turn up.
         </p>
         <div class="phero__cta">
-          <a class="btn btn--primary" href="/rates/">Book a tee time</a>
-          <a class="btn btn--ghost" href="/visit/">Plan your visit</a>
+          <a class="btn btn--primary" href={url('/rates/')}>Book a tee time</a>
+          <a class="btn btn--ghost" href={url('/visit/')}>Plan your visit</a>
         </div>
       </div>
       <Image class="split__img" src={poursImg}

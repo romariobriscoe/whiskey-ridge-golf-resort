@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import { url } from '../data/site';
 
 import dawn from '../assets/photos/homepage_hero_panoramic_valley_dawn.jpg';
 import porch from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
@@ -102,7 +103,7 @@ const shots = [
           parts we undersold.
         </p>
       </div>
-      <a class="btn btn--primary" href="/rates/">Book a tee time</a>
+      <a class="btn btn--primary" href={url('/rates/')}>Book a tee time</a>
     </div>
   </section>
 </BaseLayout>

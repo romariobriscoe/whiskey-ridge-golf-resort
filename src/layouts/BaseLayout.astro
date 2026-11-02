@@ -8,7 +8,7 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import TeeSheetTicker from '../components/TeeSheetTicker.astro';
-import { site, contact, course } from '../data/site';
+import { site, contact, course, url } from '../data/site';
 
 interface Props {
   title: string;
@@ -18,6 +18,7 @@ interface Props {
 }
 const { title, description = site.description, ticker = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+// Schema points at the live page rather than the aspirational domain.
 
 /* Structured data. Only verified facts go in — no ratings, no awards.
    For a course with essentially no digital footprint this is the
@@ -27,7 +28,7 @@ const schema = {
   '@type': 'GolfCourse',
   name: site.name,
   description: site.description,
-  url: site.url,
+  url: canonical,
   telephone: contact.phone,
   address: {
     '@type': 'PostalAddress',
@@ -55,7 +56,7 @@ const schema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#231F20" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

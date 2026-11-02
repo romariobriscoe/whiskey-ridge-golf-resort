@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { contact } from '../data/site';
+import { contact, url } from '../data/site';
 
 import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
 import dawnImg from '../assets/photos/homepage_hero_panoramic_valley_dawn.jpg';
@@ -88,7 +88,7 @@ const nearby = [
           lands. You tell us the dates and the headcount; we do the ringing round.
         </p>
         <div class="phero__cta">
-          <a class="btn btn--primary" href="/groups/">Build a stay-and-play</a>
+          <a class="btn btn--primary" href={url('/groups/')}>Build a stay-and-play</a>
           <a class="btn btn--ghost" href={contact.phoneHref}>Call {contact.phone}</a>
         </div>
       </div>

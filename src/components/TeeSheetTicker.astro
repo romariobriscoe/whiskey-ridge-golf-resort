@@ -11,7 +11,7 @@
    In production the entries come from the booking provider's live
    sheet (TBD). Here they come from src/data/site.ts.
    ------------------------------------------------------------------ */
-import { teeSheet, booking } from '../data/site';
+import { teeSheet, booking, url } from '../data/site';
 ---
 <aside class="ticker" data-ticker aria-label="Live tee sheet">
   <div class="ticker__body">
@@ -23,7 +23,7 @@ import { teeSheet, booking } from '../data/site';
       {teeSheet[0].note}
     </p>
   </div>
-  <a class="ticker__cta" href={booking.href}>Book</a>
+  <a class="ticker__cta" href={url(booking.href)}>Book</a>
   <button class="ticker__x" type="button" data-ticker-dismiss aria-label="Hide the tee sheet">
     <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
       <path d="M1 1 11 11 M11 1 1 11" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" />

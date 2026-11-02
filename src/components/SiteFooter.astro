@@ -1,6 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
-import { nav, contact, course, partner } from '../data/site';
+import { nav, contact, course, partner, url } from '../data/site';
 const half = Math.ceil(nav.length / 2);
 const cols = [nav.slice(0, half), nav.slice(half)];
 ---
@@ -18,7 +18,7 @@ const cols = [nav.slice(0, half), nav.slice(half)];
     <div class="ftr__links">
       {cols.map((col) => (
         <nav aria-label="Footer">
-          {col.map((item) => <a href={item.href}>{item.label}</a>)}
+          {col.map((item) => <a href={url(item.href)}>{item.label}</a>)}
         </nav>
       ))}
     </div>

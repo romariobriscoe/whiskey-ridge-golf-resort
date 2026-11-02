@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { contact, bristol } from '../data/site';
+import { contact, bristol, url } from '../data/site';
 
 import aerialImg from '../assets/photos/course_routing_down_the_valley.jpg';
 
@@ -128,7 +128,7 @@ const faqs = [
           {contact.street}, {contact.city}, {contact.state} {contact.zip}. Hours {contact.hours}.
         </p>
       </div>
-      <a class="btn btn--primary" href="/rates/">Book a tee time</a>
+      <a class="btn btn--primary" href={url('/rates/')}>Book a tee time</a>
     </div>
   </section>
 </BaseLayout>

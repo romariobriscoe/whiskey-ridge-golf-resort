@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { course, signatureHoles, booking } from '../data/site';
+import { course, signatureHoles, booking, url } from '../data/site';
 
 import routingImg from '../assets/photos/course_routing_down_the_valley.jpg';
 import dropImg from '../assets/photos/course_signature_hole_the_drop_par3.jpg';
@@ -162,8 +162,8 @@ const detail = [
           or walk the gallery first if you would rather look before you commit.
         </p>
         <div class="hero__cta">
-          <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
-          <a class="btn btn--ghost" href="/gallery/">See the gallery</a>
+          <a class="btn btn--primary" href={url(booking.href)}>Book a tee time</a>
+          <a class="btn btn--ghost" href={url('/gallery/')}>See the gallery</a>
         </div>
       </div>
       <Image class="split__img" src={fogImg}
