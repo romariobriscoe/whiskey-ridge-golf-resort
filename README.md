@@ -21,7 +21,19 @@ code."), puts the experience section *before* the course detail so it reframes t
 and keeps Bristol's demand drivers — the casino, the Speedway, State Street — as the reason
 the weekend exists at all.
 
-**Phase 1 — homepage only.** The remaining eight pages land in Phase 2.
+**All nine pages built.** Phase 1 was the homepage; Phase 2 added the remaining eight.
+
+| Route | Page |
+| --- | --- |
+| `/` | Homepage |
+| `/course/` | The Course — honest description, signature holes, scorecard |
+| `/rates/` | Rates & Tee Times — booking stub, rate card, experiential tiers |
+| `/groups/` | Groups & Outings — the money page, package builder |
+| `/clubhouse/` | Clubhouse & Bar — the Tennessee Hills partnership |
+| `/stay/` | Stay — planned lodging, nearby options |
+| `/events/` | Events & Weddings — spaces, date enquiry |
+| `/visit/` | Plan Your Visit — directions, FAQ, review capture |
+| `/gallery/` | Gallery |
 
 ## Stack
 
@@ -49,6 +61,11 @@ Charcoal `#231F20` · Deepest Forest `#0D2B20` · Emerald `#0B6B4E` · Whiskey A
 · Brass Gold `#C6A65B` · White / Soft Grey `#F5F5F5`. No cream, no parchment anywhere —
 light surfaces stay cool and neutral, and all warmth comes from the amber, the brass and
 the photography.
+
+Recurring layout (`grid`, `card`, `split`, `facts`, `rate-table`, `callout`, `form`) lives in
+`src/styles/patterns.css` and is shared by all nine pages; only genuinely page-specific rules
+stay scoped in the `.astro` files. Patterns are band-aware — a card on a soft band goes white,
+a card on a dark band goes translucent — so sections change register without variant classes.
 
 **Two registers, one system.** `.band--char` and `.band--forest` carry the brand (and every
 nav, hero and footer); `.band` and `.band--soft` carry the reading. Bands retune the same

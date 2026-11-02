@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { partner, contact } from '../data/site';
+
+import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
+import whiskeyImg from '../assets/photos/clubhouse_the_whiskey_wall_warm_light.jpg';
+import poursImg from '../assets/photos/gallery_07_two_pours_scorecard_between_them.jpg';
+
+/* Sample menu. Every price is TBD and the dishes are a direction for the
+   kitchen, not a published menu. */
+const menu = [
+  { n: 'The Turn Burger', d: 'Smashed double, pimento cheese, bread-and-butter pickles' },
+  { n: 'Hot Chicken Sandwich', d: 'Heat scale: honest through to reckless' },
+  { n: 'Smoked Wings', d: 'Dry rub or whiskey glaze, by the half-dozen' },
+  { n: 'Porch Pretzel', d: 'Beer cheese, enough for the foursome' },
+  { n: 'Pour of the Week', d: "The bartender's pick, priced like a handshake" },
+  { n: 'The Transfusion', d: 'Yes, we make it properly' },
+];
+---
+
+<BaseLayout
+  title="Clubhouse & Bar — Whiskey Ridge Golf Resort"
+  description="The nineteenth at Whiskey Ridge, poured in partnership with Tennessee Hills Distillery. A kitchen that respects a post-round appetite and a porch over the eighteenth."
+>
+  <PageHero
+    eyebrow="Clubhouse & bar"
+    title="The nineteenth is"
+    em="the point."
+    lead="Half the reason this place is called what it is. A proper pour, a kitchen that respects a post-round appetite, and a porch that looks back down eighteen."
+    image={barImg}
+    alt="The clubhouse bar busy at golden hour, fire lit and the course visible through tall windows"
+  />
+
+  <!-- the partnership: the thing nobody else in the market has -->
+  <section class="section band" aria-labelledby="tn-h">
+    <div class="shell split split--narrow">
+      <Image class="split__img" src={whiskeyImg}
+             alt="The back bar lit warm, shelves of Tennessee whiskey running the full height of the wall"
+             widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+      <div>
+        <p class="eyebrow">{partner.credit}</p>
+        <h2 id="tn-h" class="heading">A distillery partner, not a liquor order.</h2>
+        <p class="prose split__p">
+          {partner.name} has been making whiskey since {partner.established}. They are a partner
+          in this resort, which is why the name on the gate is not decoration. The shelf is built
+          around Tennessee rather than apologising for it, and the pours are listed honestly —
+          no four-times markup on a bottle you could name blindfolded.
+        </p>
+        <p class="prose split__p">
+          Local beer on draft, a short cocktail list done properly, and no televisions you cannot
+          ask us to turn off. Settle the match on the porch. Loser buys.
+        </p>
+        <p class="meta tbd-note">
+          The tasting programme, barrel selections and the bar's own name are still being
+          settled with the distillery. Nothing here is on the menu until it is.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- menu -->
+  <section class="section band band--soft" aria-labelledby="menu-h">
+    <div class="shell">
+      <div class="menu__head">
+        <h2 id="menu-h" class="heading">From the kitchen</h2>
+        <p class="label menu__flag">Sample menu — final dishes &amp; prices TBD</p>
+      </div>
+      <ul class="menu">
+        {menu.map((m) => (
+          <li class="menu__i">
+            <div>
+              <p class="menu__n">{m.n}</p>
+              <p class="menu__d">{m.d}</p>
+            </div>
+            <span class="menu__p">$ [TBD]</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- hours + back room -->
+  <section class="section band" aria-labelledby="hours-h">
+    <div class="shell">
+      <h2 id="hours-h" class="visually-hidden">Hours and private hire</h2>
+      <div class="grid grid--2">
+        <div class="card">
+          <div class="card__body">
+            <h3 class="label card__kicker">Hours</h3>
+            <p class="prose card__copy">
+              Kitchen {contact.hours}. Bar {contact.hours} — open past the last tee time, always.
+              Pro shop {contact.hours}.
+            </p>
+            <p class="meta tbd-note">All hours TBD with ownership.</p>
+          </div>
+        </div>
+        <div class="card card--dark">
+          <div class="card__body">
+            <h3 class="label card__kicker">The back room</h3>
+            <p class="prose card__copy">
+              A private room for outings, rehearsal dinners and the poker game nobody admits to.
+              Seats [40]. Books through the events desk.
+            </p>
+            <a class="link-arrow card__cta" href="/events/">Ask about private events</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- close -->
+  <section class="section band band--char" aria-labelledby="close-h">
+    <div class="shell split">
+      <div>
+        <h2 id="close-h" class="heading">Walk off eighteen. Sit down.</h2>
+        <p class="prose split__p">
+          You do not need a tee time to use the bar, and you do not need to have played well to
+          enjoy it. Book a round, or just turn up.
+        </p>
+        <div class="phero__cta">
+          <a class="btn btn--primary" href="/rates/">Book a tee time</a>
+          <a class="btn btn--ghost" href="/visit/">Plan your visit</a>
+        </div>
+      </div>
+      <Image class="split__img" src={poursImg}
+             alt="Two glasses of whiskey and a scorecard on a weathered table, the course beyond at dusk"
+             widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .phero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
+  .menu__head { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3);
+    align-items: baseline; justify-content: space-between; margin-bottom: var(--space-4); }
+  .menu__flag { color: var(--wr-emerald); }
+  .menu { display: grid; gap: var(--space-2) var(--space-6); list-style: none; padding: 0; }
+  .menu__i { display: flex; gap: var(--space-3); justify-content: space-between;
+    border-bottom: 1px solid var(--wr-line); padding-bottom: 1rem; }
+  .menu__n { font-weight: 600; font-size: 1rem; }
+  .menu__d { font-size: 0.84375rem; color: var(--wr-ink-muted); margin-top: 4px; }
+  .menu__p { font-weight: 700; color: var(--wr-emerald); white-space: nowrap; }
+  .card--dark { background: var(--wr-forest); border-color: var(--wr-forest); color: #fff; }
+  .card--dark .card__kicker { color: var(--wr-brass); }
+  .card--dark .card__copy { color: var(--wr-line); }
+  .card--dark .card__cta { color: var(--wr-brass); }
+  @media (min-width: 700px) { .menu { grid-template-columns: repeat(2, 1fr); } }
+</style>

@@ -84,16 +84,16 @@ const stats = [
     <div class="shell">
       <p class="eyebrow">Four ways to come</p>
       <h2 id="ways-h" class="heading ways__h">Pick your kind of weekend.</h2>
-      <ul class="ways">
+      <ul class="grid grid--4">
         {ways.map((w) => (
-          <li class="way">
-            <Image class="way__img" src={w.img} alt={w.alt}
+          <li class="card">
+            <Image class="card__img" src={w.img} alt={w.alt}
                    widths={[320, 480, 640]} sizes="(max-width: 700px) 100vw, 25vw" quality={70} />
-            <div class="way__body">
-              <p class="label way__kicker"><span class="way__n">{w.n}</span> {w.kicker}</p>
+            <div class="card__body">
+              <p class="label card__kicker"><span class="card__n">{w.n}</span> {w.kicker}</p>
               <h3 class="subhead">{w.title}</h3>
-              <p class="prose way__copy">{w.body}</p>
-              <a class="link-arrow way__cta" href={w.href}>{w.cta}</a>
+              <p class="prose card__copy">{w.body}</p>
+              <a class="link-arrow card__cta" href={w.href}>{w.cta}</a>
             </div>
           </li>
         ))}
@@ -139,17 +139,17 @@ const stats = [
           <h3 class="heading exp__feature-h">{featuredExperience.title}</h3>
           <p class="prose">{featuredExperience.body}</p>
           <a class="link-arrow exp__feature-cta" href="/clubhouse/">See the clubhouse &amp; bar</a>
-          <p class="meta exp__note">{featuredExperience.note}</p>
+          <p class="meta tbd-note">{featuredExperience.note}</p>
         </div>
       </div>
 
-      <ul class="exp__list">
+      <ul class="grid grid--2">
         {experience.map((e) => (
           <li class="exp__item">
             <p class="label exp__kicker">{e.kicker}</p>
             <h3 class="subhead">{e.title}</h3>
             <p class="prose exp__body">{e.body}</p>
-            {e.note && <p class="meta exp__note">{e.note}</p>}
+            {e.note && <p class="meta tbd-note">{e.note}</p>}
           </li>
         ))}
       </ul>
@@ -192,15 +192,15 @@ const stats = [
     <div class="shell">
       <p class="eyebrow">Why Bristol</p>
       <h2 id="bristol-h" class="heading">The town does the nightlife. We handle the daylight.</h2>
-      <p class="lead bristol__lead">
+      <p class="lead lede">
         Bristol became a real destination while nobody was watching. Everything below is
         minutes from the first tee.
       </p>
-      <ul class="bristol">
+      <ul class="facts facts--4">
         {bristol.map((b) => (
-          <li class="rule-top">
-            <h3 class="label bristol__t">{b.title}</h3>
-            <p class="prose bristol__b">{b.body}</p>
+          <li>
+            <h3 class="label facts__t">{b.title}</h3>
+            <p class="prose facts__b">{b.body}</p>
           </li>
         ))}
       </ul>
@@ -225,14 +225,16 @@ const stats = [
         </p>
         <a class="btn btn--primary" href={booking.href}>Full rates &amp; booking</a>
       </div>
-      <table class="rates">
-        <caption class="visually-hidden">Green fees — placeholder pricing pending confirmation</caption>
-        <tbody>
-          {rates.rows.map((r) => (
-            <tr><th scope="row">{r.label}</th><td>$ {r.price}</td></tr>
-          ))}
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="rate-table">
+          <caption class="visually-hidden">Green fees — placeholder pricing pending confirmation</caption>
+          <tbody>
+            {rates.rows.map((r) => (
+              <tr><th scope="row">{r.label}</th><td class="price">$ {r.price}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -254,22 +256,21 @@ const stats = [
 
   <!-- ░░ REVIEW CAPTURE ░░ the site has to do a review base's job ░░ -->
   <section class="section band" aria-labelledby="review-h">
-    <div class="shell review">
+    <div class="shell callout callout--split">
       <div>
-        <h2 id="review-h" class="heading review__h">Had a good round? Say so.</h2>
+        <h2 id="review-h" class="heading callout__h">Had a good round? Say so.</h2>
         <p class="prose">
           We are the new name in town, and reviews are how the next group finds us. One tap
           from the QR at the counter, the link in your booking text, or right here.
         </p>
       </div>
-      <a class="btn btn--ghost review__cta" href="/visit/#review">Leave a review</a>
+      <a class="btn btn--ghost" href="/visit/#review">Leave a review</a>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* Mobile-first throughout: base rules are the phone layout,
-     min-width queries add the desktop composition. */
+  /* Page-specific only — shared patterns live in src/styles/patterns.css */
 
   /* ---------- hero ---------- */
   .hero { position: relative; isolation: isolate; overflow: hidden; }
@@ -293,6 +294,13 @@ const stats = [
   .hero__h { margin-top: var(--space-2); max-width: 17ch; }
   .hero__lead { margin-top: var(--space-3); color: var(--wr-line); max-width: 38ch; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
+  .hero__partner {
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    margin-top: var(--space-4);
+    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--wr-brass);
+  }
+  .hero__partner-rule { width: 2rem; height: 1px; background: var(--wr-brass); flex: none; }
 
   .stats {
     display: flex; flex-wrap: wrap; gap: 0.625rem 1.5rem;
@@ -307,51 +315,13 @@ const stats = [
     border-radius: 50%; background: var(--wr-brass);
   }
 
-  /* ---------- four ways ---------- */
   .ways__h { margin-top: var(--space-2); margin-bottom: var(--space-6); max-width: 18ch; }
-  .ways { display: grid; gap: var(--space-3); list-style: none; padding: 0; }
-  .way {
-    display: flex; flex-direction: column; overflow: hidden;
-    background: var(--wr-soft); border: 1px solid var(--wr-line); border-radius: var(--radius-md);
-  }
-  .way__img { width: 100%; height: 160px; object-fit: cover; }
-  .way__body { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.5rem; flex: 1; }
-  .way__kicker { color: var(--wr-emerald); }
-  .way__n { color: var(--wr-gold-deep); }
-  .way__copy { font-size: 0.9375rem; }
-  .way__cta { margin-top: auto; }
 
   /* ---------- experiential ---------- */
   .exp__top { display: grid; gap: var(--space-4); align-items: center; }
   .exp__h { margin-top: var(--space-2); }
   .exp__lead { margin-top: var(--space-2); font-size: var(--text-lead); }
-  .exp__img {
-    width: 100%; height: 100%; min-height: 240px;
-    object-fit: cover; border-radius: var(--radius-md);
-  }
-  .exp__list {
-    display: grid; gap: var(--space-4); list-style: none; padding: 0;
-    margin-top: var(--space-6); padding-top: var(--space-4);
-    border-top: 1px solid var(--wr-line);
-  }
-  .exp__item { display: flex; flex-direction: column; gap: 0.625rem; }
-  .exp__kicker { color: var(--wr-emerald); }
-  .exp__body { font-size: 0.9375rem; }
-  /* Unconfirmed detail stays visible rather than being quietly implied. */
-  .exp__note {
-    margin-top: auto; padding-top: 0.5rem;
-    border-top: 1px dashed var(--wr-mauve); font-size: 0.75rem;
-  }
-
-  .hero__partner {
-    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
-    margin-top: var(--space-4);
-    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--wr-brass);
-  }
-  .hero__partner-rule { width: 2rem; height: 1px; background: var(--wr-brass); flex: none; }
-
-  /* The co-brand gets a block of its own, not one card among three. */
+  .exp__img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: var(--radius-md); }
   .exp__feature {
     display: grid; gap: var(--space-3);
     margin-top: var(--space-6); padding-top: var(--space-4);
@@ -361,89 +331,19 @@ const stats = [
   .exp__feature-body { display: flex; flex-direction: column; gap: 0.75rem; }
   .exp__feature-h { font-size: var(--text-h3); }
   .exp__feature-cta { align-self: start; }
+  .exp__item { display: flex; flex-direction: column; gap: 0.625rem; }
+  .exp__kicker { color: var(--wr-emerald); }
+  .exp__body { font-size: 0.9375rem; }
+  .grid--2 { margin-top: var(--space-4); }
 
-  @media (min-width: 700px) {
-    .exp__list { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
-  }
-  @media (min-width: 1000px) {
-    .exp__feature { grid-template-columns: 0.85fr 1fr; gap: var(--space-6); align-items: center; }
-  }
-  @media (min-width: 1000px) {
-    .exp__top { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }
-  }
+  .callout__h { font-size: var(--text-h3); }
 
-  /* ---------- split sections ---------- */
-  .split { display: grid; gap: var(--space-4); align-items: center; }
-  .split__p { margin-top: var(--space-2); }
-  .split__img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: var(--radius-md); }
-  .split__fine { margin-top: var(--space-2); }
-  .split .heading { margin-top: var(--space-2); }
-  .split .btn { margin-top: var(--space-3); }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 0.625rem; list-style: none; padding: 0; margin-top: var(--space-3); }
-  .chips li {
-    border: 1px solid var(--band-rule); border-radius: var(--radius-pill);
-    padding: 0.5rem 1rem; font-family: var(--font-label); font-weight: 500;
-    font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--band-muted);
-  }
-
-  /* ---------- bristol ---------- */
-  .bristol__lead { margin: var(--space-2) 0 var(--space-6); }
-  .bristol { display: grid; gap: var(--space-4); list-style: none; padding: 0; }
-  .bristol__t { color: var(--wr-ink); margin-bottom: 0.5rem; font-size: 1rem; letter-spacing: 0.1em; }
-  .bristol__b { font-size: 0.90625rem; }
-  .locator {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem;
-    margin-top: var(--space-6); padding: 1.125rem 1.5rem;
-    border: 1px solid var(--wr-line); border-radius: var(--radius-md);
-    font-family: var(--font-label); font-weight: 500; font-size: 0.875rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--wr-ink-muted);
-  }
-  .locator .link-arrow { font-family: var(--font-body); letter-spacing: 0; text-transform: none; }
-  .locator span[aria-hidden] { color: var(--wr-gold-deep); }
-
-  /* ---------- rates ---------- */
-  .rates {
-    width: 100%; border-collapse: collapse;
-    background: var(--wr-white); border: 1px solid var(--wr-line); border-radius: var(--radius-md);
-    overflow: hidden;
-  }
-  .rates tr + tr { border-top: 1px solid var(--wr-line); }
-  .rates th { text-align: left; font-weight: 500; padding: 1.125rem 1.5rem; font-size: 0.9375rem; }
-  .rates td { text-align: right; font-weight: 700; color: var(--wr-emerald); padding: 1.125rem 1.5rem; white-space: nowrap; }
-
-  /* ---------- group + review ---------- */
-  .cta-row { display: grid; gap: var(--space-4); align-items: center; }
-  .cta-row__p { margin-top: var(--space-2); }
-  .cta-row .btn { justify-self: start; }
-  .review {
-    display: grid; gap: var(--space-3); align-items: center;
-    border: 1px dashed var(--wr-mauve); border-radius: var(--radius-md); padding: var(--space-4);
-  }
-  .review__h { font-size: var(--text-h3); }
-  .review__cta { justify-self: start; }
-
-  /* ================= 700px and up ================= */
-  @media (min-width: 700px) {
-    .ways { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-    .bristol { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) var(--space-6); }
-    .review { grid-template-columns: 1fr auto; gap: var(--space-6); }
-    .review__cta { justify-self: end; }
-  }
-
-  /* ================= 1000px and up ================= */
   @media (min-width: 1000px) {
     .hero__inner { padding-block: clamp(5rem, 3rem + 6vw, 8.25rem); }
-    .ways { grid-template-columns: repeat(4, 1fr); }
-    .way__img { height: 150px; }
-    .bristol { grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
-    .split { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }
-    .cta-row { grid-template-columns: 1fr auto; gap: var(--space-8); }
-    .cta-row .btn { justify-self: end; }
+    .exp__top { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }
+    .exp__feature { grid-template-columns: 0.85fr 1fr; gap: var(--space-6); align-items: center; }
   }
 
-  /* The docked ticker owns the bottom edge on phones. */
   @media (max-width: 640px) {
     .hero__img { object-position: 62% 38%; }
     .hero__inner { padding-block: 3rem 3.25rem; }

@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { rates, rateCard, experientialTiers, booking, contact } from '../data/site';
+
+/* Sample availability for the front-end stub. `state` drives the visual:
+   open / selected / low (urgency) / booked (disabled). */
+const times = [
+  { t: '7:30', state: 'open' },
+  { t: '8:10', state: 'booked' },
+  { t: '9:40', state: 'selected' },
+  { t: '10:20', state: 'open' },
+  { t: '11:50', state: 'open' },
+  { t: '1:30', state: 'low' },
+  { t: '3:00', state: 'twilight' },
+  { t: '4:40', state: 'twilight' },
+];
+const label: Record<string, string> = {
+  open: '$ [TBD]', selected: 'Selected', low: '2 spots left',
+  booked: 'Booked', twilight: 'Twilight',
+};
+---
+
+<BaseLayout
+  title="Rates & Tee Times — Whiskey Ridge Golf Resort"
+  description="Book a tee time at Whiskey Ridge in Bristol, Tennessee. Date, players, time, done — and groups of twelve or more get a human instead."
+  ticker={false}
+>
+  <PageHero
+    eyebrow="Rates & tee times"
+    title="Booked in"
+    em="under a minute."
+    lead="Date, players, time, done. No account required and no mood piece between you and the tee sheet. Groups of twelve or more get a person instead — on purpose."
+  />
+
+  <!-- booking stub -->
+  <section id="booking" class="section band" aria-labelledby="book-h">
+    <div class="shell">
+      <h2 id="book-h" class="visually-hidden">Find and book a tee time</h2>
+      <ol class="steps">
+        <li class="steps__i is-current">1 · Date</li>
+        <li class="steps__i">2 · Time</li>
+        <li class="steps__i">3 · Confirm</li>
+      </ol>
+
+      <div class="booker">
+        <form class="form" aria-label="Find a tee time">
+          <div class="field">
+            <label for="b-date">Date</label>
+            <input class="input" id="b-date" name="date" type="date" value="2026-11-14" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="b-players">Players</label>
+            <select class="input" id="b-players" name="players">
+              <option>4 players</option><option>1 player</option><option>2 players</option>
+              <option>3 players</option><option>8 players (back-to-back times)</option>
+              <option>12+ — talk to the group desk</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="b-cart">Walk or ride</label>
+            <select class="input" id="b-cart" name="cart"><option>Walking</option><option>Cart</option></select>
+          </div>
+          <button class="btn btn--primary" type="button">Show available times</button>
+          <p class="meta">
+            Front-end stub. Wires to the tee-sheet provider ({booking.provider}) during build.
+          </p>
+        </form>
+
+        <div>
+          <p class="label booker__cap">Saturday 14 November · 4 players · sample availability</p>
+          <ul class="times">
+            {times.map((x) => (
+              <li>
+                <button
+                  class:list={['time', `time--${x.state}`]}
+                  type="button"
+                  disabled={x.state === 'booked'}
+                  aria-label={x.state === 'booked' ? `${x.t} AM, fully booked` : `Book ${x.t}`}
+                  aria-pressed={x.state === 'selected' ? 'true' : undefined}
+                >
+                  <span class="time__t">{x.t}</span>
+                  <span class="time__s">{label[x.state]}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div class="booker__sel">
+            <span>Sat 14 Nov · 9:40 AM · 4 players · walking</span>
+            <button class="btn btn--primary" type="button">Continue to confirm</button>
+          </div>
+
+          <p class="meta booker__help">
+            Greyed times are already booked. Nothing open on your day?
+            <a href="#booking">Sunday the 15th</a> has eleven times left, or call
+            <a href={contact.phoneHref}>{contact.phone}</a> and we will find you a spot.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- rate card -->
+  <section class="section band band--soft" aria-labelledby="card-h">
+    <div class="shell">
+      <p class="eyebrow">The rate card</p>
+      <h2 id="card-h" class="heading">Every number, flagged as a placeholder.</h2>
+      <p class="lead lede">{rates.note} The rebrand will not price Bristol out of its own golf course.</p>
+      <div class="table-wrap">
+        <table class="rate-table">
+          <caption class="visually-hidden">Green fees by rate type — placeholder pricing pending confirmation</caption>
+          <thead>
+            <tr>
+              <th scope="col">Rate</th>
+              <th scope="col" class="num">Weekday</th>
+              <th scope="col" class="num">Weekend</th>
+              <th scope="col" class="num">Twilight 3pm+</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rateCard.map((r) => (
+              <tr>
+                <th scope="row">{r.label}</th>
+                <td class="num price">$ {r.wd}</td>
+                <td class="num price">$ {r.we}</td>
+                {r.tw ? <td class="num price">$ {r.tw}</td> : <td class="num muted">—</td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="meta split__fine">
+        Season and dynamic pricing TBD. Membership and founding-member tiers TBD.
+      </p>
+    </div>
+  </section>
+
+  <!-- experiential tiers -->
+  <section class="section band" aria-labelledby="tiers-h">
+    <div class="shell">
+      <p class="eyebrow">Beyond the green fee</p>
+      <h2 id="tiers-h" class="heading">Ways to come that are not eighteen holes.</h2>
+      <p class="lead lede">
+        Experiential golf does not price like a green fee, so it will not be sold like one.
+        These are the shapes being built. None is live yet, and none has a price.
+      </p>
+      <ul class="grid grid--3">
+        {experientialTiers.map((x) => (
+          <li class="card">
+            <div class="card__body">
+              <h3 class="subhead">{x.name}</h3>
+              <p class="prose card__copy">{x.body}</p>
+              <p class="meta tbd-note">Pricing and availability TBD.</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- groups handoff -->
+  <section class="section band band--forest" aria-labelledby="grp-h">
+    <div class="shell cta-row">
+      <div>
+        <h2 id="grp-h" class="heading">Twelve or more? Skip the grid.</h2>
+        <p class="prose cta-row__p">
+          Group rates, back-to-back times, carts staged, food ordered before you turn and the
+          bar held afterwards — the group desk builds it with you in one call or one form.
+        </p>
+      </div>
+      <a class="btn btn--primary" href="/groups/">Go to Groups &amp; Outings</a>
+    </div>
+  </section>
+
+  <!-- policies -->
+  <section class="section band" aria-labelledby="pol-h">
+    <div class="shell">
+      <h2 id="pol-h" class="visually-hidden">Booking policies</h2>
+      <ul class="facts facts--3">
+        <li>
+          <h3 class="label facts__t">Cancellation</h3>
+          <p class="prose facts__b">Free up to [24] hours before your time. Weather calls are ours to make and we make them generously.</p>
+          <p class="meta tbd-note">Policy TBD.</p>
+        </li>
+        <li>
+          <h3 class="label facts__t">Rain checks</h3>
+          <p class="prose facts__b">If the mountain weather wins mid-round, the pro shop makes it right rather than arguing about which hole you reached.</p>
+          <p class="meta tbd-note">Terms TBD.</p>
+        </li>
+        <li>
+          <h3 class="label facts__t">Walk-ups</h3>
+          <p class="prose facts__b">Always welcome when the sheet allows. Call <a href={contact.phoneHref}>{contact.phone}</a> from the car and we will hold what we can.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .steps { display: flex; list-style: none; padding: 0; margin: 0 0 var(--space-4); }
+  .steps__i {
+    flex: 1; padding-bottom: 0.75rem; border-bottom: 3px solid var(--wr-line);
+    font-family: var(--font-label); font-weight: 600; font-size: 0.8125rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--wr-plum);
+  }
+  .steps__i.is-current { border-bottom-color: var(--wr-brass); color: var(--wr-ink); }
+
+  .booker { display: grid; gap: var(--space-4); align-items: start; }
+  .booker__cap { color: var(--wr-ink-muted); margin-bottom: 0.875rem; }
+
+  .times { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; list-style: none; padding: 0; }
+  .time {
+    width: 100%; min-height: 56px; padding: 0.875rem 0.625rem; text-align: center;
+    background: var(--wr-white); border: 1px solid var(--wr-mauve); border-radius: var(--radius-sm);
+    transition: border-color var(--duration-base) var(--ease-out), background-color var(--duration-base) var(--ease-out);
+  }
+  .time:hover:not([disabled]) { border-color: var(--wr-emerald); }
+  .time__t { display: block; font-weight: 700; font-size: 1rem; color: var(--wr-ink); }
+  .time__s { display: block; font-size: 0.75rem; color: var(--wr-plum); margin-top: 4px; }
+  .time--selected { background: var(--wr-char); border-color: var(--wr-char); }
+  .time--selected .time__t { color: #fff; }
+  .time--selected .time__s { color: var(--wr-brass); }
+  .time--low { border-color: var(--wr-amber); }
+  .time--low .time__s { color: #8A6730; font-weight: 600; }
+  .time--booked { background: var(--wr-soft); border-style: dashed; cursor: not-allowed; }
+  .time--booked .time__t { color: var(--wr-mauve); text-decoration: line-through; }
+  .time--booked .time__s { color: var(--wr-mauve); }
+
+  .booker__sel {
+    display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; justify-content: space-between;
+    margin-top: var(--space-3); padding: 1rem 1.25rem;
+    background: var(--wr-soft); border: 1px solid var(--wr-line); border-radius: var(--radius-md);
+    font-size: 0.90625rem; color: var(--wr-ink-muted);
+  }
+  .booker__help { margin-top: var(--space-2); }
+
+  @media (min-width: 560px) { .times { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 1000px) { .booker { grid-template-columns: 0.85fr 1.4fr; gap: var(--space-6); } }
+</style>

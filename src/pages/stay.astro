@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { contact } from '../data/site';
+
+import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
+import dawnImg from '../assets/photos/homepage_hero_panoramic_valley_dawn.jpg';
+
+const nearby = [
+  { k: 'Resort & casino', n: 'Hard Rock Hotel & Casino Bristol',
+    b: 'The anchor of the new Bristol weekend — hotel, casino floor, shows. No golf on the property, which is where we come in.' },
+  { k: 'Downtown', n: 'State Street & downtown hotels',
+    b: 'Walkable to the music, the bars and the state line itself. Specific properties get listed once outreach is done.' },
+  { k: 'Highway & speedway', n: 'I-81 corridor & Speedway area',
+    b: 'The practical play for race weekends and bigger groups. Book these early in April and September.' },
+];
+---
+
+<BaseLayout
+  title="Stay — Whiskey Ridge Golf Resort"
+  description="On-site lodging at Whiskey Ridge is planned, not open. Until it is, we bundle your rounds with where people already stay in Bristol — and we say which is which."
+>
+  <PageHero
+    eyebrow="Stay"
+    title="Here's the"
+    em="honest version."
+    lead="Lodging on the property is planned, not open. Until it is, we will bundle your golf with the places people already stay in Bristol — and we will never blur which is which."
+  />
+
+  <!-- coming -->
+  <section class="section band band--forest" aria-labelledby="ridge-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Coming to the ridge</p>
+        <h2 id="ridge-h" class="heading">Sleep where you played.</h2>
+        <p class="prose split__p">
+          On-site lodging is in the works. Walk off eighteen, eat, pour, sleep, repeat — the
+          version of a golf trip where nobody has to drive anywhere afterwards.
+        </p>
+        <p class="prose split__p">
+          Details land here the moment ownership signs them off, and not a day before. The image
+          beside this is a concept, not a photograph of something that exists.
+        </p>
+        <p class="meta tbd-note">
+          Format (cabins / lodge / cottages), unit count and timeline all TBD.
+        </p>
+      </div>
+      <Image class="split__img" src={cabinsImg}
+             alt="Concept rendering of a cabin with a lit fire pit on its deck, overlooking the course at dusk"
+             widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+
+  <!-- nearby -->
+  <section class="section band" aria-labelledby="near-h">
+    <div class="shell">
+      <p class="eyebrow">Until then · nearby, not affiliated</p>
+      <h2 id="near-h" class="heading">Where the weekend already sleeps.</h2>
+      <p class="lead lede">
+        Bristol's hotels handle race weekends, so they can handle your foursome. Everything below
+        is a nearby option rather than a partner. Stay-and-play partnerships are being negotiated
+        and will be labelled plainly the moment they are signed.
+      </p>
+      <ul class="grid grid--3">
+        {nearby.map((x) => (
+          <li class="card">
+            <div class="card__body">
+              <p class="label card__kicker">{x.k}</p>
+              <h3 class="subhead">{x.n}</h3>
+              <p class="prose card__copy">{x.b}</p>
+              <p class="meta tbd-note">Drive time to the course TBD.</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- bundle -->
+  <section class="section band band--soft" aria-labelledby="bundle-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">One confirmation</p>
+        <h2 id="bundle-h" class="heading">Want rounds and rooms on one email?</h2>
+        <p class="prose split__p">
+          The group desk builds stay-and-play itineraries today, before any formal partnership
+          lands. You tell us the dates and the headcount; we do the ringing round.
+        </p>
+        <div class="phero__cta">
+          <a class="btn btn--primary" href="/groups/">Build a stay-and-play</a>
+          <a class="btn btn--ghost" href={contact.phoneHref}>Call {contact.phone}</a>
+        </div>
+      </div>
+      <Image class="split__img" src={dawnImg}
+             alt="Dawn over the valley course, mist on the ridges beyond the fairways"
+             widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .phero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
+</style>

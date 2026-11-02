@@ -60,6 +60,24 @@ export const course = {
   ratingsNote: 'Course ratings and distances to be confirmed with ownership before launch.',
 } as const;
 
+/* Signature holes. Numbers, names and yardages are ALL unconfirmed —
+   they need the official card and a walk with the superintendent.
+   They render bracketed on the page so nobody mistakes them for fact. */
+export const signatureHoles = [
+  {
+    hole: '[7]', par: 3, yards: '[164]', name: '[The Drop]',
+    body: 'Downhill over the creek with the ridge standing behind the green. Short enough to tempt you, exposed enough to punish the tempted.',
+  },
+  {
+    hole: '[12]', par: 4, yards: '[338]', name: '[Cedar Bend]',
+    body: 'A short four with an actual decision off the tee: lay back to the corner, or take on the creek and leave yourself a flick. Both work. Only one makes the story.',
+  },
+  {
+    hole: '[18]', par: 4, yards: '[376]', name: '[Last Pour]',
+    body: 'Uphill to the clubhouse with the porch watching and the bar already pouring. Settle the bets before you reach the green.',
+  },
+] as const;
+
 /* No rate is published until ownership sets the new card.
    The ~$25 reference is the current green fee at the existing course. */
 export const rates = {
@@ -71,6 +89,34 @@ export const rates = {
     { label: 'Twilight · after 3 pm', price: TBD },
   ],
 } as const;
+
+/* The full card. Every price is TBD — nothing here is a guess dressed
+   up as a number. Columns are weekday / weekend / twilight. */
+export const rateCard = [
+  { label: '18 holes · walking', wd: TBD, we: TBD, tw: TBD },
+  { label: '18 holes · with cart', wd: TBD, we: TBD, tw: TBD },
+  { label: '9 holes', wd: TBD, we: TBD, tw: null },
+  { label: 'Junior / Senior / Military', wd: TBD, we: TBD, tw: null },
+  { label: 'Range balls · small / large', wd: TBD, we: TBD, tw: null },
+] as const;
+
+/* Experiential tiers. The category the resort is being built around
+   needs products a green-fee table cannot express — these are the
+   shapes, not the prices, and none of them is live yet. */
+export const experientialTiers = [
+  {
+    name: 'Range & a round of drinks',
+    body: 'An hour on the range with the bar open behind you. No tee time, no scorecard, no reason to be good at golf.',
+  },
+  {
+    name: 'Nine and dine',
+    body: 'Nine holes late in the day, a table held for afterwards. The weeknight version of a golf trip.',
+  },
+  {
+    name: 'The full day',
+    body: 'Eighteen, lunch at the turn, and the bar when you are done. Built for groups who want the day handled.',
+  },
+] as const;
 
 /* Nearby demand drivers. These are facts about Bristol, not claimed
    partnerships — drive times stay TBD until measured. */

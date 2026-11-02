@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { contact, bristol } from '../data/site';
+
+import aerialImg from '../assets/photos/course_routing_down_the_valley.jpg';
+
+const drives = [
+  { n: 'Tri-Cities Airport (TRI)', d: 'Direct flights, rental counters, no shuttle drama', t: '≈20 min', firm: true },
+  { n: 'Hard Rock Hotel & Casino', d: 'Play the morning after, painlessly', t: '[— min]', firm: false },
+  { n: 'Bristol Motor Speedway', d: 'Race-week traffic plans on request', t: '[— min]', firm: false },
+  { n: 'Downtown & State Street', d: 'Museums, music, and the state line underfoot', t: '[— min]', firm: false },
+];
+
+const faqs = [
+  { q: 'Can I walk the course?', a: 'Please do — it is built for it. Under four hours at a normal pace, and carts are there if the hill wins.' },
+  { q: 'Is there a dress code?', a: 'Common sense. Collars optional, shoes required, denim fine. Dress for golf, not for a deposition.' },
+  { q: 'Do I need a tee time?', a: 'Book ahead on weekends and race weeks. Weekday walk-ups usually get out — call from the car and we will tell you the truth.' },
+  { q: 'What if the weather turns?', a: 'Mountain weather moves fast in both directions. Rain checks are generous, and the bar is dry by definition.' },
+  { q: 'Can beginners and kids play?', a: 'A short, forgiving par 71 is the best first course anyone could ask for. Junior rates TBD; patience included free.' },
+  { q: 'Do you have to golf to come?', a: 'No. The range and the bar stand on their own, and plenty of people turn up for the second without touching the first.' },
+];
+---
+
+<BaseLayout
+  title="Plan Your Visit — Whiskey Ridge Golf Resort"
+  description="115 Cedar Creek Rd, Bristol, Tennessee — about twenty minutes from Tri-Cities Airport. Directions, hours, FAQs and what else to do in Bristol."
+>
+  <PageHero
+    eyebrow="Plan your visit"
+    title="Easy to find."
+    em="Hard to leave."
+    lead={`${contact.street}, ${contact.city}, ${contact.state} ${contact.zip} — on the ridge above Cedar Creek, about twenty minutes from wheels-down at Tri-Cities Airport.`}
+  />
+
+  <!-- getting here -->
+  <section class="section band" aria-labelledby="map-h">
+    <div class="shell split">
+      <div class="mapcard">
+        <Image class="mapcard__img" src={aerialImg}
+               alt="Aerial view of the course and clubhouse on the ridge above the valley"
+               widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 55vw" quality={70} />
+        <div class="mapcard__panel">
+          <p class="label mapcard__k">Whiskey Ridge · Bristol TN</p>
+          <p class="mapcard__a">{contact.street}, {contact.city}, {contact.state} {contact.zip}</p>
+          <p class="mapcard__c">{contact.lat}, {contact.lng}</p>
+          <a class="btn btn--primary mapcard__btn" href={contact.mapsHref} rel="noopener">Open in Maps</a>
+        </div>
+      </div>
+
+      <div>
+        <h2 id="map-h" class="heading">Getting here</h2>
+        <ul class="drives">
+          {drives.map((d) => (
+            <li class="drives__i">
+              <div>
+                <p class="drives__n">{d.n}</p>
+                <p class="drives__d">{d.d}</p>
+              </div>
+              <span class:list={['drives__t', !d.firm && 'is-tbd']}>{d.t}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="meta tbd-note">
+          Bracketed drive times are unmeasured and get verified before launch. Only the airport
+          figure is firm.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- bristol -->
+  <section class="section band band--forest" aria-labelledby="br-h">
+    <div class="shell">
+      <p class="eyebrow">While you're here</p>
+      <h2 id="br-h" class="heading">Build the rest of the weekend.</h2>
+      <ul class="facts facts--4 lede">
+        {bristol.map((b) => (
+          <li>
+            <h3 class="label facts__t">{b.title}</h3>
+            <p class="prose facts__b">{b.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- faq: native disclosure, no javascript -->
+  <section class="section band" aria-labelledby="faq-h">
+    <div class="shell">
+      <p class="eyebrow">Good questions</p>
+      <h2 id="faq-h" class="heading">Asked often, answered straight.</h2>
+      <div class="faq lede">
+        {faqs.map((f) => (
+          <details class="faq__i">
+            <summary class="faq__q">{f.q}</summary>
+            <p class="prose faq__a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- review capture: the site has to do a review base's job -->
+  <section id="review" class="section band band--soft" aria-labelledby="rev-h">
+    <div class="shell callout callout--split">
+      <div>
+        <h2 id="rev-h" class="heading callout__h">Had a good round? Say so.</h2>
+        <p class="prose">
+          We are the new name in town with one lifetime review on record, while the courses down
+          the road carry two hundred and fifty each. Reviews are how the next group finds us —
+          one tap from the QR at the counter, the link in your booking text, or right here.
+        </p>
+        <p class="meta tbd-note">Review destinations (Google, GolfPass) to be wired at launch.</p>
+      </div>
+      <a class="btn btn--primary" href="#review">Leave a review</a>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section class="section band band--char" aria-labelledby="ct-h">
+    <div class="shell cta-row">
+      <div>
+        <h2 id="ct-h" class="heading">Talk to a person.</h2>
+        <p class="prose cta-row__p">
+          Pro shop and tee sheet: <a href={contact.phoneHref}>{contact.phone}</a>.<br />
+          {contact.street}, {contact.city}, {contact.state} {contact.zip}. Hours {contact.hours}.
+        </p>
+      </div>
+      <a class="btn btn--primary" href="/rates/">Book a tee time</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mapcard { position: relative; border-radius: var(--radius-md); overflow: hidden; min-height: 320px; }
+  .mapcard__img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; }
+  .mapcard__panel {
+    position: absolute; left: 1rem; bottom: 1rem; right: 1rem;
+    background: var(--wr-char); border-left: 3px solid var(--wr-brass);
+    border-radius: var(--radius-sm); padding: 1rem 1.25rem;
+    display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .mapcard__k { color: var(--wr-brass); }
+  .mapcard__a { color: #fff; font-size: 0.9375rem; font-weight: 600; }
+  .mapcard__c { color: var(--wr-mauve-text); font-size: 0.8125rem; }
+  .mapcard__btn { margin-top: 0.625rem; align-self: start; }
+
+  .drives { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; margin-top: var(--space-3); }
+  .drives__i {
+    display: flex; gap: var(--space-2); align-items: center; justify-content: space-between;
+    border: 1px solid var(--wr-line); border-radius: var(--radius-md); padding: 1rem 1.25rem;
+  }
+  .drives__n { font-weight: 600; font-size: 0.96875rem; }
+  .drives__d { font-size: 0.84375rem; color: var(--wr-ink-muted); margin-top: 3px; }
+  .drives__t { font-family: var(--font-label); font-weight: 600; font-size: 0.9375rem;
+    letter-spacing: 0.08em; color: var(--wr-emerald); white-space: nowrap; flex: none; }
+  .drives__t.is-tbd { color: var(--wr-plum); }
+
+  .faq { display: grid; gap: 0; }
+  .faq__i { border-bottom: 1px solid var(--wr-line); }
+  .faq__q {
+    cursor: pointer; list-style: none; padding: 1.125rem 2.5rem 1.125rem 0; position: relative;
+    font-size: 1.0625rem; font-weight: 600; min-height: 44px; display: flex; align-items: center;
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::after {
+    content: '+'; position: absolute; right: 0.25rem; font-weight: 400;
+    font-size: 1.5rem; color: var(--wr-gold-deep); line-height: 1;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .faq__i[open] .faq__q::after { transform: rotate(45deg); }
+  .faq__a { padding-bottom: 1.25rem; font-size: 0.9375rem; }
+  @media (min-width: 900px) { .faq { grid-template-columns: repeat(2, 1fr); column-gap: var(--space-6); } }
+</style>

@@ -1,0 +1,198 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { contact } from '../data/site';
+
+import celebrationImg from '../assets/photos/groups_outings_foursome_celebration.jpg';
+import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
+
+const trips = [
+  { k: 'Buddies trip', b: '36 holes, two nights, one tab. Replay rates for the group that cannot get enough of a course this quick.' },
+  { k: 'Casino + golf', b: 'Morning tee times built around late casino nights. The round that fixes the night before.' },
+  { k: 'Race weekend', b: 'Speedway weekends sell the town out. Play before the green flag — we plan the day around race traffic.' },
+  { k: 'Bachelor party', b: 'Scramble format, music allowed, bar held afterwards. We have seen worse swings than yours.' },
+  { k: 'Corporate / tourney', b: 'Shotgun starts up to [144]. A forgiving course is the right course for a mixed-ability field.' },
+];
+
+const included = [
+  'A dedicated coordinator from first call to final invoice',
+  'Shotgun or tee-time starts, with formats and flights set up for you',
+  'Carts, range balls and on-course contests staged before anyone arrives',
+  'Food and drink from turn snacks to a full post-round spread',
+  'One itemised bill',
+];
+
+const addons = [
+  { id: 'a-replay', l: 'Second round · replay rate', on: true },
+  { id: 'a-carts', l: 'Carts for the group', on: true },
+  { id: 'a-turn', l: 'Food & drinks at the turn', on: false },
+  { id: 'a-bar', l: 'Bar held after the round', on: false },
+  { id: 'a-stay', l: 'Lodging bundle', on: true },
+  { id: 'a-prizes', l: 'Prizes & scoring (outings)', on: false },
+];
+---
+
+<BaseLayout
+  title="Groups & Outings — Whiskey Ridge Golf Resort"
+  description="Buddies trips, corporate outings, tournaments and bachelor parties in Bristol, Tennessee. Four to 144 players, one coordinator, one bill."
+>
+  <PageHero
+    eyebrow="Groups & outings · 4 to 144 players"
+    title="The easiest group trip in"
+    em="Tennessee."
+    lead="One form, one coordinator, one bill. Golf and a pour by day, casino and State Street by night, and nobody has to be the person chasing twelve payments."
+    image={celebrationImg}
+    alt="A foursome trading high fives on the eighteenth green with the clubhouse behind"
+  >
+    <div class="phero__cta">
+      <a class="btn btn--primary" href="#builder">Build your trip</a>
+      <a class="btn btn--ghost" href="#outings">Corporate &amp; tournaments</a>
+    </div>
+  </PageHero>
+
+  <!-- trip shapes -->
+  <section class="section band" aria-labelledby="trips-h">
+    <div class="shell">
+      <p class="eyebrow">Pick a shape, we do the rest</p>
+      <h2 id="trips-h" class="heading">Five trips we already know how to run.</h2>
+      <ul class="grid grid--5 trips">
+        {trips.map((x) => (
+          <li class="card">
+            <div class="card__body">
+              <h3 class="label card__kicker">{x.k}</h3>
+              <p class="prose card__copy">{x.b}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the builder: this is the conversion -->
+  <section id="builder" class="section band band--soft" aria-labelledby="builder-h">
+    <div class="shell split split--narrow">
+      <div>
+        <p class="eyebrow">The package builder</p>
+        <h2 id="builder-h" class="heading">Interested to requested in about ninety seconds.</h2>
+        <p class="prose split__p">
+          Tell us the size, the dates and what you want bolted on. A real person replies within
+          one business day with a priced itinerary. No login, no deposit to ask a question.
+        </p>
+        <ol class="howto">
+          <li><span class="howto__n">01</span> Pick your dates and group size.</li>
+          <li><span class="howto__n">02</span> Check the add-ons you want priced.</li>
+          <li><span class="howto__n">03</span> We reply with an itinerary and one total. Book it or tweak it.</li>
+        </ol>
+      </div>
+
+      <form class="form" aria-labelledby="builder-h">
+        <div class="form__row form__row--2">
+          <div class="field">
+            <label for="g-size">Group size</label>
+            <select class="input" id="g-size" name="size">
+              <option>8 players</option><option>4–7</option><option>8–12</option>
+              <option>13–16</option><option>Outing / tournament (17+)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="g-dates">Dates</label>
+            <input class="input" id="g-dates" name="dates" type="text" placeholder="17–19 April, flexible" autocomplete="off" />
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>Add-ons to price</legend>
+          <div class="check-grid">
+            {addons.map((a) => (
+              <label class="check" for={a.id}>
+                <input type="checkbox" id={a.id} name="addons" value={a.l} checked={a.on} />
+                {a.l}
+              </label>
+            ))}
+          </div>
+          <p class="meta tbd-note">Lodging bundles depend on partner hotels — not yet signed.</p>
+        </fieldset>
+
+        <div class="form__row form__row--2">
+          <div class="field">
+            <label for="g-name">Your name</label>
+            <input class="input" id="g-name" name="name" type="text" autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="g-email">Email</label>
+            <input class="input" id="g-email" name="email" type="email" inputmode="email" autocomplete="email" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="g-phone">Phone (optional)</label>
+          <input class="input" id="g-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+        </div>
+
+        <button class="btn btn--primary" type="button">Request my package</button>
+        <p class="meta">Replies within one business day. Nothing is charged at this step.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- corporate -->
+  <section id="outings" class="section band" aria-labelledby="outings-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Corporate outings & tournaments</p>
+        <h2 id="outings-h" class="heading">Your whole office can play this course. That is the point.</h2>
+        <p class="prose split__p">
+          A 5,886-yard par 71 means the scratch golfer and the once-a-year golfer finish the same
+          scramble smiling. Nobody loses four balls and their afternoon. We handle carts, scoring,
+          signage, food and the bar at the end; you take the credit.
+        </p>
+      </div>
+      <div class="included">
+        <h3 class="label included__h">Every outing includes</h3>
+        <ul class="included__list">
+          {included.map((i) => <li>{i}</li>)}
+        </ul>
+        <p class="meta tbd-note">Outing pricing TBD with ownership.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- stay and play -->
+  <section class="section band band--char" aria-labelledby="sp-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Stay & play</p>
+        <h2 id="sp-h" class="heading">Golf here, sleep where the weekend is.</h2>
+        <p class="prose split__p">
+          Bundled rates with Bristol hotels are being lined up now. On-site lodging at the ridge
+          is in the works. Until either is signed we will say so plainly rather than imply a
+          partnership we do not have — and your rounds and rooms still land on one confirmation.
+        </p>
+        <div class="phero__cta">
+          <a class="btn btn--ghost" href="/stay/">See stay options</a>
+          <a class="btn btn--ghost" href={contact.phoneHref}>Call {contact.phone}</a>
+        </div>
+      </div>
+      <Image class="split__img" src={barImg}
+             alt="The clubhouse bar busy at golden hour, a group at the rail"
+             widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .phero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
+  .trips { margin-top: var(--space-6); }
+  .howto { list-style: none; padding: 0; margin-top: var(--space-3); display: flex; flex-direction: column; gap: 0.875rem;
+    font-size: 0.9375rem; color: var(--band-muted); }
+  .howto li { display: flex; gap: 0.75rem; align-items: baseline; }
+  .howto__n { font-family: var(--font-label); font-weight: 600; font-size: 0.875rem; color: var(--wr-gold-deep); flex: none; }
+  .included { background: var(--wr-forest); border-radius: var(--radius-md); padding: var(--space-4); color: #fff; }
+  .included__h { color: var(--wr-brass); margin-bottom: var(--space-2); }
+  .included__list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;
+    font-size: 0.90625rem; line-height: 1.55; color: var(--wr-line); }
+  .included__list li { display: flex; gap: 0.625rem; }
+  .included__list li::before { content: ''; flex: none; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--wr-brass); margin-top: 0.6em; }
+  .included .tbd-note { color: #9FB8AC; border-top-color: var(--wr-slate-green); }
+</style>

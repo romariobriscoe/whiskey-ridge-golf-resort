@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+import dawn from '../assets/photos/homepage_hero_panoramic_valley_dawn.jpg';
+import porch from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
+import fog from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
+import routing from '../assets/photos/course_routing_down_the_valley.jpg';
+import drop from '../assets/photos/course_signature_hole_the_drop_par3.jpg';
+import bar from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
+import wall from '../assets/photos/clubhouse_the_whiskey_wall_warm_light.jpg';
+import cabins from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
+import lawn from '../assets/photos/events_the_overlook_ceremony_lawn.jpg';
+import dinner from '../assets/photos/events_clubhouse_dinner_reception.jpg';
+import celebration from '../assets/photos/groups_outings_foursome_celebration.jpg';
+import walking from '../assets/photos/gallery_02_foursome_walking_long_shadows.jpg';
+import pours from '../assets/photos/gallery_07_two_pours_scorecard_between_them.jpg';
+
+/* `tall` items span two rows on wide screens, so the grid reads as a
+   composed page rather than a uniform contact sheet. */
+const shots = [
+  { src: fog, cap: 'Sunrise fog off the first tee', tall: true,
+    alt: 'Sun breaking through autumn trees, fog lying in the valley below the first tee' },
+  { src: walking, cap: 'A foursome walking, long shadows',
+    alt: 'Four players walking the fairway with push carts, mountains behind them' },
+  { src: wall, cap: 'The whiskey wall',
+    alt: 'Shelves of whiskey running the full height of the back bar, lit warm' },
+  { src: porch, cap: 'The porch at last light', tall: true,
+    alt: 'Guests on the lantern-lit clubhouse porch watching players putt out at dusk' },
+  { src: drop, cap: 'The Drop, over the creek',
+    alt: 'A downhill par 3 to a green ringed by stone with the creek running below' },
+  { src: routing, cap: 'The valley from above',
+    alt: 'Aerial view of the course threading the valley floor beside the creek' },
+  { src: bar, cap: 'The bar at golden hour', tall: true,
+    alt: 'The clubhouse bar busy at golden hour, fire lit and the course through tall windows' },
+  { src: celebration, cap: 'Settled on the eighteenth',
+    alt: 'A foursome trading high fives on the eighteenth green' },
+  { src: dawn, cap: 'Dawn over the ridge',
+    alt: 'Dawn light over the valley course with mist on the ridges beyond' },
+  { src: lawn, cap: 'The Overlook, ceremony hour',
+    alt: 'An outdoor ceremony on a lawn above the valley as the sun sets' },
+  { src: dinner, cap: 'A reception in the clubhouse',
+    alt: 'A long candlelit table set for a reception under timber beams' },
+  { src: pours, cap: 'Two pours and a scorecard',
+    alt: 'Two glasses of whiskey beside a scorecard on a weathered table at dusk' },
+  { src: cabins, cap: 'Lodging concept — not yet built',
+    alt: 'Concept rendering of a cabin with a lit fire pit on its deck above the course' },
+];
+---
+
+<BaseLayout
+  title="Gallery — Whiskey Ridge Golf Resort"
+  description="The course, the clubhouse and the bar at Whiskey Ridge in Bristol, Tennessee."
+>
+  <PageHero
+    eyebrow="Gallery"
+    title="The shot list,"
+    em="honestly framed."
+    lead="New photography is being shot for the rebrand. Everything below is the property and the direction — one frame is a lodging concept rather than a photograph, and it says so."
+  />
+
+  <section class="section band" aria-labelledby="g-h">
+    <div class="shell">
+      <h2 id="g-h" class="visually-hidden">Photographs of the course, clubhouse and bar</h2>
+      <ul class="gal">
+        {shots.map((s, i) => (
+          <li class:list={['gal__i', s.tall && 'gal__i--tall']}>
+            <Image
+              class="gal__img"
+              src={s.src}
+              alt={s.alt}
+              widths={[400, 640, 900]}
+              sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              quality={70}
+            />
+            <figcaption class="gal__cap">{s.cap}</figcaption>
+          </li>
+        ))}
+      </ul>
+      <p class="meta split__fine">
+        Two frames need a retouch before launch: the scorecard in the whiskey still life carries
+        another course's branding, and the porch sign has unreadable small text.
+      </p>
+    </div>
+  </section>
+
+  <section class="section band band--forest" aria-labelledby="g-cta">
+    <div class="shell cta-row">
+      <div>
+        <h2 id="g-cta" class="heading">Looks better in person.</h2>
+        <p class="prose cta-row__p">
+          Photographs flatten a ridge and none of them pour you a drink. Come and see which
+          parts we undersold.
+        </p>
+      </div>
+      <a class="btn btn--primary" href="/rates/">Book a tee time</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gal { display: grid; gap: var(--space-2); list-style: none; padding: 0; grid-auto-rows: 220px; }
+  .gal__i { position: relative; overflow: hidden; border-radius: var(--radius-md); }
+  .gal__img { width: 100%; height: 100%; object-fit: cover; }
+  .gal__cap {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 2.25rem 1rem 0.875rem;
+    font-family: var(--font-label); font-weight: 500; font-size: 0.75rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+    background: linear-gradient(to top, rgba(20, 17, 15, 0.82) 0%, rgba(20, 17, 15, 0) 100%);
+  }
+  @media (min-width: 700px) {
+    .gal { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 240px; }
+    .gal__i--tall { grid-row: span 2; }
+  }
+  @media (min-width: 1100px) {
+    .gal { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 260px; }
+  }
+</style>
