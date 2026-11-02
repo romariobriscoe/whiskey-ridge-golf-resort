@@ -20,7 +20,7 @@
   --wr-amber-hover:   #C59A57;  /* Honey Amber — hover lift */
   --wr-brass:         #C6A65B;  /* Brass Gold — eyebrows/rules on dark */
   --wr-gold-deep:     #A9893E;  /* Deep Gold — rules and borders on light (non-text) */
-  --wr-gold-text:     #86661B;  /* text-safe gold: 4.90:1 on soft grey, 5.34:1 on white */
+  --wr-gold-text:     #86661B;  /* text-safe gold: 4.90:1 on soft gray, 5.34:1 on white */
   --wr-gold-tint:     #E3D3A8;  /* italic emphasis on dark only */
 
   --wr-white:         #FFFFFF;
@@ -96,7 +96,7 @@
 /* ------------------------------------------------------------------
    Bands retune the same tokens rather than restyling every child.
    One system, two registers: charcoal/forest carry the brand,
-   white and soft-grey carry the reading.
+   white and soft-gray carry the reading.
    ------------------------------------------------------------------ */
 .band            { background: var(--band-bg); color: var(--band-text); }
 .band--soft      { --band-bg: var(--wr-soft); }

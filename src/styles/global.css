@@ -16,6 +16,11 @@ body {
 }
 img, picture, svg, video { display: block; max-width: 100%; }
 img { background: var(--wr-soft); }
+/* A photo on a dark band loads against the band's own dark, never a light grey
+   flash. Under a hero scrim, grey reads as a washed-out photo until it decodes. */
+.band--char img, .band--forest img { background: var(--wr-char-deep); }
+/* Patterns set display on forms and cards; `hidden` still has to win. */
+[hidden] { display: none !important; }
 input, button, select, textarea { font: inherit; color: inherit; }
 button { background: none; border: 0; cursor: pointer; }
 

@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { course, signatureHoles, booking, url } from '../data/site';
+import Tentative from '../components/Tentative.astro';
+import { course, signatureHoles, booking, url, TBD } from '../data/site';
 
 import routingImg from '../assets/photos/course_routing_down_the_valley.jpg';
 import dropImg from '../assets/photos/course_signature_hole_the_drop_par3.jpg';
@@ -13,26 +14,26 @@ import fogImg from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
 const holeImgs = [dropImg, bendImg, lastImg];
 const holeAlts = [
   'A downhill par 3 to a green ringed by stone, the creek running below it',
-  'Players walking a fairway that bends away through autumn colour',
+  'Players walking a fairway that bends away through fall color',
   'The eighteenth green below the lit clubhouse porch at dusk',
 ];
 
 const detail = [
   { t: 'Practice', b: `On-site driving range with three practice tees. Warm up properly, find one swing thought, then leave it at the range like everybody else. Carts available.`, note: 'Lessons and clinics TBD.' },
   { t: 'Pace & dress', b: 'Rounds move. Under four hours walking is the house standard and the marshals keep it there kindly. Dress code: common sense. Collars optional, shoes required, denim fine.', note: '' },
-  { t: 'Conditions & season', b: 'Bent grass greens, mountain mornings, four real seasons. Spring and autumn are prime, summer plays early, winter is for the brave and the discounted.', note: 'Season dates and winter rates TBD.' },
+  { t: 'Conditions & season', b: 'Bent grass greens, mountain mornings, four real seasons. Spring and fall are prime, summer plays early, winter is for the brave and the discounted.', note: 'Season dates and winter rates TBD.' },
 ];
 ---
 
 <BaseLayout
-  title="The Course — Whiskey Ridge Golf Resort"
+  title="The Course | Whiskey Ridge Golf Resort"
   description="A short, walkable par 71 above Cedar Creek in Bristol, Tennessee. Bent grass greens, under four hours on foot, and a bar at the end of it."
 >
   <PageHero
     eyebrow="The course"
     title="Short on purpose."
     em="Better for it."
-    lead="Par 71 along the ridge above Cedar Creek — bent grass greens, honest par 3s, and a routing that never makes you wait on a par 5 to prove a point."
+    lead="Par 71 along the ridge above Cedar Creek: bent grass greens, honest par 3s, and a routing that never makes you wait on a par 5 to prove a point."
     image={routingImg}
     alt="Aerial view of the course threading the valley floor beside the creek, clubhouse on the ridge above"
   />
@@ -45,7 +46,7 @@ const detail = [
         <div class="pitch pitch--is">
           <h3 class="heading pitch__h">What it is</h3>
           <p class="prose pitch__p">
-            A quick, walkable par 71 — 5,886 yards from the blues, 5,404 from the whites, 4,538
+            A quick, walkable par 71: 5,886 yards from the blues, 5,404 from the whites, 4,538
             from the reds. Greens that roll true, ridge views on the back nine, and a slope of
             113 that means you will hit greens and make putts. You will leave wanting the course
             record rather than a refund on lost balls.
@@ -54,8 +55,7 @@ const detail = [
         <div class="pitch pitch--isnt">
           <h3 class="heading pitch__h">What it is not</h3>
           <p class="prose pitch__p">
-            A championship slog. Nobody here will tell you this is the hardest test in Tennessee,
-            because it isn't and you would know within three holes. It is the round you actually
+            A championship slog. Nobody here will tell you this is the hardest test in Tennessee. It isn't, and that's the point. It is the round you actually
             want on a trip: fast, fun, scoreable, and finished somewhere worth sitting down. The
             crew that shoots 78 and the crew that shoots 108 both come back.
           </p>
@@ -69,23 +69,22 @@ const detail = [
     <div class="shell">
       <p class="eyebrow">Three to talk about</p>
       <h2 id="holes-h" class="heading">Signature holes</h2>
-      <p class="lead lede">
-        Hole numbers, names and yardages below are placeholders. They get confirmed with the
-        official card and a walk of the property before any of this is published as fact.
-      </p>
-      <ul class="grid grid--3">
+      <ul class="grid grid--3 holes">
         {signatureHoles.map((h, i) => (
           <li class="card">
             <Image class="card__img" src={holeImgs[i]} alt={holeAlts[i]}
                    widths={[320, 480, 640]} sizes="(max-width: 1000px) 100vw, 33vw" quality={70} />
             <div class="card__body">
-              <p class="label card__kicker">Hole {h.hole} <span class="card__n">·</span> Par {h.par} <span class="card__n">·</span> {h.yards} yds</p>
-              <h3 class="subhead">{h.name}</h3>
+              <p class="label card__kicker">Hole <Tentative value={h.hole} /> <span class="card__n">·</span> Par {h.par} <span class="card__n">·</span> <Tentative value={h.yards} /> yds</p>
+              <h3 class="subhead"><Tentative value={h.name} /></h3>
               <p class="prose card__copy">{h.body}</p>
             </div>
           </li>
         ))}
       </ul>
+      <p class="meta split__fine">
+        <span aria-hidden="true">†</span> Hole numbers, names and yardages are placeholders until the official card and a walk of the property confirm them.
+      </p>
     </div>
   </section>
 
@@ -114,23 +113,24 @@ const detail = [
             {course.tees.map((tee) => (
               <tr>
                 <th scope="row">{tee.name}</th>
-                <td class="num muted">[—]</td>
-                <td class="num muted">[—]</td>
+                <td class="num muted"><Tentative /></td>
+                <td class="num muted"><Tentative /></td>
                 <td class="num"><strong>{tee.approx ? '≈' : ''}{tee.yards.toLocaleString()}</strong></td>
-                <td class="num">{tee.rating} / {tee.slope}{tee.confirm ? '*' : ''}</td>
+                <td class="num">{tee.rating === TBD ? <Tentative /> : `${tee.rating} / ${tee.slope}${tee.confirm ? '*' : ''}`}</td>
               </tr>
             ))}
             <tr>
               <th scope="row">Par</th>
-              <td class="num muted">[—]</td>
-              <td class="num muted">[—]</td>
+              <td class="num muted"><Tentative /></td>
+              <td class="num muted"><Tentative /></td>
               <td class="num"><strong>{course.par}</strong></td>
-              <td class="num muted">—</td>
+              <td class="num muted">n/a</td>
             </tr>
           </tbody>
         </table>
       </div>
       <p class="meta split__fine">*{course.ratingsNote} One database lists 71.0 / 126 from the blues against the 70.0 / 113 shown here.</p>
+      <p class="meta split__fine"><span aria-hidden="true">†</span> Per-hole yardages and the white and red ratings fill in from the official card.</p>
     </div>
   </section>
 
@@ -174,6 +174,8 @@ const detail = [
 </BaseLayout>
 
 <style>
+  .holes { margin-top: var(--space-6); }
+  .holes .card__img { aspect-ratio: 4 / 3; }
   .pitch { border-top: 2px solid var(--wr-forest); padding-top: var(--space-3); }
   .pitch--isnt { border-top-color: var(--wr-gold-deep); }
   .pitch__h { font-size: var(--text-h3); }

@@ -9,7 +9,7 @@ Marketing site for the rebrand of Cedars Golf Course / Bristol Golf Club at the 
 The course is 5,886 yards at slope 113. It cannot be sold as championship golf, and the
 local players who are the near-term revenue base would see through the attempt. Experiential
 golf resolves that: short and forgiving stops being an apology and becomes the design intent —
-a course that does not punish you for turning up.
+a course that does not punish you for showing up.
 
 The **Tennessee Hills Distillery partnership** (confirmed) gives the 19th hole an identity no
 other public course in the Tri-Cities can copy, so it is credited plainly: a byline under the
@@ -31,7 +31,7 @@ the weekend exists at all.
 | `/groups/` | Groups & Outings — the money page, package builder |
 | `/clubhouse/` | Clubhouse & Bar — the Tennessee Hills partnership |
 | `/stay/` | Stay — planned lodging, nearby options |
-| `/events/` | Events & Weddings — spaces, date enquiry |
+| `/events/` | Events & Weddings — spaces, date inquiry |
 | `/visit/` | Plan Your Visit — directions, FAQ, review capture |
 | `/gallery/` | Gallery |
 
@@ -39,9 +39,9 @@ the weekend exists at all.
 
 [Astro](https://astro.build) 5, static output.
 
-- **Zero JavaScript by default.** The homepage ships ~2.3 KB of inline JS (mobile drawer +
-  tee-sheet ticker) and no bundle.
-- **Images optimised at build.** `astro:assets` emits AVIF/WebP at several widths with
+- **No framework, no client bundle by default.** The homepage ships ~6 KB of inline JS (mobile
+  drawer + tee-sheet ticker). The two pages with forms add one small module for validation.
+- **Images optimized at build.** `astro:assets` emits AVIF/WebP at several widths with
   `width`/`height` baked in, so there is no layout shift. The hero drops from 922 KB to ~64 KB.
 - **Fonts self-hosted** via `@fontsource`, so there is no third-party request on first paint.
 
@@ -86,7 +86,7 @@ Direction A ("dark-led"), locked in Phase 0. Everything keys off `src/styles/tok
 
 **Palette** — HSHG forest/gold crossed with Tennessee Hills charcoal/amber:
 Charcoal `#231F20` · Deepest Forest `#0D2B20` · Emerald `#0B6B4E` · Whiskey Amber `#AD813C`
-· Brass Gold `#C6A65B` · White / Soft Grey `#F5F5F5`. No cream, no parchment anywhere —
+· Brass Gold `#C6A65B` · White / Soft Gray `#F5F5F5`. No cream, no parchment anywhere —
 light surfaces stay cool and neutral, and all warmth comes from the amber, the brass and
 the photography.
 
@@ -107,18 +107,21 @@ and 1400px.
 **Signature element** — `src/components/TeeSheetTicker.astro`. The course opens with one
 lifetime review against competitors carrying 250, so the site shows the tee sheet filling
 instead: it cycles the next open times and turns gold at two spots left. A pill bottom-right
-on desktop, the docked bar on mobile, collapsed on the booking page. Pauses on hover and on
-keyboard focus, announces through `aria-live`, and holds still under `prefers-reduced-motion`.
+on desktop, the docked bar on mobile, collapsed on the booking page. It rises from the bottom
+edge only when that corner is free, tucking away for the hero's booking buttons, the footer and
+anything interactive that scrolls beneath it. Pauses on hover and on keyboard focus, holds still
+under `prefers-reduced-motion`, and gives screen readers the times once as a list instead of
+announcing every rotation.
 
 ## Accessibility
 
-WCAG AA by construction. Every token text pair is verified at AA or better. Two brand colours
+WCAG AA by construction. Every token text pair is verified at AA or better. Two brand colors
 needed text-safe variants, because the brand values measured below 4.5:1 as small text:
 
 | Brand value | Used for | Text variant |
 | --- | --- | --- |
 | `--wr-mauve` `#8E8083` | borders, dashed rules | `--wr-mauve-text` `#96888B` (4.81:1 on charcoal) |
-| `--wr-gold-deep` `#A9893E` | 2px rules, dots, markers | `--wr-gold-text` `#86661B` (4.90:1 on soft grey) |
+| `--wr-gold-deep` `#A9893E` | 2px rules, dots, markers | `--wr-gold-text` `#86661B` (4.90:1 on soft gray) |
 
 Bands expose both: `--band-mark` for decorative marks and `--band-mark-text` for the same accent
 as type. On dark bands both resolve to Brass Gold, which already passes. Focus rings read on
@@ -128,7 +131,7 @@ touch targets, 16px minimum form text so iOS does not zoom on focus.
 ## Unconfirmed facts
 
 Everything factual lives in `src/data/site.ts`. Anything marked `TBD` renders as a visible
-placeholder rather than a guess — **do not publish these as fact**:
+"pending" chip or a dagger footnote rather than a guess — **do not publish these as fact**:
 
 | Item | Status |
 | --- | --- |
@@ -142,16 +145,15 @@ placeholder rather than a guess — **do not publish these as fact**:
 | Booking provider | foreUP / Lightspeed / GolfNow / Supreme — undecided. The flow is a front-end stub. |
 | Final domain | `whiskeyridgegolf.com` is a placeholder in `astro.config.mjs` and `site.ts`. |
 | Tennessee Hills relationship | **Confirmed partnership.** Named in copy, credited in the hero and footer (`partner` in `site.ts`). |
-| **Whiskey programme** | Tastings, barrel programme and exclusive pours are **not** claimed — `partner.programme` is TBD. |
-| **Liquor licence** | `partner.licence` TBD. No licence-dependent language (tastings, sampling, on-site pours as a draw) appears anywhere yet. |
+| **Whiskey program** | Tastings, barrel program and exclusive pours are **not** claimed — `partner.program` is TBD. |
+| **Liquor license** | `partner.license` TBD. No license-dependent language (tastings, sampling, on-site pours as a draw) appears anywhere yet. |
 | **On-site distilling** | `partner.onSite` TBD. Nothing claims distilling or a tasting room at the ridge. |
 | Bar name | The clubhouse bar is unnamed in copy. |
 | **Experiential attractions** | Simulators, short-course and night play are marked TBD on the page itself, not described as existing. |
 
 No awards, rankings, press quotes, testimonials or heritage claims appear anywhere, and the
 copy never claims championship difficulty. The Tennessee Hills partnership is named because it
-is real; what it permits is not assumed — nothing asserts an on-site distillery, a tasting
-licence, a barrel programme or any specific product line. That is deliberate: at 5,886 yards and slope 113
+is real; what it permits is not assumed — nothing asserts an on-site distillery, a tasting license, a barrel program or any specific product line. That is deliberate: at 5,886 yards and slope 113
 the course is shorter and more forgiving than average, and local players would know.
 
 ## Photography

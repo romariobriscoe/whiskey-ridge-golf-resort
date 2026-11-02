@@ -30,7 +30,7 @@ const isCurrent = (href: string) => {
       data-menu-toggle
     >
       <span class="hdr__bars" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="hdr__menu-label">Menu</span>
+      <span class="hdr__menu-label" data-menu-label>Menu</span>
     </button>
   </div>
 
@@ -67,15 +67,37 @@ const isCurrent = (href: string) => {
     border: 1px solid var(--wr-plum); border-radius: var(--radius-sm);
   }
   .hdr__bars { display: flex; flex-direction: column; gap: 4px; }
-  .hdr__bars i { display: block; width: 20px; height: 2px; background: #fff; }
+  .hdr__bars i {
+    display: block; width: 20px; height: 2px; background: #fff;
+    transition: transform 200ms var(--ease-out), opacity 120ms var(--ease-out);
+  }
   .hdr__bars i:last-child { background: var(--wr-brass); }
+  /* Open: the outer bars cross, the middle one drops out. 6px = 2px bar + 4px gap. */
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(2) { opacity: 0; }
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
   .hdr__menu-label {
     font-family: var(--font-label); font-weight: 600; font-size: 0.8125rem;
     letter-spacing: var(--track-label); text-transform: uppercase;
+    min-width: 3.25em; text-align: left; /* Menu and Close hold the same width */
   }
 
-  .drawer { border-top: 1px solid var(--wr-line-dark); background: var(--wr-char); padding: var(--space-2) var(--gutter) var(--space-4); }
-  .drawer[hidden] { display: none; }
+  .drawer {
+    border-top: 1px solid var(--wr-line-dark); background: var(--wr-char);
+    padding: var(--space-2) var(--gutter) var(--space-4);
+    /* The page behind is scroll-locked, so a short screen scrolls the drawer itself. */
+    max-height: calc(100dvh - 78px); overflow-y: auto;
+    transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  @starting-style {
+    .drawer { opacity: 0; transform: translateY(-8px); }
+  }
+  /* Closing is quicker than opening. allow-discrete keeps it rendered until the
+     fade ends; a browser without it just closes instantly. */
+  .drawer[hidden] {
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out), display 150ms allow-discrete;
+  }
   .drawer__nav { display: flex; flex-direction: column; }
   .drawer__nav a {
     color: var(--wr-line); font-size: 1.0625rem; padding: 0.9375rem 0;
@@ -99,12 +121,16 @@ const isCurrent = (href: string) => {
   // page remains reachable from the footer sitemap.
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const label = document.querySelector<HTMLElement>('[data-menu-label]');
 
   if (toggle && drawer) {
     const setOpen = (open: boolean) => {
       drawer.hidden = !open;
       toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? 'Close' : 'Menu';
       document.body.style.overflow = open ? 'hidden' : '';
+      // The docked tee sheet would sit on top of the drawer's own Book button.
+      document.documentElement.toggleAttribute('data-drawer-open', open);
     };
     toggle.addEventListener('click', () => {
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');

@@ -17,21 +17,21 @@ const spaces = [
     b: 'Receptions and dinners, with the bar included by definition rather than as a line item.',
     note: 'Seated and standing capacities TBD.' },
   { n: 'Golf, obviously', img: walkImg,
-    alt: 'Four players walking the fairway together in autumn light',
+    alt: 'Four players walking the fairway together in fall light',
     b: 'Add nine or eighteen for the wedding party, the groomsmen, or the whole guest list the morning after.',
     note: '' },
 ];
 ---
 
 <BaseLayout
-  title="Events & Weddings — Whiskey Ridge Golf Resort"
+  title="Events & Weddings | Whiskey Ridge Golf Resort"
   description="Weddings, rehearsal dinners and corporate events above Cedar Creek in Bristol, Tennessee. Ridge views, a clubhouse, and a bar ten steps away."
 >
   <PageHero
     eyebrow="Events & weddings"
     title="A ridge at sunset is"
     em="hard to argue with."
-    lead="Weddings, rehearsal dinners, retirement parties and the company holiday thing people actually show up to — with the valley below and the bar ten steps away."
+    lead="Weddings, rehearsal dinners, retirement parties and the company holiday thing people actually show up to, with the valley below and the bar ten steps away."
     image={lawnImg}
     alt="An outdoor ceremony on a lawn above the valley as the sun sets behind the ridges"
   />
@@ -75,7 +75,7 @@ const spaces = [
         <p class="prose split__p">Replies within one business day.</p>
       </div>
 
-      <form class="form" aria-labelledby="inq-h">
+      <form class="form" aria-labelledby="inq-h" data-demo-form data-done-body="You will hear back within one business day. If a Speedway weekend or an outing already owns your date, that reply says so, along with the nearest date that works.">
         <div class="form__row form__row--2">
           <div class="field">
             <label for="e-type">Event type</label>
@@ -100,18 +100,18 @@ const spaces = [
         <div class="form__row form__row--2">
           <div class="field">
             <label for="e-name">Your name</label>
-            <input class="input" id="e-name" name="name" type="text" autocomplete="name" />
+            <input class="input" id="e-name" name="name" type="text" autocomplete="name" required />
           </div>
           <div class="field">
             <label for="e-email">Email</label>
-            <input class="input" id="e-email" name="email" type="email" inputmode="email" autocomplete="email" />
+            <input class="input" id="e-email" name="email" type="email" inputmode="email" autocomplete="email" required />
           </div>
         </div>
         <div class="field">
           <label for="e-note">Anything we should know? (optional)</label>
           <textarea class="input" id="e-note" name="note" rows="3"></textarea>
         </div>
-        <button class="btn btn--primary" type="button">Check my date</button>
+        <button class="btn btn--primary" type="submit">Check my date</button>
       </form>
     </div>
   </section>
@@ -123,13 +123,17 @@ const spaces = [
         <h2 id="ev-close" class="heading">Come and walk it first.</h2>
         <p class="prose cta-row__p">
           Photographs flatten a ridge. If the date matters, come and stand on the lawn at the
-          hour you are thinking of — we will open the bar.
+          hour you are thinking of, and we will open the bar.
         </p>
       </div>
       <a class="btn btn--primary" href="#inquiry">Ask about a date</a>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import '../scripts/demo-form';
+</script>
 
 <style>
   .spaces { margin-top: var(--space-6); }

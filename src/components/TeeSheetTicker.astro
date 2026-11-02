@@ -8,6 +8,12 @@
    in one object: it cycles the next open times and turns gold when a
    time drops to two spots.
 
+   It rises from the bottom edge only when nothing needs that corner: it
+   stays tucked while the hero's own booking buttons or the footer are on
+   screen, and steps aside for any link, button or field that scrolls under
+   it. On phones it is a docked bar with its own strip, so only the footer
+   tucks it.
+
    In production the entries come from the booking provider's live
    sheet (TBD). Here they come from src/data/site.ts.
    ------------------------------------------------------------------ */
@@ -18,10 +24,16 @@ import { teeSheet, booking, url } from '../data/site';
     <p class="ticker__head">
       <span class="ticker__dot" aria-hidden="true"></span>On the sheet now
     </p>
-    <p class="ticker__when" data-ticker-when aria-live="polite">{teeSheet[0].when}</p>
-    <p class="ticker__note" data-ticker-note data-low={teeSheet[0].low ? 'true' : 'false'}>
+    <!-- The rotating pair is visual only. Announcing it would interrupt a screen
+         reader every few seconds for the whole visit, so the list below carries
+         the same times once. -->
+    <p class="ticker__when" data-ticker-when aria-hidden="true">{teeSheet[0].when}</p>
+    <p class="ticker__note" data-ticker-note aria-hidden="true" data-low={teeSheet[0].low ? 'true' : 'false'}>
       {teeSheet[0].note}
     </p>
+    <ul class="visually-hidden">
+      {teeSheet.map((e) => <li>{e.when}: {e.note}</li>)}
+    </ul>
   </div>
   <a class="ticker__cta" href={url(booking.href)}>Book</a>
   <button class="ticker__x" type="button" data-ticker-dismiss aria-label="Hide the tee sheet">
@@ -30,6 +42,7 @@ import { teeSheet, booking, url } from '../data/site';
     </svg>
   </button>
 </aside>
+<p class="visually-hidden" role="status" data-ticker-status></p>
 
 <script is:inline define:vars={{ entries: teeSheet }}>
   (() => {
@@ -38,6 +51,10 @@ import { teeSheet, booking, url } from '../data/site';
     const when = root.querySelector('[data-ticker-when]');
     const note = root.querySelector('[data-ticker-note]');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Tuck before first paint, so it rises into place instead of flashing in
+    // and sliding away. Without JS this never runs and it simply stays put.
+    root.classList.add('is-tucked');
 
     let n = 0;
     let held = false;
@@ -57,7 +74,7 @@ import { teeSheet, booking, url } from '../data/site';
     };
 
     const start = () => {
-      if (timer || reduce.matches) return;
+      if (timer || reduce.matches || root.hidden) return;
       timer = window.setInterval(() => {
         if (!held && !document.hidden) { n += 1; paint(); }
       }, 4200);
@@ -82,10 +99,68 @@ import { teeSheet, booking, url } from '../data/site';
 
     if (read()) { root.hidden = true; return; }
 
+    /* ---- when to get out of the way ---- */
+    const phone = window.matchMedia('(max-width: 640px)');
+    const blockers = new Set();
+    const sync = () => {
+      // Never yank it away from someone who has focus inside it.
+      if (blockers.size && root.contains(document.activeElement)) return;
+      root.classList.toggle('is-tucked', blockers.size > 0);
+    };
+    const track = (entries) => {
+      entries.forEach((e) => (e.isIntersecting ? blockers.add(e.target) : blockers.delete(e.target)));
+      sync();
+    };
+
+    let observers = [];
+    const watch = () => {
+      observers.forEach((o) => o.disconnect());
+      blockers.clear();
+
+      // Whole-viewport: the footer always, the hero's booking buttons on desktop.
+      const page = new IntersectionObserver(track);
+      document.querySelectorAll('footer').forEach((el) => page.observe(el));
+      if (!phone.matches) {
+        document.querySelectorAll('.hero__cta, .phero').forEach((el) => page.observe(el));
+      }
+      observers = [page];
+      if (phone.matches) return;
+
+      // The ticker's own resting rectangle: anything interactive passing through
+      // it would be covered. The tucked transform is removed for the measurement.
+      const was = root.classList.contains('is-tucked');
+      root.style.transition = 'none';
+      root.classList.remove('is-tucked');
+      const r = root.getBoundingClientRect();
+      root.classList.toggle('is-tucked', was);
+      root.offsetHeight; // commit the tucked state before transitions come back
+      root.style.transition = '';
+      const vw = document.documentElement.clientWidth;
+      const vh = window.innerHeight;
+      const corner = new IntersectionObserver(track, {
+        rootMargin: `${-Math.round(r.top)}px ${-Math.round(vw - r.right)}px ${-Math.round(vh - r.bottom)}px ${-Math.round(r.left)}px`,
+      });
+      document.querySelectorAll('main a, main button, main input, main select, main textarea')
+        .forEach((el) => corner.observe(el));
+      observers.push(corner);
+    };
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(watch, 150);
+    });
+    watch();
+
     root.querySelector('[data-ticker-dismiss]')?.addEventListener('click', () => {
       stop();
-      root.hidden = true;
+      observers.forEach((o) => o.disconnect());
+      root.classList.add('is-tucked');
       write();
+      const status = document.querySelector('[data-ticker-status]');
+      if (status) status.textContent = 'Tee sheet hidden for this visit.';
+      // Leave the same way it came in, then come out of the page entirely.
+      window.setTimeout(() => { root.hidden = true; }, 220);
     });
 
     start();
@@ -101,6 +176,19 @@ import { teeSheet, booking, url } from '../data/site';
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-dock);
     right: var(--gutter); bottom: var(--gutter);
+    /* Rising in: unhurried, with a beat so it does not flicker past a link that
+       only just cleared the corner. Clearing out: quick. */
+    transition: transform 400ms var(--ease-out) 120ms, visibility 0s linear 0s;
+  }
+  /* visibility takes the tucked ticker out of the tab order too. */
+  .ticker.is-tucked {
+    transform: translateY(calc(100% + var(--gutter) + 8px));
+    visibility: hidden;
+    transition: transform 200ms var(--ease-out), visibility 0s linear 200ms;
+  }
+  :global(html[data-drawer-open]) .ticker {
+    transform: translateY(calc(100% + var(--gutter) + 8px));
+    visibility: hidden;
   }
   .ticker__body { padding-right: 2.25rem; }
   .ticker__body { padding: 0.75rem 1.25rem; display: flex; flex-direction: column; gap: 3px; min-width: 13rem; }

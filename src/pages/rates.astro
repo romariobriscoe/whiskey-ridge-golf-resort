@@ -1,50 +1,50 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import { rates, rateCard, experientialTiers, booking, contact, url } from '../data/site';
+import Pending from '../components/Pending.astro';
+import { rates, rateCard, experientialTiers, contact, url } from '../data/site';
 
 /* Sample availability for the front-end stub. `state` drives the visual:
    open / selected / low (urgency) / booked (disabled). */
 const times = [
-  { t: '7:30', state: 'open' },
-  { t: '8:10', state: 'booked' },
-  { t: '9:40', state: 'selected' },
-  { t: '10:20', state: 'open' },
-  { t: '11:50', state: 'open' },
-  { t: '1:30', state: 'low' },
-  { t: '3:00', state: 'twilight' },
-  { t: '4:40', state: 'twilight' },
+  { t: '7:30 AM', state: 'open' },
+  { t: '8:10 AM', state: 'booked' },
+  { t: '9:40 AM', state: 'open', selected: true },
+  { t: '10:20 AM', state: 'open' },
+  { t: '11:50 AM', state: 'open' },
+  { t: '1:30 PM', state: 'low' },
+  { t: '3:00 PM', state: 'twilight' },
+  { t: '4:40 PM', state: 'twilight' },
 ];
 const label: Record<string, string> = {
-  open: '$ [TBD]', selected: 'Selected', low: '2 spots left',
-  booked: 'Booked', twilight: 'Twilight',
+  open: 'Open', low: '2 spots left', booked: 'Booked', twilight: 'Twilight',
 };
 ---
 
 <BaseLayout
-  title="Rates & Tee Times — Whiskey Ridge Golf Resort"
-  description="Book a tee time at Whiskey Ridge in Bristol, Tennessee. Date, players, time, done — and groups of twelve or more get a human instead."
+  title="Rates & Tee Times | Whiskey Ridge Golf Resort"
+  description="Book a tee time at Whiskey Ridge in Bristol, Tennessee. Date, players, time, done. Groups of twelve or more get a human instead."
   ticker={false}
 >
   <PageHero
     eyebrow="Rates & tee times"
     title="Booked in"
     em="under a minute."
-    lead="Date, players, time, done. No account required and no mood piece between you and the tee sheet. Groups of twelve or more get a person instead — on purpose."
+    lead="Date, players, time, done. No account, no app, no nonsense between you and the tee sheet. Groups of twelve or more get a person instead, on purpose."
   />
 
   <!-- booking stub -->
   <section id="booking" class="section band" aria-labelledby="book-h">
     <div class="shell">
       <h2 id="book-h" class="visually-hidden">Find and book a tee time</h2>
-      <ol class="steps">
-        <li class="steps__i is-current">1 · Date</li>
+      <ol class="steps" data-steps>
+        <li class="steps__i is-current" aria-current="step">1 · Date</li>
         <li class="steps__i">2 · Time</li>
         <li class="steps__i">3 · Confirm</li>
       </ol>
 
       <div class="booker">
-        <form class="form" aria-label="Find a tee time">
+        <form class="form" aria-label="Find a tee time" data-booker-form>
           <div class="field">
             <label for="b-date">Date</label>
             <input class="input" id="b-date" name="date" type="date" value="2026-11-14" autocomplete="off" />
@@ -52,50 +52,71 @@ const label: Record<string, string> = {
           <div class="field">
             <label for="b-players">Players</label>
             <select class="input" id="b-players" name="players">
-              <option>4 players</option><option>1 player</option><option>2 players</option>
-              <option>3 players</option><option>8 players (back-to-back times)</option>
-              <option>12+ — talk to the group desk</option>
+              <option value="4">4 players</option><option value="1">1 player</option><option value="2">2 players</option>
+              <option value="3">3 players</option><option value="8">8 players (back-to-back times)</option>
+              <option value="12">12+ (talk to the group desk)</option>
             </select>
           </div>
           <div class="field">
             <label for="b-cart">Walk or ride</label>
             <select class="input" id="b-cart" name="cart"><option>Walking</option><option>Cart</option></select>
           </div>
-          <button class="btn btn--primary" type="button">Show available times</button>
+          <button class="btn btn--primary" type="submit">Show available times</button>
           <p class="meta">
-            Front-end stub. Wires to the tee-sheet provider ({booking.provider}) during build.
+            Demo with sample times. This connects to the live tee sheet once a booking provider is chosen.
           </p>
         </form>
 
         <div>
-          <p class="label booker__cap">Saturday 14 November · 4 players · sample availability</p>
-          <ul class="times">
+          <p class="label booker__cap" data-booker-cap aria-live="polite">Saturday, November 14 · 4 players · sample availability</p>
+
+          <ul class="times" data-times>
             {times.map((x) => (
               <li>
                 <button
-                  class:list={['time', `time--${x.state}`]}
+                  class:list={['time', x.selected ? 'time--selected' : `time--${x.state}`]}
                   type="button"
-                  disabled={x.state === 'booked'}
-                  aria-label={x.state === 'booked' ? `${x.t} AM, fully booked` : `Book ${x.t}`}
-                  aria-pressed={x.state === 'selected' ? 'true' : undefined}
+                  data-time={x.t}
+                  data-state={x.state}
+                  aria-disabled={x.state === 'booked' ? 'true' : undefined}
+                  aria-label={x.state === 'booked' ? `${x.t}, fully booked` : `${x.t}, ${label[x.state]}`}
+                  aria-pressed={x.state === 'booked' ? undefined : x.selected ? 'true' : 'false'}
                 >
                   <span class="time__t">{x.t}</span>
-                  <span class="time__s">{label[x.state]}</span>
+                  <span class="time__s">{x.selected ? 'Selected' : label[x.state]}</span>
                 </button>
               </li>
             ))}
           </ul>
 
-          <div class="booker__sel">
-            <span>Sat 14 Nov · 9:40 AM · 4 players · walking</span>
-            <button class="btn btn--primary" type="button">Continue to confirm</button>
+          <div class="booker__sel" data-sel-bar>
+            <span data-sel-text role="status">Sat, Nov 14 · 9:40 AM · 4 players · walking</span>
+            <button class="btn btn--primary" type="button" data-continue>Continue to confirm</button>
           </div>
 
-          <p class="meta booker__help">
-            Greyed times are already booked. Nothing open on your day?
-            <a href="#booking">Sunday the 15th</a> has eleven times left, or call
+          <p class="meta booker__help" data-help>
+            Grayed-out times are already booked. Nothing open on your day? Try
+            <a href="#booking" data-next-day>Sunday the 15th</a>, or call
             <a href={contact.phoneHref}>{contact.phone}</a> and we will find you a spot.
           </p>
+
+          <div class="form-done" data-confirm tabindex="-1" hidden>
+            <h3 class="subhead" data-confirm-text></h3>
+            <p>
+              This is where the real thing holds your time and texts you a confirmation. The booking
+              provider is still being chosen, so nothing was booked.
+            </p>
+            <button class="btn btn--quiet" type="button" data-change>Change the time</button>
+          </div>
+
+          <div class="form-done" data-group-note tabindex="-1" hidden>
+            <h3 class="subhead">Twelve or more gets a person.</h3>
+            <p>
+              The group desk builds it with you: back-to-back times, carts staged, food ordered and
+              the bar held afterward.
+            </p>
+            <a class="btn btn--primary" href={url('/groups/')}>Plan a group trip</a>
+          </div>
         </div>
       </div>
     </div>
@@ -104,27 +125,26 @@ const label: Record<string, string> = {
   <!-- rate card -->
   <section class="section band band--soft" aria-labelledby="card-h">
     <div class="shell">
-      <p class="eyebrow">The rate card</p>
-      <h2 id="card-h" class="heading">Every number, flagged as a placeholder.</h2>
-      <p class="lead lede">{rates.note} The rebrand will not price Bristol out of its own golf course.</p>
+      <p class="eyebrow">Green fees &amp; extras</p>
+      <h2 id="card-h" class="heading">The rate card.</h2>
+      <p class="lead lede">{rates.note} {rates.promise}</p>
       <div class="table-wrap">
         <table class="rate-table">
-          <caption class="visually-hidden">Green fees by rate type — placeholder pricing pending confirmation</caption>
+          <caption class="visually-hidden">Green fees by rate type: pricing pending confirmation</caption>
           <thead>
             <tr>
               <th scope="col">Rate</th>
-              <th scope="col" class="num">Weekday</th>
-              <th scope="col" class="num">Weekend</th>
-              <th scope="col" class="num">Twilight 3pm+</th>
+              <th scope="col" class="price">Price</th>
             </tr>
           </thead>
           <tbody>
             {rateCard.map((r) => (
               <tr>
-                <th scope="row">{r.label}</th>
-                <td class="num price">$ {r.wd}</td>
-                <td class="num price">$ {r.we}</td>
-                {r.tw ? <td class="num price">$ {r.tw}</td> : <td class="num muted">—</td>}
+                <th scope="row">
+                  {r.label}
+                  <span class="rate-table__sub">Weekday · weekend{r.tw ? ' · twilight 3 PM+' : ''}</span>
+                </th>
+                <td class="price"><Pending /></td>
               </tr>
             ))}
           </tbody>
@@ -166,10 +186,10 @@ const label: Record<string, string> = {
         <h2 id="grp-h" class="heading">Twelve or more? Skip the grid.</h2>
         <p class="prose cta-row__p">
           Group rates, back-to-back times, carts staged, food ordered before you turn and the
-          bar held afterwards — the group desk builds it with you in one call or one form.
+          bar held afterward. The group desk builds it with you in one call or one form.
         </p>
       </div>
-      <a class="btn btn--primary" href={url('/groups/')}>Go to Groups &amp; Outings</a>
+      <a class="btn btn--primary" href={url('/groups/')}>Plan a group trip</a>
     </div>
   </section>
 
@@ -180,8 +200,8 @@ const label: Record<string, string> = {
       <ul class="facts facts--3">
         <li>
           <h3 class="label facts__t">Cancellation</h3>
-          <p class="prose facts__b">Free up to [24] hours before your time. Weather calls are ours to make and we make them generously.</p>
-          <p class="meta tbd-note">Policy TBD.</p>
+          <p class="prose facts__b">Free up to 24<span aria-hidden="true">†</span> hours before your time. Weather calls are ours to make and we make them generously.</p>
+          <p class="meta tbd-note"><span aria-hidden="true">†</span> Policy TBD.</p>
         </li>
         <li>
           <h3 class="label facts__t">Rain checks</h3>
@@ -196,6 +216,210 @@ const label: Record<string, string> = {
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  /* Demo booking flow. Availability is sample data, seeded by date so a given
+     day always looks the same. Replace render() with the provider's API. */
+  type State = 'open' | 'low' | 'booked' | 'twilight';
+  const LABEL: Record<State, string> = { open: 'Open', low: '2 spots left', booked: 'Booked', twilight: 'Twilight' };
+
+  const q = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel);
+  const form = q<HTMLFormElement>('[data-booker-form]');
+  const dateInput = q<HTMLInputElement>('#b-date');
+  const players = q<HTMLSelectElement>('#b-players');
+  const cart = q<HTMLSelectElement>('#b-cart');
+  const cap = q('[data-booker-cap]');
+  const timesList = q('[data-times]');
+  const bar = q('[data-sel-bar]');
+  const selText = q('[data-sel-text]');
+  const cont = q<HTMLButtonElement>('[data-continue]');
+  const help = q('[data-help]');
+  const nextLink = q<HTMLAnchorElement>('[data-next-day]');
+  const confirm = q('[data-confirm]');
+  const confirmText = q('[data-confirm-text]');
+  const groupNote = q('[data-group-note]');
+  const steps = [...document.querySelectorAll<HTMLElement>('[data-steps] > li')];
+  const slots = [...document.querySelectorAll<HTMLButtonElement>('[data-time]')];
+
+  if (form && dateInput && players && cart && cap && timesList && bar && selText && cont && help && nextLink && confirm && confirmText && groupNote) {
+    const iso = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const parse = (value: string) => new Date(`${value}T12:00:00`);
+    const longDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const shortDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const ordinal = (n: number) => {
+      const tail = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th';
+      return `${n}${tail}`;
+    };
+
+    // The sample date ships in the HTML; never open the demo on a day already gone.
+    const today = iso(new Date());
+    dateInput.min = today;
+    if (dateInput.value < today) {
+      const d = new Date();
+      d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7));
+      dateInput.value = iso(d);
+    }
+
+    const setStep = (n: number) => {
+      steps.forEach((li, i) => {
+        li.classList.toggle('is-current', i === n);
+        if (i === n) li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+      });
+    };
+
+    const paint = (slot: HTMLButtonElement, state: State, selected: boolean) => {
+      slot.dataset.state = state;
+      slot.classList.remove('time--open', 'time--low', 'time--booked', 'time--twilight', 'time--selected');
+      slot.classList.add(selected ? 'time--selected' : `time--${state}`);
+      const status = slot.querySelector('.time__s');
+      if (status) status.textContent = selected ? 'Selected' : LABEL[state];
+      const t = slot.dataset.time;
+      if (state === 'booked') {
+        slot.setAttribute('aria-disabled', 'true');
+        slot.removeAttribute('aria-pressed');
+        slot.setAttribute('aria-label', `${t}, fully booked`);
+      } else {
+        slot.removeAttribute('aria-disabled');
+        slot.setAttribute('aria-pressed', String(selected));
+        slot.setAttribute('aria-label', `${t}, ${LABEL[state]}`);
+      }
+    };
+
+    const selectedSlot = () => slots.find((s) => s.classList.contains('time--selected'));
+
+    const summary = () => {
+      const slot = selectedSlot();
+      if (!slot) return '';
+      const count = players.value;
+      return `${shortDate(parse(dateInput.value))} · ${slot.dataset.time} · ${count} ${count === '1' ? 'player' : 'players'} · ${cart.value.toLowerCase()}`;
+    };
+
+    const refreshBar = () => {
+      const text = summary();
+      selText.textContent = text || 'Pick a time to continue.';
+      cont.disabled = !text;
+    };
+
+    const showOnly = (mode: 'times' | 'confirm' | 'group') => {
+      timesList.hidden = mode !== 'times';
+      bar.hidden = mode !== 'times';
+      help.hidden = mode !== 'times';
+      confirm.hidden = mode !== 'confirm';
+      groupNote.hidden = mode !== 'group';
+    };
+
+    const refreshNextDay = () => {
+      const d = parse(dateInput.value);
+      d.setDate(d.getDate() + 1);
+      nextLink.textContent = `${d.toLocaleDateString('en-US', { weekday: 'long' })} the ${ordinal(d.getDate())}`;
+    };
+
+    const render = () => {
+      const value = dateInput.value;
+      const d = parse(value);
+      const count = players.value;
+      const head = `${longDate(d)} · ${count === '12' ? '12 or more players' : `${count} ${count === '1' ? 'player' : 'players'}`}`;
+
+      if (count === '12') {
+        cap.textContent = head;
+        showOnly('group');
+        setStep(1);
+        return;
+      }
+
+      cap.textContent = `${head} · sample availability`;
+      showOnly('times');
+      setStep(1);
+
+      // Small seeded generator: same date, same sheet.
+      let seed = [...value].reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 7);
+      const next = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+
+      const before = selectedSlot()?.dataset.time;
+      const day = slots.filter((s) => !/^(3|4):/.test(s.dataset.time ?? ''));
+      const booked = new Set<HTMLButtonElement>();
+      const howMany = next() > 0.5 ? 2 : 1;
+      while (booked.size < howMany) booked.add(day[Math.floor(next() * day.length)]);
+      const free = day.filter((s) => !booked.has(s));
+      const low = free[Math.floor(next() * free.length)];
+
+      slots.forEach((slot) => {
+        const state: State = booked.has(slot) ? 'booked' : slot === low ? 'low' : day.includes(slot) ? 'open' : 'twilight';
+        paint(slot, state, state !== 'booked' && slot.dataset.time === before);
+      });
+
+      refreshBar();
+      refreshNextDay();
+    };
+
+    slots.forEach((slot) => {
+      slot.addEventListener('click', () => {
+        if (slot.getAttribute('aria-disabled') === 'true') return;
+        const current = selectedSlot();
+        if (current && current !== slot) paint(current, current.dataset.state as State, false);
+        paint(slot, slot.dataset.state as State, true);
+        setStep(1);
+        refreshBar();
+      });
+    });
+
+    const dateField = dateInput.closest('.field');
+    const clearDateError = () => {
+      dateField?.classList.remove('is-error');
+      dateInput.removeAttribute('aria-invalid');
+      dateInput.removeAttribute('aria-describedby');
+      document.getElementById('b-date-error')?.remove();
+    };
+    const dateError = (message: string) => {
+      clearDateError();
+      const note = document.createElement('p');
+      note.className = 'field__error';
+      note.id = 'b-date-error';
+      note.textContent = message;
+      dateInput.after(note);
+      dateField?.classList.add('is-error');
+      dateInput.setAttribute('aria-invalid', 'true');
+      dateInput.setAttribute('aria-describedby', note.id);
+      dateInput.focus();
+    };
+
+    form.noValidate = true;
+    dateInput.addEventListener('input', clearDateError);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!dateInput.value) return dateError('Pick a date to see tee times.');
+      if (dateInput.value < today) return dateError('Pick today or a later date.');
+      clearDateError();
+      render();
+    });
+
+    nextLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      const d = parse(dateInput.value);
+      d.setDate(d.getDate() + 1);
+      dateInput.value = iso(d);
+      clearDateError();
+      render();
+    });
+
+    cont.addEventListener('click', () => {
+      confirmText.textContent = summary();
+      showOnly('confirm');
+      setStep(2);
+      confirm.focus();
+    });
+
+    q('[data-change]')?.addEventListener('click', () => {
+      showOnly('times');
+      setStep(1);
+      selectedSlot()?.focus();
+    });
+
+    refreshNextDay();
+  }
+</script>
 
 <style>
   .steps { display: flex; list-style: none; padding: 0; margin: 0 0 var(--space-4); }
@@ -215,7 +439,7 @@ const label: Record<string, string> = {
     background: var(--wr-white); border: 1px solid var(--wr-mauve); border-radius: var(--radius-sm);
     transition: border-color var(--duration-base) var(--ease-out), background-color var(--duration-base) var(--ease-out);
   }
-  .time:hover:not([disabled]) { border-color: var(--wr-emerald); }
+  .time:hover:not([aria-disabled='true']) { border-color: var(--wr-emerald); }
   .time__t { display: block; font-weight: 700; font-size: 1rem; color: var(--wr-ink); }
   .time__s { display: block; font-size: 0.75rem; color: var(--wr-plum); margin-top: 4px; }
   .time--selected { background: var(--wr-char); border-color: var(--wr-char); }
@@ -223,6 +447,9 @@ const label: Record<string, string> = {
   .time--selected .time__s { color: var(--wr-brass); }
   .time--low { border-color: var(--wr-amber); }
   .time--low .time__s { color: #8A6730; font-weight: 600; }
+  /* Booked stays focusable so keyboard and screen reader users learn the slot is
+     full, so it opts out of the global aria-disabled fade and pointer lock. */
+  .time[aria-disabled='true'] { opacity: 1; pointer-events: auto; }
   .time--booked { background: var(--wr-soft); border-style: dashed; cursor: not-allowed; }
   .time--booked .time__t { color: #6B6063; text-decoration: line-through; }
   .time--booked .time__s { color: #6B6063; }
@@ -234,6 +461,7 @@ const label: Record<string, string> = {
     font-size: 0.90625rem; color: var(--wr-ink-muted);
   }
   .booker__help { margin-top: var(--space-2); }
+  .rate-table__sub { display: block; margin-top: 2px; font-size: var(--text-small); font-weight: 400; color: var(--wr-plum); }
 
   @media (min-width: 560px) { .times { grid-template-columns: repeat(4, 1fr); } }
   @media (min-width: 1000px) { .booker { grid-template-columns: 0.85fr 1.4fr; gap: var(--space-6); } }

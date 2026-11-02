@@ -1,0 +1,9 @@
+---
+/* A placeholder value inside running text or a table cell. site.ts keeps
+   the brackets ("[The Drop]"); on the page they become a dagger pointing at
+   the section's footnote. With no value it renders the dagger alone. */
+interface Props { value?: string | number }
+const { value } = Astro.props;
+const text = value === undefined ? '' : String(value).replace(/^\[|\]$/g, '');
+---
+{text}<sup class="tentative" aria-hidden="true">†</sup><span class="visually-hidden"> (placeholder)</span>

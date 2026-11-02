@@ -25,7 +25,7 @@
 .band--soft .card { background: var(--wr-white); }
 .band--char .card,
 .band--forest .card { background: rgba(255, 255, 255, 0.045); border-color: var(--band-rule); }
-.card__img { width: 100%; height: 150px; object-fit: cover; }
+.card__img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
 .card__body { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.5rem; flex: 1; }
 .card__kicker { color: var(--band-accent); }
 .card__copy { font-size: 0.9375rem; }
@@ -73,6 +73,8 @@
 .rate-table td { padding: 1.125rem 1.375rem; font-size: 0.9375rem; color: var(--wr-ink); }
 .rate-table .num { text-align: center; white-space: nowrap; }
 .rate-table .price { text-align: right; font-weight: 700; color: var(--wr-emerald); white-space: nowrap; }
+.rate-table thead th.price { color: #fff; }
+.rate-table .tentative { font-size: 1em; }
 .rate-table .muted { color: var(--wr-plum); }
 
 /* ---------- banner row: copy left, one action right ---------- */
@@ -123,3 +125,31 @@
 .locator .link-arrow { font-family: var(--font-body); letter-spacing: 0; text-transform: none; }
 .locator span[aria-hidden] { color: var(--band-mark-text); }
 .lede { margin: var(--space-2) 0 var(--space-6); }
+
+/* ---------- pending chip: an unconfirmed value, without the brackets ---------- */
+.pending {
+  display: inline-block; padding: 0.1875rem 0.5625rem; white-space: nowrap;
+  font-family: var(--font-label); font-weight: 600; font-size: 0.75rem; line-height: 1.4;
+  letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
+  color: var(--band-meta); background: var(--wr-soft);
+  border: 1px dashed var(--wr-mauve); border-radius: var(--radius-sm);
+}
+.band--soft .pending { background: var(--wr-white); }
+.band--char .pending, .band--forest .pending { background: transparent; }
+.rate-table .pending { background: var(--wr-soft); color: var(--wr-plum); }
+.tentative { font-size: 0.7em; margin-left: 0.05em; color: var(--band-mark-text); }
+
+/* ---------- form validation + success ---------- */
+.field__error { color: var(--wr-oxblood); font-size: var(--text-small); font-weight: 500; }
+.field.is-error .input { border-color: var(--wr-oxblood); }
+.field.is-error .input:focus { border-color: var(--wr-oxblood); box-shadow: 0 0 0 3px rgba(94, 8, 29, 0.16); }
+.form-done {
+  display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start;
+  background: var(--wr-white); border: 1px solid var(--wr-line);
+  border-top: 2px solid var(--wr-gold-deep); border-radius: var(--radius-md); padding: var(--space-4);
+  color: var(--wr-ink);
+}
+.form-done:focus { outline: none; }
+.form-done p { color: var(--wr-ink-muted); }
+.btn--quiet { border: 1px solid var(--wr-mauve); color: var(--wr-ink); }
+.btn--quiet:hover { border-color: var(--wr-emerald); color: var(--wr-emerald); }

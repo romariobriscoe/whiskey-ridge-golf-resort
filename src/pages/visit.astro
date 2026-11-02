@@ -2,36 +2,37 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
 import { contact, bristol, url } from '../data/site';
 
 import aerialImg from '../assets/photos/course_routing_down_the_valley.jpg';
 
 const drives = [
   { n: 'Tri-Cities Airport (TRI)', d: 'Direct flights, rental counters, no shuttle drama', t: '≈20 min', firm: true },
-  { n: 'Hard Rock Hotel & Casino', d: 'Play the morning after, painlessly', t: '[— min]', firm: false },
-  { n: 'Bristol Motor Speedway', d: 'Race-week traffic plans on request', t: '[— min]', firm: false },
-  { n: 'Downtown & State Street', d: 'Museums, music, and the state line underfoot', t: '[— min]', firm: false },
+  { n: 'Hard Rock Hotel & Casino', d: 'Play the morning after, painlessly', t: 'Pending', firm: false },
+  { n: 'Bristol Motor Speedway', d: 'Race-week traffic plans on request', t: 'Pending', firm: false },
+  { n: 'Downtown & State Street', d: 'Museums, music, and the state line underfoot', t: 'Pending', firm: false },
 ];
 
 const faqs = [
-  { q: 'Can I walk the course?', a: 'Please do — it is built for it. Under four hours at a normal pace, and carts are there if the hill wins.' },
+  { q: 'Can I walk the course?', a: 'Please do. It is built for it. Under four hours at a normal pace, and carts are there if the hill wins.' },
   { q: 'Is there a dress code?', a: 'Common sense. Collars optional, shoes required, denim fine. Dress for golf, not for a deposition.' },
-  { q: 'Do I need a tee time?', a: 'Book ahead on weekends and race weeks. Weekday walk-ups usually get out — call from the car and we will tell you the truth.' },
+  { q: 'Do I need a tee time?', a: 'Book ahead on weekends and race weeks. Weekday walk-ups usually get out. Call from the car and we will tell you the truth.' },
   { q: 'What if the weather turns?', a: 'Mountain weather moves fast in both directions. Rain checks are generous, and the bar is dry by definition.' },
   { q: 'Can beginners and kids play?', a: 'A short, forgiving par 71 is the best first course anyone could ask for. Junior rates TBD; patience included free.' },
-  { q: 'Do you have to golf to come?', a: 'No. The range and the bar stand on their own, and plenty of people turn up for the second without touching the first.' },
+  { q: 'Do you have to golf to come?', a: 'No. The range and the bar stand on their own, and plenty of people show up for the second without touching the first.' },
 ];
 ---
 
 <BaseLayout
-  title="Plan Your Visit — Whiskey Ridge Golf Resort"
-  description="115 Cedar Creek Rd, Bristol, Tennessee — about twenty minutes from Tri-Cities Airport. Directions, hours, FAQs and what else to do in Bristol."
+  title="Plan Your Visit | Whiskey Ridge Golf Resort"
+  description="115 Cedar Creek Rd, Bristol, Tennessee, about twenty minutes from Tri-Cities Airport. Directions, hours, FAQs and what else to do in Bristol."
 >
   <PageHero
     eyebrow="Plan your visit"
     title="Easy to find."
     em="Hard to leave."
-    lead={`${contact.street}, ${contact.city}, ${contact.state} ${contact.zip} — on the ridge above Cedar Creek, about twenty minutes from wheels-down at Tri-Cities Airport.`}
+    lead={`${contact.street}, ${contact.city}, ${contact.state} ${contact.zip}, on the ridge above Cedar Creek, about twenty minutes from wheels-down at Tri-Cities Airport.`}
   />
 
   <!-- getting here -->
@@ -58,13 +59,12 @@ const faqs = [
                 <p class="drives__n">{d.n}</p>
                 <p class="drives__d">{d.d}</p>
               </div>
-              <span class:list={['drives__t', !d.firm && 'is-tbd']}>{d.t}</span>
+              {d.firm ? <span class="drives__t">{d.t}</span> : <Pending label={d.t} />}
             </li>
           ))}
         </ul>
         <p class="meta tbd-note">
-          Bracketed drive times are unmeasured and get verified before launch. Only the airport
-          figure is firm.
+          Pending drive times get measured before launch. Only the airport figure is firm.
         </p>
       </div>
     </div>
@@ -108,14 +108,23 @@ const faqs = [
       <div>
         <h2 id="rev-h" class="heading callout__h">Had a good round? Say so.</h2>
         <p class="prose">
-          We are the new name in town with one lifetime review on record, while the courses down
-          the road carry two hundred and fifty each. Reviews are how the next group finds us —
-          one tap from the QR at the counter, the link in your booking text, or right here.
+          We are the new name in town, and reviews are how the next group finds us. One tap from the QR at the counter, the link in your booking text, or right here.
         </p>
         <p class="meta tbd-note">Review destinations (Google, GolfPass) to be wired at launch.</p>
       </div>
-      <a class="btn btn--primary" href="#review">Leave a review</a>
+      <button class="btn btn--primary" type="button" data-review-open>Leave a review</button>
     </div>
+
+    <dialog class="review-dlg" data-review-dialog aria-labelledby="review-dlg-h">
+      <div class="review-dlg__in">
+        <h3 id="review-dlg-h" class="subhead">Where do you want to leave it?</h3>
+        <div class="review-dlg__opts">
+          <button class="btn btn--quiet" type="button" disabled>Google · wired at launch</button>
+          <button class="btn btn--quiet" type="button" disabled>GolfPass · wired at launch</button>
+        </div>
+        <button class="btn btn--primary" type="button" data-review-close>Close</button>
+      </div>
+    </dialog>
   </section>
 
   <!-- contact -->
@@ -125,7 +134,7 @@ const faqs = [
         <h2 id="ct-h" class="heading">Talk to a person.</h2>
         <p class="prose cta-row__p">
           Pro shop and tee sheet: <a href={contact.phoneHref}>{contact.phone}</a>.<br />
-          {contact.street}, {contact.city}, {contact.state} {contact.zip}. Hours {contact.hours}.
+          {contact.street}, {contact.city}, {contact.state} {contact.zip}. Hours being set with ownership.
         </p>
       </div>
       <a class="btn btn--primary" href={url('/rates/')}>Book a tee time</a>
@@ -133,7 +142,23 @@ const faqs = [
   </section>
 </BaseLayout>
 
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-review-dialog]');
+  if (dialog) {
+    document.querySelector('[data-review-open]')?.addEventListener('click', () => dialog.showModal());
+    dialog.querySelector('[data-review-close]')?.addEventListener('click', () => dialog.close());
+    // A click on the backdrop lands on the dialog itself, not the inner panel.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>
+
 <style>
+  .review-dlg { margin: auto; padding: 0; border: 0; border-radius: var(--radius-md); width: min(26rem, calc(100vw - 2rem)); color: var(--wr-ink); }
+  .review-dlg::backdrop { background: rgba(20, 17, 15, 0.6); }
+  .review-dlg__in { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); }
+  .review-dlg__opts { display: flex; flex-direction: column; gap: 0.75rem; }
   .mapcard { position: relative; border-radius: var(--radius-md); overflow: hidden; min-height: 320px; }
   .mapcard__img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; }
   .mapcard__panel {
@@ -156,7 +181,7 @@ const faqs = [
   .drives__d { font-size: 0.84375rem; color: var(--wr-ink-muted); margin-top: 3px; }
   .drives__t { font-family: var(--font-label); font-weight: 600; font-size: 0.9375rem;
     letter-spacing: 0.08em; color: var(--wr-emerald); white-space: nowrap; flex: none; }
-  .drives__t.is-tbd { color: var(--wr-plum); }
+  
 
   .faq { display: grid; gap: 0; }
   .faq__i { border-bottom: 1px solid var(--wr-line); }
