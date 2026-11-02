@@ -11,7 +11,7 @@ export const site = {
   shortName: 'Whiskey Ridge',
   tagline: 'Golf Resort · Bristol TN',
   description:
-    'Eighteen walkable holes above Cedar Creek in Bristol, Tennessee — minutes from the casino, the Speedway and State Street. Book a round or a group weekend.',
+    'Experiential golf in Bristol, Tennessee — a short, walkable par 71 above Cedar Creek, a Tennessee Hills pour at the end of it, and the whole of Bristol around it. Book a round or a group weekend.',
   url: 'https://whiskeyridgegolf.com', // TBD: confirm final domain
 } as const;
 
@@ -90,6 +90,57 @@ export const bristol = [
   {
     title: 'The Highlands',
     body: 'South Holston trout water, Appalachian trail country, and mountain air that makes the beer taste better.',
+  },
+] as const;
+
+/* ------------------------------------------------------------------
+   POSITIONING — experiential golf, Tennessee Hills themed.
+
+   This reframes the course's one real liability. At 5,886 yards and
+   slope 113 it cannot be sold as championship golf, and local players
+   would see through the attempt. As the substrate for experiential
+   golf, short and forgiving stops being an apology and becomes the
+   design intent: nobody is punished for showing up.
+
+   The Tennessee Hills theme gives the 19th hole an identity no public
+   course in the Tri-Cities can copy.
+   ------------------------------------------------------------------ */
+
+export const positioning = {
+  category: 'Experiential golf',
+  theme: 'Tennessee Hills',
+  /* What is safe to say today. The resort is Tennessee Hills *themed* —
+     nothing here claims an on-site distillery, a tasting licence or a
+     signed partnership. Confirm the nature of the relationship before
+     any of that language goes further. */
+  themeScope: TBD, // TBD: licensed / partnered / owned — and what that permits us to say
+} as const;
+
+/* The experience layer. Items marked `confirmed` are supported by the
+   existing property; the rest are slots the build is designed to take
+   once ownership signs them off. Nothing unconfirmed is described as
+   though it exists. */
+export const experience = [
+  {
+    kicker: 'The pour',
+    title: 'Tennessee Hills on the back bar',
+    body: 'The whiskey is not an afterthought stocked behind the register. It is half the reason the place is called what it is — poured honestly, priced like a handshake, and waiting the moment you walk off eighteen.',
+    confirmed: false,
+    note: 'Programme, tastings and barrel detail TBD.',
+  },
+  {
+    kicker: 'The range',
+    title: 'Three tees and no agenda',
+    body: 'Warm up properly, or skip the round entirely and just hit balls with a drink in the holder. Both are a legitimate way to spend an evening here.',
+    confirmed: true,
+    note: '',
+  },
+  {
+    kicker: 'Play it your way',
+    title: 'Formats worth arguing over',
+    body: 'Scrambles, skins, nine-and-dine, whatever the group talks itself into on the first tee. A forgiving course is the one that makes those games fun instead of grim.',
+    confirmed: false,
+    note: 'Additional attractions — simulators, short-course and night play — TBD.',
   },
 ] as const;
 

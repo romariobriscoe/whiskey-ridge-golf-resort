@@ -31,6 +31,7 @@ button { background: none; border: 0; cursor: pointer; }
   line-height: var(--leading-hero);
   letter-spacing: -0.01em;
   font-variation-settings: 'SOFT' 0, 'WONK' 0;
+  text-wrap: balance;   /* keeps 'No dress code.' off its own orphan line */
 }
 .display em { font-style: italic; color: var(--band-accent); }
 h2.heading, .heading {
@@ -38,6 +39,7 @@ h2.heading, .heading {
   font-weight: 500;
   font-size: var(--text-h2);
   line-height: var(--leading-head);
+  text-wrap: balance;
 }
 h3.subhead, .subhead {
   font-family: var(--font-display);

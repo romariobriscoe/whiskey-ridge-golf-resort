@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site, contact, course, rates, bristol, booking } from '../data/site';
+import { site, contact, course, rates, bristol, booking, experience } from '../data/site';
 
 import heroImg from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
 import fogImg from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
@@ -9,18 +9,19 @@ import routingImg from '../assets/photos/course_routing_down_the_valley.jpg';
 import celebrationImg from '../assets/photos/groups_outings_foursome_celebration.jpg';
 import walkingImg from '../assets/photos/gallery_02_foursome_walking_long_shadows.jpg';
 import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
+import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
 
 const ways = [
-  { n: '01', kicker: 'A round', title: 'Just golf, no games',
-    body: 'Public, daily-fee golf with no tee-sheet politics. Walk on, walk it, and still make the first green flag at the Speedway.',
+  { n: '01', kicker: 'A round', title: 'Walk on, play fast',
+    body: 'Public, daily-fee golf with no tee-sheet politics and nobody checking your collar. Walk it in under four hours and still make the first green flag at the Speedway.',
     cta: 'See rates & tee times', href: '/rates/', img: fogImg,
     alt: 'Morning fog burning off the fairway below the first tee' },
   { n: '02', kicker: 'A group trip', title: 'Bring the whole crew',
-    body: 'Four to sixteen players, one booking, one bill. Golf by day, casino and State Street by night. The easiest buddies trip you will ever plan.',
+    body: 'Four to sixteen players, one booking, one bill. Golf and a pour by day, casino and State Street by night. The easiest buddies trip you will ever plan.',
     cta: 'Build your trip', href: '/groups/', img: celebrationImg,
     alt: 'A foursome trading high fives on the eighteenth green' },
   { n: '03', kicker: 'An outing', title: 'Outings that run themselves',
-    body: 'Short and forgiving is exactly what a mixed-ability scramble wants. Bring the office, the league, or the reunion — we run the day.',
+    body: 'Short and forgiving is exactly what a mixed-ability scramble wants. Bring the office, the league or the reunion — we run the day, start to last pour.',
     cta: 'Plan an outing', href: '/groups/', img: walkingImg,
     alt: 'Four players walking the fairway with push carts in autumn light' },
   { n: '04', kicker: 'A stay', title: 'Make a weekend of it',
@@ -31,7 +32,7 @@ const ways = [
 
 const stats = [
   `${course.holes} holes`, `Par ${course.par}`, `${course.greens} greens`,
-  course.pace, 'From $25 for 18*',
+  'Under four hours', 'No dress code', 'From $25 for 18*',
 ];
 ---
 
@@ -56,11 +57,11 @@ const stats = [
     <div class="shell hero__inner">
       <p class="eyebrow">Bristol, Tennessee</p>
       <h1 id="hero-h" class="display hero__h">
-        The golf side of a <em>Bristol weekend.</em>
+        Eighteen holes. Tennessee whiskey. <em>No dress code.</em>
       </h1>
       <p class="lead hero__lead">
-        Eighteen walkable holes above Cedar Creek, minutes from the casino floor, the Speedway
-        gates, and the bars on State Street. Play fast. Play loose. Finish with a proper pour.
+        A short, walkable par 71 above Cedar Creek — built to be played fast and finished with
+        a proper Tennessee pour. Bristol handles the rest: the casino, the Speedway, State Street.
       </p>
       <div class="hero__cta">
         <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
@@ -95,18 +96,59 @@ const stats = [
     </div>
   </section>
 
+  <!-- ░░ EXPERIENTIAL ░░ sits before the course detail on purpose: it
+       reframes how 5,886 yards reads when you get there ░░ -->
+  <section class="section band band--soft" aria-labelledby="exp-h">
+    <div class="shell">
+      <div class="exp__top">
+        <div>
+          <p class="eyebrow">Experiential golf · Tennessee Hills</p>
+          <h2 id="exp-h" class="heading exp__h">Eighteen holes is where the day starts.</h2>
+          <p class="prose exp__lead">
+            Whiskey Ridge is built as a day out, not a tee sheet. The round is the reason you
+            come — the pour, the range at dusk and whatever the group talks itself into on the
+            first tee are why you stay, and why you book the next one before you leave.
+          </p>
+        </div>
+        <Image
+          class="exp__img"
+          src={barImg}
+          alt="The clubhouse bar busy at golden hour, players at the rail with the course through the windows"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 900px) 100vw, 45vw"
+          quality={72}
+        />
+      </div>
+
+      <ul class="exp__list">
+        {experience.map((e) => (
+          <li class="exp__item">
+            <p class="label exp__kicker">{e.kicker}</p>
+            <h3 class="subhead">{e.title}</h3>
+            <p class="prose exp__body">{e.body}</p>
+            {e.note && <p class="meta exp__note">{e.note}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <!-- ░░ THE COURSE ░░ the honesty block ░░ -->
   <section class="section band band--forest" aria-labelledby="course-h">
     <div class="shell split">
       <div>
         <p class="eyebrow">The course</p>
-        <h2 id="course-h" class="heading">5,886 yards of exactly what a round should be.</h2>
+        <h2 id="course-h" class="heading">Short on purpose. Better for it.</h2>
         <p class="prose split__p">
-          We will save you the brochure talk: this is not championship length, and it is not
-          trying to be. It is a par 71 you can walk, score on, and argue about at the bar
-          after — bent grass greens, honest par 3s, and ridge views the whole way around.
+          We will save you the brochure talk: 5,886 yards is not championship length and is not
+          trying to be. That is the design. Experiential golf starts with a course that does not
+          punish you for turning up — a par 71 you can walk in under four hours, score on, and
+          argue about afterwards over a glass.
         </p>
-        <p class="prose split__p">Golf the way it was before golf got precious.</p>
+        <p class="prose split__p">
+          Bent grass greens, honest par 3s, ridge views the whole way around. Golf the way it was
+          before golf got precious.
+        </p>
         <ul class="chips">
           <li>Par {course.par}</li>
           <li>Blue 5,886 · White 5,404 · Red 4,538</li>
@@ -178,9 +220,9 @@ const stats = [
         <p class="eyebrow">Groups of 4–16</p>
         <h2 id="groups-h" class="heading">Bringing a crew? One booking covers it.</h2>
         <p class="prose cta-row__p">
-          Tee times, carts, food, and a stay if you want one — handled in a single pass.
-          Tournaments and corporate outings get their own coordinator and a course built
-          for mixed-ability scrambles.
+          Tee times, carts, food, the bar afterwards and a stay if you want one — handled in a
+          single pass. Tournaments and corporate outings get their own coordinator and a course
+          built so the once-a-year golfer finishes the scramble smiling.
         </p>
       </div>
       <a class="btn btn--primary" href="/groups/">Start a group booking</a>
@@ -225,7 +267,7 @@ const stats = [
       linear-gradient(to bottom, rgba(20, 17, 15, 0.3) 0%, rgba(20, 17, 15, 0) 28%);
   }
   .hero__inner { padding-block: clamp(3.5rem, 2rem + 7vw, 7rem); }
-  .hero__h { margin-top: var(--space-2); max-width: 15ch; }
+  .hero__h { margin-top: var(--space-2); max-width: 17ch; }
   .hero__lead { margin-top: var(--space-3); color: var(--wr-line); max-width: 38ch; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
 
@@ -255,6 +297,35 @@ const stats = [
   .way__n { color: var(--wr-gold-deep); }
   .way__copy { font-size: 0.9375rem; }
   .way__cta { margin-top: auto; }
+
+  /* ---------- experiential ---------- */
+  .exp__top { display: grid; gap: var(--space-4); align-items: center; }
+  .exp__h { margin-top: var(--space-2); }
+  .exp__lead { margin-top: var(--space-2); font-size: var(--text-lead); }
+  .exp__img {
+    width: 100%; height: 100%; min-height: 240px;
+    object-fit: cover; border-radius: var(--radius-md);
+  }
+  .exp__list {
+    display: grid; gap: var(--space-4); list-style: none; padding: 0;
+    margin-top: var(--space-6); padding-top: var(--space-4);
+    border-top: 1px solid var(--wr-line);
+  }
+  .exp__item { display: flex; flex-direction: column; gap: 0.625rem; }
+  .exp__kicker { color: var(--wr-emerald); }
+  .exp__body { font-size: 0.9375rem; }
+  /* Unconfirmed detail stays visible rather than being quietly implied. */
+  .exp__note {
+    margin-top: auto; padding-top: 0.5rem;
+    border-top: 1px dashed var(--wr-mauve); font-size: 0.75rem;
+  }
+
+  @media (min-width: 700px) {
+    .exp__list { grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  }
+  @media (min-width: 1000px) {
+    .exp__top { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }
+  }
 
   /* ---------- split sections ---------- */
   .split { display: grid; gap: var(--space-4); align-items: center; }

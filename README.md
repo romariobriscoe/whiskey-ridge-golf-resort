@@ -1,7 +1,21 @@
 # Whiskey Ridge Golf Resort
 
 Marketing site for the rebrand of Cedars Golf Course / Bristol Golf Club at the Cedars
-(115 Cedar Creek Rd, Bristol, TN 37620) as **Whiskey Ridge Golf Resort**.
+(115 Cedar Creek Rd, Bristol, TN 37620) as **Whiskey Ridge Golf Resort** — an
+**experiential golf**, **Tennessee Hills themed** resort.
+
+## Positioning
+
+The course is 5,886 yards at slope 113. It cannot be sold as championship golf, and the
+local players who are the near-term revenue base would see through the attempt. Experiential
+golf resolves that: short and forgiving stops being an apology and becomes the design intent —
+a course that does not punish you for turning up. The Tennessee Hills theme gives the 19th
+hole an identity no other public course in the Tri-Cities can copy.
+
+The homepage therefore leads with the category ("Eighteen holes. Tennessee whiskey. No dress
+code."), puts the experience section *before* the course detail so it reframes the yardage,
+and keeps Bristol's demand drivers — the casino, the Speedway, State Street — as the reason
+the weekend exists at all.
 
 **Phase 1 — homepage only.** The remaining eight pages land in Phase 2.
 
@@ -71,9 +85,13 @@ placeholder rather than a guess — **do not publish these as fact**:
 | Drive times to Hard Rock / Speedway / downtown | Unmeasured. Only the ~20 min to TRI is used. |
 | Booking provider | foreUP / Lightspeed / GolfNow / Supreme — undecided. The flow is a front-end stub. |
 | Final domain | `whiskeyridgegolf.com` is a placeholder in `astro.config.mjs` and `site.ts`. |
+| **Tennessee Hills relationship** | **Themed** is all the copy claims. Licensed / partnered / owned is unset (`positioning.themeScope`) — and it governs how far the language can go. |
+| **Whiskey programme** | Tastings, barrel programme and on-site distilling are *not* claimed. No liquor-licence language appears anywhere. |
+| **Experiential attractions** | Simulators, short-course and night play are marked TBD on the page itself, not described as existing. |
 
 No awards, rankings, press quotes, testimonials or heritage claims appear anywhere, and the
-copy never claims championship difficulty. That is deliberate: at 5,886 yards and slope 113
+copy never claims championship difficulty. The Tennessee Hills theme is written as a theme:
+nothing asserts an on-site distillery, a tasting licence or a signed partnership. That is deliberate: at 5,886 yards and slope 113
 the course is shorter and more forgiving than average, and local players would know.
 
 ## Photography
