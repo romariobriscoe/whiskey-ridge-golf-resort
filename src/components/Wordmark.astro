@@ -1,0 +1,22 @@
+---
+interface Props { href?: string; class?: string }
+const { href = '/', class: cls = '' } = Astro.props;
+---
+<a href={href} class={`wordmark ${cls}`} aria-label="Whiskey Ridge Golf Resort — home">
+  <span class="wordmark__name">Whiskey Ridge</span>
+  <span class="wordmark__sub">Golf Resort <span aria-hidden="true">·</span> Bristol TN</span>
+</a>
+
+<style>
+  .wordmark { display: inline-flex; flex-direction: column; line-height: 1; color: inherit; }
+  .wordmark:hover { color: inherit; }
+  .wordmark__name {
+    font-family: var(--font-label); font-weight: 600;
+    font-size: 1.3125rem; letter-spacing: var(--track-mark); text-transform: uppercase;
+  }
+  .wordmark__sub {
+    margin-top: 4px; font-family: var(--font-label); font-weight: 500;
+    font-size: 0.625rem; letter-spacing: 0.34em; text-transform: uppercase;
+    color: var(--wr-brass);
+  }
+</style>

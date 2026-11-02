@@ -1,0 +1,118 @@
+---
+import Wordmark from './Wordmark.astro';
+import { nav, contact, booking } from '../data/site';
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+<header class="hdr band band--char">
+  <div class="hdr__inner shell">
+    <Wordmark />
+
+    <nav class="hdr__nav" aria-label="Main">
+      {nav.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+
+    <a class="hdr__phone" href={contact.phoneHref}>{contact.phone}</a>
+    <a class="btn btn--primary hdr__book" href={booking.href}>Book a tee time</a>
+
+    <button
+      class="hdr__menu"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-drawer"
+      data-menu-toggle
+    >
+      <span class="hdr__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="hdr__menu-label">Menu</span>
+    </button>
+  </div>
+
+  <!-- Drawer: labelled, keyboard-closable, full nav parity with desktop -->
+  <div class="drawer" id="site-drawer" data-drawer hidden>
+    <nav class="drawer__nav" aria-label="Main (mobile)">
+      {nav.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+    <div class="drawer__foot">
+      <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
+      <a class="drawer__phone" href={contact.phoneHref}>Call {contact.phone}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; }
+  .hdr__inner { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.75rem); min-height: 78px; }
+  .hdr__nav { display: flex; gap: 1.25rem; margin-left: auto; font-size: 0.84375rem; font-weight: 500; }
+  .hdr__nav a { color: var(--wr-line); padding-block: 0.25rem; }
+  .hdr__nav a:hover { color: #fff; }
+  .hdr__nav a[aria-current='page'] { color: #fff; box-shadow: inset 0 -2px 0 var(--wr-brass); }
+  .hdr__phone {
+    font-family: var(--font-label); font-weight: 500; font-size: 0.9375rem;
+    letter-spacing: 0.08em; color: var(--wr-line); white-space: nowrap;
+  }
+  .hdr__book { padding: 0.75rem 1.375rem; font-size: var(--text-ui); }
+
+  .hdr__menu {
+    display: none; align-items: center; gap: 0.5625rem; margin-left: auto;
+    min-height: 44px; padding: 0.625rem 0.75rem; color: #fff;
+    border: 1px solid var(--wr-plum); border-radius: var(--radius-sm);
+  }
+  .hdr__bars { display: flex; flex-direction: column; gap: 4px; }
+  .hdr__bars i { display: block; width: 20px; height: 2px; background: #fff; }
+  .hdr__bars i:last-child { background: var(--wr-brass); }
+  .hdr__menu-label {
+    font-family: var(--font-label); font-weight: 600; font-size: 0.8125rem;
+    letter-spacing: var(--track-label); text-transform: uppercase;
+  }
+
+  .drawer { border-top: 1px solid var(--wr-line-dark); background: var(--wr-char); padding: var(--space-2) var(--gutter) var(--space-4); }
+  .drawer[hidden] { display: none; }
+  .drawer__nav { display: flex; flex-direction: column; }
+  .drawer__nav a {
+    color: var(--wr-line); font-size: 1.0625rem; padding: 0.9375rem 0;
+    border-bottom: 1px solid var(--wr-line-dark);
+  }
+  .drawer__nav a[aria-current='page'] { color: var(--wr-brass); font-weight: 600; }
+  .drawer__foot { display: flex; flex-direction: column; gap: 0.875rem; margin-top: var(--space-3); }
+  .drawer__foot .btn { width: 100%; }
+  .drawer__phone { color: var(--wr-brass); font-weight: 600; text-align: center; min-height: 44px;
+    display: flex; align-items: center; justify-content: center; }
+
+  @media (max-width: 1140px) {
+    .hdr__nav, .hdr__phone, .hdr__book { display: none; }
+    .hdr__menu { display: inline-flex; }
+  }
+</style>
+
+<script>
+  // Progressive enhancement: the drawer markup ships in the HTML and is
+  // revealed by the toggle. Without JS the header still renders and every
+  // page remains reachable from the footer sitemap.
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+
+  if (toggle && drawer) {
+    const setOpen = (open: boolean) => {
+      drawer.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    // Reset when the viewport grows past the breakpoint.
+    window.matchMedia('(min-width: 1141px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

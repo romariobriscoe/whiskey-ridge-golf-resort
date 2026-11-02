@@ -1,0 +1,344 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, contact, course, rates, bristol, booking } from '../data/site';
+
+import heroImg from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
+import fogImg from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
+import routingImg from '../assets/photos/course_routing_down_the_valley.jpg';
+import celebrationImg from '../assets/photos/groups_outings_foursome_celebration.jpg';
+import walkingImg from '../assets/photos/gallery_02_foursome_walking_long_shadows.jpg';
+import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
+
+const ways = [
+  { n: '01', kicker: 'A round', title: 'Just golf, no games',
+    body: 'Public, daily-fee golf with no tee-sheet politics. Walk on, walk it, and still make the first green flag at the Speedway.',
+    cta: 'See rates & tee times', href: '/rates/', img: fogImg,
+    alt: 'Morning fog burning off the fairway below the first tee' },
+  { n: '02', kicker: 'A group trip', title: 'Bring the whole crew',
+    body: 'Four to sixteen players, one booking, one bill. Golf by day, casino and State Street by night. The easiest buddies trip you will ever plan.',
+    cta: 'Build your trip', href: '/groups/', img: celebrationImg,
+    alt: 'A foursome trading high fives on the eighteenth green' },
+  { n: '03', kicker: 'An outing', title: 'Outings that run themselves',
+    body: 'Short and forgiving is exactly what a mixed-ability scramble wants. Bring the office, the league, or the reunion — we run the day.',
+    cta: 'Plan an outing', href: '/groups/', img: walkingImg,
+    alt: 'Four players walking the fairway with push carts in autumn light' },
+  { n: '04', kicker: 'A stay', title: 'Make a weekend of it',
+    body: 'Lodging on the ridge is in the works. Until it opens, we bundle your rounds with the places people already stay in Bristol.',
+    cta: 'See stay options', href: '/stay/', img: cabinsImg,
+    alt: 'Concept rendering of a cabin deck overlooking the course at dusk' },
+];
+
+const stats = [
+  `${course.holes} holes`, `Par ${course.par}`, `${course.greens} greens`,
+  course.pace, 'From $25 for 18*',
+];
+---
+
+<BaseLayout
+  title="Whiskey Ridge Golf Resort — Golf in Bristol, Tennessee"
+  description={site.description}
+>
+  <!-- ░░ HERO ░░ one frame that answers what, where and how to book ░░ -->
+  <section class="hero band band--char" aria-labelledby="hero-h">
+    <Image
+      class="hero__img"
+      src={heroImg}
+      alt="Players putting out on the eighteenth green at dusk, seen from the lantern-lit clubhouse porch with the ridge behind"
+      widths={[900, 1280, 1600, 2000]}
+      sizes="(max-width: 700px) 1280px, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      quality={72}
+    />
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="shell hero__inner">
+      <p class="eyebrow">Bristol, Tennessee</p>
+      <h1 id="hero-h" class="display hero__h">
+        The golf side of a <em>Bristol weekend.</em>
+      </h1>
+      <p class="lead hero__lead">
+        Eighteen walkable holes above Cedar Creek, minutes from the casino floor, the Speedway
+        gates, and the bars on State Street. Play fast. Play loose. Finish with a proper pour.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href={booking.href}>Book a tee time</a>
+        <a class="btn btn--ghost" href="/groups/">Plan a group trip</a>
+      </div>
+    </div>
+
+    <ul class="stats shell" aria-label="Course at a glance">
+      {stats.map((s) => <li>{s}</li>)}
+    </ul>
+  </section>
+
+  <!-- ░░ FOUR WAYS ░░ -->
+  <section class="section band" aria-labelledby="ways-h">
+    <div class="shell">
+      <p class="eyebrow">Four ways to come</p>
+      <h2 id="ways-h" class="heading ways__h">Pick your kind of weekend.</h2>
+      <ul class="ways">
+        {ways.map((w) => (
+          <li class="way">
+            <Image class="way__img" src={w.img} alt={w.alt}
+                   widths={[320, 480, 640]} sizes="(max-width: 700px) 100vw, 25vw" quality={70} />
+            <div class="way__body">
+              <p class="label way__kicker"><span class="way__n">{w.n}</span> {w.kicker}</p>
+              <h3 class="subhead">{w.title}</h3>
+              <p class="prose way__copy">{w.body}</p>
+              <a class="link-arrow way__cta" href={w.href}>{w.cta}</a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ░░ THE COURSE ░░ the honesty block ░░ -->
+  <section class="section band band--forest" aria-labelledby="course-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">The course</p>
+        <h2 id="course-h" class="heading">5,886 yards of exactly what a round should be.</h2>
+        <p class="prose split__p">
+          We will save you the brochure talk: this is not championship length, and it is not
+          trying to be. It is a par 71 you can walk, score on, and argue about at the bar
+          after — bent grass greens, honest par 3s, and ridge views the whole way around.
+        </p>
+        <p class="prose split__p">Golf the way it was before golf got precious.</p>
+        <ul class="chips">
+          <li>Par {course.par}</li>
+          <li>Blue 5,886 · White 5,404 · Red 4,538</li>
+          <li>Rating 70.0 / Slope 113*</li>
+          <li>Built {course.built}</li>
+        </ul>
+        <a class="btn btn--ghost" href="/course/">Tour the course</a>
+        <p class="meta split__fine">*{course.ratingsNote}</p>
+      </div>
+      <Image class="split__img" src={routingImg}
+             alt="Aerial view of the course threading the valley floor beside the creek, clubhouse on the ridge above"
+             widths={[480, 720, 960]} sizes="(max-width: 900px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+
+  <!-- ░░ WHY BRISTOL ░░ -->
+  <section class="section band" aria-labelledby="bristol-h">
+    <div class="shell">
+      <p class="eyebrow">Why Bristol</p>
+      <h2 id="bristol-h" class="heading">The town does the nightlife. We handle the daylight.</h2>
+      <p class="lead bristol__lead">
+        Bristol became a real destination while nobody was watching. Everything below is
+        minutes from the first tee.
+      </p>
+      <ul class="bristol">
+        {bristol.map((b) => (
+          <li class="rule-top">
+            <h3 class="label bristol__t">{b.title}</h3>
+            <p class="prose bristol__b">{b.body}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="locator">
+        <span>≈20 min from Tri-Cities Airport (TRI)</span>
+        <span aria-hidden="true">·</span>
+        <span>{contact.street}, {contact.city}, {contact.state} {contact.zip}</span>
+        <a class="link-arrow" href="/visit/">Plan your visit</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ░░ RATES AT A GLANCE ░░ -->
+  <section class="section band band--soft" aria-labelledby="rates-h">
+    <div class="shell split">
+      <div>
+        <p class="eyebrow">Rates at a glance</p>
+        <h2 id="rates-h" class="heading">Priced like a course you will actually play twice.</h2>
+        <p class="prose split__p">
+          The numbers here are placeholders — {rates.note} The rebrand will not price Bristol
+          out of its own golf course.
+        </p>
+        <a class="btn btn--primary" href={booking.href}>Full rates &amp; booking</a>
+      </div>
+      <table class="rates">
+        <caption class="visually-hidden">Green fees — placeholder pricing pending confirmation</caption>
+        <tbody>
+          {rates.rows.map((r) => (
+            <tr><th scope="row">{r.label}</th><td>$ {r.price}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ░░ GROUPS ░░ the money page handoff ░░ -->
+  <section class="section band band--char" aria-labelledby="groups-h">
+    <div class="shell cta-row">
+      <div>
+        <p class="eyebrow">Groups of 4–16</p>
+        <h2 id="groups-h" class="heading">Bringing a crew? One booking covers it.</h2>
+        <p class="prose cta-row__p">
+          Tee times, carts, food, and a stay if you want one — handled in a single pass.
+          Tournaments and corporate outings get their own coordinator and a course built
+          for mixed-ability scrambles.
+        </p>
+      </div>
+      <a class="btn btn--primary" href="/groups/">Start a group booking</a>
+    </div>
+  </section>
+
+  <!-- ░░ REVIEW CAPTURE ░░ the site has to do a review base's job ░░ -->
+  <section class="section band" aria-labelledby="review-h">
+    <div class="shell review">
+      <div>
+        <h2 id="review-h" class="heading review__h">Had a good round? Say so.</h2>
+        <p class="prose">
+          We are the new name in town, and reviews are how the next group finds us. One tap
+          from the QR at the counter, the link in your booking text, or right here.
+        </p>
+      </div>
+      <a class="btn btn--ghost review__cta" href="/visit/#review">Leave a review</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Mobile-first throughout: base rules are the phone layout,
+     min-width queries add the desktop composition. */
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; isolation: isolate; overflow: hidden; }
+  .hero__img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 40%; z-index: -2;
+  }
+  .hero__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(
+        to right,
+        rgba(20, 17, 15, 0.86) 0%,
+        rgba(20, 17, 15, 0.70) 40%,
+        rgba(20, 17, 15, 0.34) 70%,
+        rgba(20, 17, 15, 0.24) 100%
+      ),
+      linear-gradient(to bottom, rgba(20, 17, 15, 0.3) 0%, rgba(20, 17, 15, 0) 28%);
+  }
+  .hero__inner { padding-block: clamp(3.5rem, 2rem + 7vw, 7rem); }
+  .hero__h { margin-top: var(--space-2); max-width: 15ch; }
+  .hero__lead { margin-top: var(--space-3); color: var(--wr-line); max-width: 38ch; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }
+
+  .stats {
+    display: flex; flex-wrap: wrap; gap: 0.625rem 1.5rem;
+    list-style: none; padding-block: 1.125rem; line-height: 1.3;
+    border-top: 1px solid var(--wr-line-dark);
+    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--wr-line);
+  }
+  .stats li { display: flex; align-items: center; gap: 0.625rem; }
+  .stats li::before {
+    content: ''; flex: none; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--wr-brass);
+  }
+
+  /* ---------- four ways ---------- */
+  .ways__h { margin-top: var(--space-2); margin-bottom: var(--space-6); max-width: 18ch; }
+  .ways { display: grid; gap: var(--space-3); list-style: none; padding: 0; }
+  .way {
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--wr-soft); border: 1px solid var(--wr-line); border-radius: var(--radius-md);
+  }
+  .way__img { width: 100%; height: 160px; object-fit: cover; }
+  .way__body { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.5rem; flex: 1; }
+  .way__kicker { color: var(--wr-emerald); }
+  .way__n { color: var(--wr-gold-deep); }
+  .way__copy { font-size: 0.9375rem; }
+  .way__cta { margin-top: auto; }
+
+  /* ---------- split sections ---------- */
+  .split { display: grid; gap: var(--space-4); align-items: center; }
+  .split__p { margin-top: var(--space-2); }
+  .split__img { width: 100%; height: 100%; min-height: 240px; object-fit: cover; border-radius: var(--radius-md); }
+  .split__fine { margin-top: var(--space-2); }
+  .split .heading { margin-top: var(--space-2); }
+  .split .btn { margin-top: var(--space-3); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.625rem; list-style: none; padding: 0; margin-top: var(--space-3); }
+  .chips li {
+    border: 1px solid var(--band-rule); border-radius: var(--radius-pill);
+    padding: 0.5rem 1rem; font-family: var(--font-label); font-weight: 500;
+    font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--band-muted);
+  }
+
+  /* ---------- bristol ---------- */
+  .bristol__lead { margin: var(--space-2) 0 var(--space-6); }
+  .bristol { display: grid; gap: var(--space-4); list-style: none; padding: 0; }
+  .bristol__t { color: var(--wr-ink); margin-bottom: 0.5rem; font-size: 1rem; letter-spacing: 0.1em; }
+  .bristol__b { font-size: 0.90625rem; }
+  .locator {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem;
+    margin-top: var(--space-6); padding: 1.125rem 1.5rem;
+    border: 1px solid var(--wr-line); border-radius: var(--radius-md);
+    font-family: var(--font-label); font-weight: 500; font-size: 0.875rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--wr-ink-muted);
+  }
+  .locator .link-arrow { font-family: var(--font-body); letter-spacing: 0; text-transform: none; }
+  .locator span[aria-hidden] { color: var(--wr-gold-deep); }
+
+  /* ---------- rates ---------- */
+  .rates {
+    width: 100%; border-collapse: collapse;
+    background: var(--wr-white); border: 1px solid var(--wr-line); border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .rates tr + tr { border-top: 1px solid var(--wr-line); }
+  .rates th { text-align: left; font-weight: 500; padding: 1.125rem 1.5rem; font-size: 0.9375rem; }
+  .rates td { text-align: right; font-weight: 700; color: var(--wr-emerald); padding: 1.125rem 1.5rem; white-space: nowrap; }
+
+  /* ---------- group + review ---------- */
+  .cta-row { display: grid; gap: var(--space-4); align-items: center; }
+  .cta-row__p { margin-top: var(--space-2); }
+  .cta-row .btn { justify-self: start; }
+  .review {
+    display: grid; gap: var(--space-3); align-items: center;
+    border: 1px dashed var(--wr-mauve); border-radius: var(--radius-md); padding: var(--space-4);
+  }
+  .review__h { font-size: var(--text-h3); }
+  .review__cta { justify-self: start; }
+
+  /* ================= 700px and up ================= */
+  @media (min-width: 700px) {
+    .ways { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    .bristol { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) var(--space-6); }
+    .review { grid-template-columns: 1fr auto; gap: var(--space-6); }
+    .review__cta { justify-self: end; }
+  }
+
+  /* ================= 1000px and up ================= */
+  @media (min-width: 1000px) {
+    .hero__inner { padding-block: clamp(5rem, 3rem + 6vw, 8.25rem); }
+    .ways { grid-template-columns: repeat(4, 1fr); }
+    .way__img { height: 150px; }
+    .bristol { grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+    .split { grid-template-columns: 1.05fr 1fr; gap: var(--space-8); }
+    .cta-row { grid-template-columns: 1fr auto; gap: var(--space-8); }
+    .cta-row .btn { justify-self: end; }
+  }
+
+  /* The docked ticker owns the bottom edge on phones. */
+  @media (max-width: 640px) {
+    .hero__img { object-position: 62% 38%; }
+    .hero__inner { padding-block: 3rem 3.25rem; }
+    .hero__scrim {
+      background: linear-gradient(
+        to bottom,
+        rgba(20, 17, 15, 0.74) 0%,
+        rgba(20, 17, 15, 0.56) 50%,
+        rgba(20, 17, 15, 0.34) 70%,
+        rgba(20, 17, 15, 0.68) 100%
+      );
+    }
+  }
+</style>

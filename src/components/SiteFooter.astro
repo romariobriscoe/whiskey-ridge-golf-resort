@@ -1,0 +1,52 @@
+---
+import Wordmark from './Wordmark.astro';
+import { nav, contact, course } from '../data/site';
+const half = Math.ceil(nav.length / 2);
+const cols = [nav.slice(0, half), nav.slice(half)];
+---
+<footer class="ftr band band--char">
+  <div class="shell ftr__inner">
+    <div>
+      <Wordmark />
+      <address class="ftr__addr">
+        {contact.street}<br />
+        {contact.city}, {contact.state} {contact.zip}<br />
+        <a href={contact.phoneHref}>{contact.phone}</a>
+      </address>
+    </div>
+
+    <div class="ftr__links">
+      {cols.map((col) => (
+        <nav aria-label="Footer">
+          {col.map((item) => <a href={item.href}>{item.label}</a>)}
+        </nav>
+      ))}
+    </div>
+
+    <div>
+      <p class="eyebrow ftr__h">Hours</p>
+      <p class="ftr__muted">Tee sheet and clubhouse hours {contact.hours} with ownership.</p>
+      <p class="ftr__fine">
+        {`Whiskey Ridge Golf Resort is the new name of the course at ${contact.street}, formerly Cedars Golf Course. ${course.ratingsNote} Rates shown are placeholders pending confirmation.`}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr__inner {
+    display: grid; gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    padding-block: var(--space-8) var(--space-6);
+  }
+  .ftr__addr { font-style: normal; margin-top: var(--space-3); color: var(--wr-line); line-height: 1.7; font-size: var(--text-ui); }
+  .ftr__addr a { color: var(--wr-brass); }
+  .ftr__links { display: flex; gap: var(--space-6); }
+  .ftr__links nav { display: flex; flex-direction: column; gap: 0.75rem; font-size: var(--text-ui); }
+  .ftr__links a { color: var(--wr-line); min-height: 24px; }
+  .ftr__h { margin-bottom: 0.75rem; }
+  .ftr__muted { color: var(--wr-line); font-size: var(--text-ui); margin-bottom: var(--space-3); }
+  .ftr__fine { color: var(--wr-mauve-text); font-size: 0.75rem; line-height: 1.7; }
+  /* Room for the docked ticker on small screens. */
+  @media (max-width: 640px) { .ftr__inner { padding-bottom: 6.5rem; } }
+</style>

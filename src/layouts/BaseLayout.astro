@@ -1,0 +1,76 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource/barlow-condensed/500.css';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource-variable/archivo';
+import '../styles/global.css';
+
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import TeeSheetTicker from '../components/TeeSheetTicker.astro';
+import { site, contact, course } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** The ticker collapses on the booking page, where it would be redundant. */
+  ticker?: boolean;
+}
+const { title, description = site.description, ticker = true } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+
+/* Structured data. Only verified facts go in — no ratings, no awards.
+   For a course with essentially no digital footprint this is the
+   cheapest win available in local search. */
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'GolfCourse',
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  telephone: contact.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contact.street,
+    addressLocality: contact.city,
+    addressRegion: contact.state,
+    postalCode: contact.zip,
+    addressCountry: 'US',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: contact.lat, longitude: contact.lng },
+  publicAccess: true,
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'Driving range', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Golf carts', value: true },
+    { '@type': 'LocationFeatureSpecification', name: `${course.holes} holes, par ${course.par}`, value: true },
+  ],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#231F20" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main"><slot /></main>
+    <SiteFooter />
+    {ticker && <TeeSheetTicker />}
+  </body>
+</html>

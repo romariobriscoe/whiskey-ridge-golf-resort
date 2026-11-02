@@ -1,0 +1,106 @@
+/* ============================================================
+   Whiskey Ridge — design tokens
+   Palette: HSHG forest/gold x Tennessee Hills charcoal/amber.
+   Locked in Phase 0. No cream, no parchment: light surfaces stay
+   cool and neutral; all warmth comes from amber, brass and photography.
+   ============================================================ */
+
+:root {
+  /* --- core palette ------------------------------------------------ */
+  --wr-char:          #231F20;  /* Charcoal Black — primary dark ground */
+  --wr-char-deep:     #1A1715;  /* pressed/inset charcoal */
+  --wr-forest:        #0D2B20;  /* Deepest Forest — course sections */
+  --wr-forest-mid:    #0F4433;  /* Dark Forest — support tone */
+  --wr-forest-deep:   #081E16;  /* furthest ridge */
+  --wr-emerald:       #0B6B4E;  /* links + eyebrows on light (5.9:1 on white) */
+  --wr-slate-green:   #2E5A52;
+  --wr-sage:          #45806B;
+
+  --wr-amber:         #AD813C;  /* Whiskey Amber — the only filled button */
+  --wr-amber-hover:   #C59A57;  /* Honey Amber — hover lift */
+  --wr-brass:         #C6A65B;  /* Brass Gold — eyebrows/rules on dark */
+  --wr-gold-deep:     #A9893E;  /* Deep Gold — rules on light */
+  --wr-gold-tint:     #E3D3A8;  /* italic emphasis on dark only */
+
+  --wr-white:         #FFFFFF;
+  --wr-soft:          #F5F5F5;  /* alternating light band */
+  --wr-line:          #DEDEDE;  /* hairline on light */
+  --wr-line-dark:     rgba(255, 255, 255, 0.14);
+
+  --wr-ink:           #231F20;  /* body text on light */
+  --wr-ink-muted:     #4C5D56;  /* secondary text, green-cast */
+  --wr-plum:          #594F51;  /* metadata */
+  --wr-mauve:         #8E8083;  /* Thumb Mauve — borders only (non-text) */
+  --wr-mauve-text:    #96888B;  /* text-safe mauve: 4.81:1 on charcoal */
+  --wr-oxblood:       #5E081D;  /* errors + alerts */
+  --wr-oxblood-tint:  #FFF6F6;
+
+  /* --- type ---------------------------------------------------------
+     Display: Fraunces (never bolder than 500, never caps, never <22px)
+     Label:   Barlow Condensed (the only face allowed in caps)
+     Body:    Archivo                                                   */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-label:   'Barlow Condensed', 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body:    'Archivo Variable', 'Archivo', -apple-system, 'Segoe UI', sans-serif;
+
+  /* fluid 390px -> 1400px */
+  --text-hero:    clamp(2.5rem, 1.63rem + 3.56vw, 4.75rem);
+  --text-h2:      clamp(1.8125rem, 1.45rem + 1.49vw, 2.75rem);
+  --text-h3:      clamp(1.3125rem, 1.24rem + 0.3vw, 1.5rem);
+  --text-lead:    clamp(1rem, 0.93rem + 0.3vw, 1.1875rem);
+  --text-body:    clamp(1rem, 0.96rem + 0.16vw, 1.0625rem);
+  --text-ui:      0.875rem;
+  --text-small:   0.8125rem;
+  --text-eyebrow: 0.8125rem;
+
+  --leading-hero: 1.04;
+  --leading-head: 1.1;
+  --leading-body: 1.65;
+
+  --track-eyebrow: 0.24em;
+  --track-label:   0.16em;
+  --track-mark:    0.24em;
+
+  /* --- spacing (8px base) ------------------------------------------ */
+  --space-1: 0.5rem;   --space-2: 1rem;    --space-3: 1.5rem;
+  --space-4: 2rem;     --space-6: 3rem;    --space-8: 4rem;
+  --space-section: clamp(3.5rem, 2rem + 6vw, 6rem);
+  --gutter:        clamp(1.25rem, 0.6rem + 2.6vw, 2.5rem);
+  --measure:       68ch;
+  --shell:         1320px;
+
+  /* --- surface ------------------------------------------------------ */
+  --radius-sm: 2px;    /* buttons, inputs */
+  --radius-md: 4px;    /* cards */
+  --radius-pill: 999px;
+  --shadow-dock: 0 12px 32px rgba(0, 0, 0, 0.38);
+
+  /* --- motion ------------------------------------------------------- */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* --- band defaults (light register) ------------------------------- */
+  --band-bg:     var(--wr-white);
+  --band-text:   var(--wr-ink);
+  --band-muted:  var(--wr-ink-muted);
+  --band-meta:   var(--wr-plum);
+  --band-accent: var(--wr-emerald);
+  --band-rule:   var(--wr-line);
+  --band-mark:   var(--wr-gold-deep);
+}
+
+/* ------------------------------------------------------------------
+   Bands retune the same tokens rather than restyling every child.
+   One system, two registers: charcoal/forest carry the brand,
+   white and soft-grey carry the reading.
+   ------------------------------------------------------------------ */
+.band            { background: var(--band-bg); color: var(--band-text); }
+.band--soft      { --band-bg: var(--wr-soft); }
+.band--char      { --band-bg: var(--wr-char);   --band-text: #fff; --band-muted: var(--wr-line);
+                   --band-meta: var(--wr-mauve-text); --band-accent: var(--wr-brass);
+                   --band-rule: var(--wr-line-dark); --band-mark: var(--wr-brass); }
+.band--forest    { --band-bg: var(--wr-forest); --band-text: #fff; --band-muted: var(--wr-line);
+                   --band-meta: #9FB8AC; --band-accent: var(--wr-brass);
+                   --band-rule: var(--wr-slate-green); --band-mark: var(--wr-brass); }

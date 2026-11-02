@@ -1,0 +1,126 @@
+---
+/* ------------------------------------------------------------------
+   SIGNATURE ELEMENT — The Tee Sheet Ticker.
+
+   Whiskey Ridge opens with one lifetime review against competitors
+   carrying 250. Reviews can't be manufactured; a filling tee sheet can
+   be shown. The ticker is the booking affordance and the social proof
+   in one object: it cycles the next open times and turns gold when a
+   time drops to two spots.
+
+   In production the entries come from the booking provider's live
+   sheet (TBD). Here they come from src/data/site.ts.
+   ------------------------------------------------------------------ */
+import { teeSheet, booking } from '../data/site';
+---
+<aside class="ticker" data-ticker aria-label="Live tee sheet">
+  <div class="ticker__body">
+    <p class="ticker__head">
+      <span class="ticker__dot" aria-hidden="true"></span>On the sheet now
+    </p>
+    <p class="ticker__when" data-ticker-when aria-live="polite">{teeSheet[0].when}</p>
+    <p class="ticker__note" data-ticker-note data-low={teeSheet[0].low ? 'true' : 'false'}>
+      {teeSheet[0].note}
+    </p>
+  </div>
+  <a class="ticker__cta" href={booking.href}>Book</a>
+</aside>
+
+<script is:inline define:vars={{ entries: teeSheet }}>
+  (() => {
+    const root = document.querySelector('[data-ticker]');
+    if (!root || entries.length < 2) return;
+    const when = root.querySelector('[data-ticker-when]');
+    const note = root.querySelector('[data-ticker-note]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let n = 0;
+    let held = false;
+    let timer = null;
+
+    const paint = () => {
+      const e = entries[n % entries.length];
+      when.textContent = e.when;
+      note.textContent = e.note;
+      note.dataset.low = String(e.low);
+      // Alternating class retriggers the rise animation on every change.
+      const cls = n % 2 ? 'is-b' : 'is-a';
+      [when, note].forEach((el) => {
+        el.classList.remove('is-a', 'is-b');
+        el.classList.add(cls);
+      });
+    };
+
+    const start = () => {
+      if (timer || reduce.matches) return;
+      timer = window.setInterval(() => {
+        if (!held && !document.hidden) { n += 1; paint(); }
+      }, 4200);
+    };
+    const stop = () => { window.clearInterval(timer); timer = null; };
+
+    // Never move while being read, by pointer or by keyboard.
+    root.addEventListener('pointerenter', () => { held = true; });
+    root.addEventListener('pointerleave', () => { held = false; });
+    root.addEventListener('focusin', () => { held = true; });
+    root.addEventListener('focusout', () => { held = false; });
+
+    reduce.addEventListener('change', () => (reduce.matches ? stop() : start()));
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    start();
+  })();
+</script>
+
+<style>
+  .ticker {
+    position: fixed; z-index: 60;
+    display: flex; align-items: stretch; overflow: hidden;
+    background: var(--wr-char);
+    border: 1px solid #3A352F; border-left: 3px solid var(--wr-brass);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-dock);
+    right: var(--gutter); bottom: var(--gutter);
+  }
+  .ticker__body { padding: 0.75rem 1.25rem; display: flex; flex-direction: column; gap: 3px; min-width: 13rem; }
+  .ticker__head {
+    display: flex; align-items: center; gap: 0.4375rem;
+    font-family: var(--font-label); font-weight: 600; font-size: 0.65625rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--wr-mauve-text);
+  }
+  .ticker__dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--wr-brass);
+    animation: wr-pulse 2.4s ease-in-out infinite;
+  }
+  .ticker__when { font-size: 0.90625rem; font-weight: 600; color: #fff; }
+  .ticker__note { font-size: 0.71875rem; color: var(--wr-mauve-text); }
+  .ticker__note[data-low='true'] { color: var(--wr-gold-tint); }
+  .ticker__cta {
+    display: flex; align-items: center; padding-inline: 1.375rem;
+    background: var(--wr-amber); color: var(--wr-char);
+    font-weight: 700; font-size: 0.84375rem;
+    transition: background-color var(--duration-base) var(--ease-out);
+  }
+  .ticker__cta:hover { background: var(--wr-amber-hover); color: var(--wr-char); }
+
+  .is-a, .is-b { animation: wr-rise var(--duration-slow) var(--ease-out); }
+  @keyframes wr-rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  @keyframes wr-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* Mobile: the pill becomes the docked bar — thumb zone, inside the safe area. */
+  @media (max-width: 640px) {
+    .ticker {
+      right: 0; left: 0; bottom: 0;
+      border-radius: 0; border-left: 0; border-top: 2px solid var(--wr-brass);
+      padding-bottom: env(safe-area-inset-bottom);
+      align-items: center; gap: 0.875rem;
+    }
+    .ticker__body { flex: 1; min-width: 0; padding: 0.75rem 0 0.75rem var(--gutter); }
+    .ticker__when { font-size: 0.9375rem; }
+    .ticker__cta { align-self: stretch; margin: 0.5rem var(--gutter) 0.5rem 0; padding-inline: 1.5rem;
+      border-radius: var(--radius-sm); min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__dot, .is-a, .is-b { animation: none; }
+  }
+</style>
