@@ -19,7 +19,7 @@
    ------------------------------------------------------------------ */
 import { teeSheet, booking, url } from '../data/site';
 ---
-<aside class="ticker" data-ticker aria-label="Live tee sheet">
+<aside class="ticker" data-ticker data-entries={JSON.stringify(teeSheet)} aria-label="Live tee sheet">
   <div class="ticker__body">
     <p class="ticker__head">
       <span class="ticker__dot" aria-hidden="true"></span>On the sheet now
@@ -44,33 +44,41 @@ import { teeSheet, booking, url } from '../data/site';
 </aside>
 <p class="visually-hidden" role="status" data-ticker-status></p>
 
-<script is:inline define:vars={{ entries: teeSheet }}>
-  (() => {
-    const root = document.querySelector('[data-ticker]');
-    if (!root || entries.length < 2) return;
-    const when = root.querySelector('[data-ticker-when]');
-    const note = root.querySelector('[data-ticker-note]');
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+<!-- Tucks before first paint, so it rises into place instead of flashing in and
+     sliding away. Without JS this never runs and the ticker simply stays put. -->
+<script is:inline>document.querySelector('[data-ticker]').classList.add('is-tucked');</script>
 
-    // Tuck before first paint, so it rises into place instead of flashing in
-    // and sliding away. Without JS this never runs and it simply stays put.
-    root.classList.add('is-tucked');
+<script>
+  interface Entry { when: string; note: string; low: boolean }
+
+  const root = document.querySelector<HTMLElement>('[data-ticker]');
+  const entries: Entry[] = JSON.parse(root?.dataset.entries ?? '[]');
+  const when = root?.querySelector<HTMLElement>('[data-ticker-when]');
+  const note = root?.querySelector<HTMLElement>('[data-ticker-note]');
+
+  if (root && when && note && entries.length >= 2) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const swapping = [when, note];
 
     let n = 0;
     let held = false;
-    let timer = null;
+    let timer: number | undefined;
 
+    // Old line fades out, then the new one rises. Alternating the class
+    // restarts the rise on every change.
     const paint = () => {
-      const e = entries[n % entries.length];
-      when.textContent = e.when;
-      note.textContent = e.note;
-      note.dataset.low = String(e.low);
-      // Alternating class retriggers the rise animation on every change.
-      const cls = n % 2 ? 'is-b' : 'is-a';
-      [when, note].forEach((el) => {
-        el.classList.remove('is-a', 'is-b');
-        el.classList.add(cls);
-      });
+      swapping.forEach((el) => el.classList.add('is-out'));
+      window.setTimeout(() => {
+        const e = entries[n % entries.length];
+        when.textContent = e.when;
+        note.textContent = e.note;
+        note.dataset.low = String(e.low);
+        const cls = n % 2 ? 'is-b' : 'is-a';
+        swapping.forEach((el) => {
+          el.classList.remove('is-a', 'is-b', 'is-out');
+          el.classList.add(cls);
+        });
+      }, 120);
     };
 
     const start = () => {
@@ -79,7 +87,7 @@ import { teeSheet, booking, url } from '../data/site';
         if (!held && !document.hidden) { n += 1; paint(); }
       }, 4200);
     };
-    const stop = () => { window.clearInterval(timer); timer = null; };
+    const stop = () => { window.clearInterval(timer); timer = undefined; };
 
     // Never move while being read, by pointer or by keyboard.
     root.addEventListener('pointerenter', () => { held = true; });
@@ -90,81 +98,84 @@ import { teeSheet, booking, url } from '../data/site';
     reduce.addEventListener('change', () => (reduce.matches ? stop() : start()));
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
-    // It follows without nagging: a floating pill that overlays body text has
-    // to be dismissible. Remembered for the session only, so it returns on
-    // the next visit rather than disappearing for good.
+    // It follows without nagging: a floating pill has to be dismissible.
+    // Remembered for the session only, so it returns on the next visit.
     const KEY = 'wr-ticker-hidden';
     const read = () => { try { return sessionStorage.getItem(KEY) === '1'; } catch { return false; } };
     const write = () => { try { sessionStorage.setItem(KEY, '1'); } catch { /* private mode */ } };
 
-    if (read()) { root.hidden = true; return; }
+    if (read()) {
+      root.hidden = true;
+    } else {
+      /* ---- when to get out of the way ---- */
+      const phone = window.matchMedia('(max-width: 640px)');
+      const blockers = new Set<Element>();
+      const sync = () => {
+        // Never yank it away from someone who has focus inside it.
+        if (blockers.size && root.contains(document.activeElement)) return;
+        root.classList.toggle('is-tucked', blockers.size > 0);
+      };
+      const track: IntersectionObserverCallback = (changes) => {
+        changes.forEach((c) => (c.isIntersecting ? blockers.add(c.target) : blockers.delete(c.target)));
+        sync();
+      };
 
-    /* ---- when to get out of the way ---- */
-    const phone = window.matchMedia('(max-width: 640px)');
-    const blockers = new Set();
-    const sync = () => {
-      // Never yank it away from someone who has focus inside it.
-      if (blockers.size && root.contains(document.activeElement)) return;
-      root.classList.toggle('is-tucked', blockers.size > 0);
-    };
-    const track = (entries) => {
-      entries.forEach((e) => (e.isIntersecting ? blockers.add(e.target) : blockers.delete(e.target)));
-      sync();
-    };
+      let observers: IntersectionObserver[] = [];
+      const watch = () => {
+        observers.forEach((o) => o.disconnect());
+        blockers.clear();
 
-    let observers = [];
-    const watch = () => {
-      observers.forEach((o) => o.disconnect());
-      blockers.clear();
+        // Whole-viewport: the footer always, the hero's booking buttons on desktop.
+        const page = new IntersectionObserver(track);
+        document.querySelectorAll('footer').forEach((el) => page.observe(el));
+        if (!phone.matches) {
+          document.querySelectorAll('.hero__cta, .phero').forEach((el) => page.observe(el));
+        }
+        observers = [page];
+        if (phone.matches) return;
 
-      // Whole-viewport: the footer always, the hero's booking buttons on desktop.
-      const page = new IntersectionObserver(track);
-      document.querySelectorAll('footer').forEach((el) => page.observe(el));
-      if (!phone.matches) {
-        document.querySelectorAll('.hero__cta, .phero').forEach((el) => page.observe(el));
-      }
-      observers = [page];
-      if (phone.matches) return;
+        // The ticker's own resting rectangle: anything interactive passing through
+        // it would be covered. The tucked transform comes off for the measurement.
+        const was = root.classList.contains('is-tucked');
+        root.style.transition = 'none';
+        root.classList.remove('is-tucked');
+        const r = root.getBoundingClientRect();
+        root.classList.toggle('is-tucked', was);
+        void root.offsetHeight; // commit the tucked state before transitions come back
+        root.style.transition = '';
+        // 8px of slack, so it clears out before anything actually touches it.
+        const vw = document.documentElement.clientWidth;
+        const vh = window.innerHeight;
+        const gap = 8;
+        const corner = new IntersectionObserver(track, {
+          rootMargin: `${gap - Math.round(r.top)}px ${gap - Math.round(vw - r.right)}px ${gap - Math.round(vh - r.bottom)}px ${gap - Math.round(r.left)}px`,
+        });
+        document.querySelectorAll('main a, main button, main input, main select, main textarea')
+          .forEach((el) => corner.observe(el));
+        observers.push(corner);
+      };
 
-      // The ticker's own resting rectangle: anything interactive passing through
-      // it would be covered. The tucked transform is removed for the measurement.
-      const was = root.classList.contains('is-tucked');
-      root.style.transition = 'none';
-      root.classList.remove('is-tucked');
-      const r = root.getBoundingClientRect();
-      root.classList.toggle('is-tucked', was);
-      root.offsetHeight; // commit the tucked state before transitions come back
-      root.style.transition = '';
-      const vw = document.documentElement.clientWidth;
-      const vh = window.innerHeight;
-      const corner = new IntersectionObserver(track, {
-        rootMargin: `${-Math.round(r.top)}px ${-Math.round(vw - r.right)}px ${-Math.round(vh - r.bottom)}px ${-Math.round(r.left)}px`,
+      let resizeTimer: number | undefined;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(watch, 150);
       });
-      document.querySelectorAll('main a, main button, main input, main select, main textarea')
-        .forEach((el) => corner.observe(el));
-      observers.push(corner);
-    };
+      watch();
 
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(watch, 150);
-    });
-    watch();
+      root.querySelector('[data-ticker-dismiss]')?.addEventListener('click', () => {
+        stop();
+        observers.forEach((o) => o.disconnect());
+        root.classList.add('is-tucked');
+        write();
+        const status = document.querySelector('[data-ticker-status]');
+        if (status) status.textContent = 'Tee sheet hidden for this visit.';
+        // Leave the same way it came in, then come out of the page entirely.
+        window.setTimeout(() => { root.hidden = true; }, 220);
+      });
 
-    root.querySelector('[data-ticker-dismiss]')?.addEventListener('click', () => {
-      stop();
-      observers.forEach((o) => o.disconnect());
-      root.classList.add('is-tucked');
-      write();
-      const status = document.querySelector('[data-ticker-status]');
-      if (status) status.textContent = 'Tee sheet hidden for this visit.';
-      // Leave the same way it came in, then come out of the page entirely.
-      window.setTimeout(() => { root.hidden = true; }, 220);
-    });
-
-    start();
-  })();
+      start();
+    }
+  }
 </script>
 
 <style>
@@ -178,13 +189,14 @@ import { teeSheet, booking, url } from '../data/site';
     right: var(--gutter); bottom: var(--gutter);
     /* Rising in: unhurried, with a beat so it does not flicker past a link that
        only just cleared the corner. Clearing out: quick. */
-    transition: transform 400ms var(--ease-out) 120ms, visibility 0s linear 0s;
+    transition: transform 400ms var(--ease-out) 120ms, opacity 400ms var(--ease-out) 120ms, visibility 0s linear 0s;
   }
   /* visibility takes the tucked ticker out of the tab order too. */
   .ticker.is-tucked {
     transform: translateY(calc(100% + var(--gutter) + 8px));
+    opacity: 0;
     visibility: hidden;
-    transition: transform 200ms var(--ease-out), visibility 0s linear 200ms;
+    transition: transform 200ms var(--ease-out), opacity 200ms var(--ease-out), visibility 0s linear 200ms;
   }
   :global(html[data-drawer-open]) .ticker {
     transform: translateY(calc(100% + var(--gutter) + 8px));
@@ -201,16 +213,18 @@ import { teeSheet, booking, url } from '../data/site';
     width: 6px; height: 6px; border-radius: 50%; background: var(--wr-brass);
     animation: wr-pulse 2.4s ease-in-out infinite;
   }
-  .ticker__when { font-size: 0.90625rem; font-weight: 600; color: #fff; }
-  .ticker__note { font-size: 0.71875rem; color: var(--wr-mauve-text); }
+  .ticker__when { font-size: 0.90625rem; font-weight: 600; color: #fff; transition: opacity 120ms var(--ease-out); }
+  .ticker__note { font-size: 0.71875rem; color: var(--wr-mauve-text); transition: opacity 120ms var(--ease-out); }
+  .ticker__when.is-out, .ticker__note.is-out { opacity: 0; }
   .ticker__note[data-low='true'] { color: var(--wr-gold-tint); }
   .ticker__cta {
     display: flex; align-items: center; padding-inline: 1.375rem;
     background: var(--wr-amber); color: var(--wr-char);
     font-weight: 700; font-size: 0.84375rem;
-    transition: background-color var(--duration-base) var(--ease-out);
+    transition: background-color var(--duration-base) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   }
   .ticker__cta:hover { background: var(--wr-amber-hover); color: var(--wr-char); }
+  .ticker__cta:active { transform: scale(0.98); }
   .ticker[hidden] { display: none; }
 
   /* 44px touch target, 10px glyph — the chrome stays quiet. */
@@ -223,8 +237,12 @@ import { teeSheet, booking, url } from '../data/site';
     transition: color var(--duration-base) var(--ease-out);
   }
   .ticker__x:hover { color: #fff; }
+  /* On desktop the control sits over the amber Book block, where mauve disappears. */
+  @media (min-width: 641px) {
+    .ticker__x, .ticker__x:hover { color: var(--wr-char); }
+  }
 
-  .is-a, .is-b { animation: wr-rise var(--duration-slow) var(--ease-out); }
+  .is-a, .is-b { animation: wr-rise 260ms var(--ease-out); }
   @keyframes wr-rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
   @keyframes wr-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 

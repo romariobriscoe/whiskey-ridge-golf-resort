@@ -153,3 +153,13 @@
 .form-done p { color: var(--wr-ink-muted); }
 .btn--quiet { border: 1px solid var(--wr-mauve); color: var(--wr-ink); }
 .btn--quiet:hover { border-color: var(--wr-emerald); color: var(--wr-emerald); }
+
+/* ---------- card reveal: once, on first scroll into view (src/scripts/reveal.ts) ---------- */
+html.js .grid > .card { transition: opacity 480ms var(--ease-out), transform 480ms var(--ease-out); }
+html.js .grid > .card:not(.is-in) { opacity: 0; transform: translateY(14px); }
+@media (prefers-reduced-motion: reduce) {
+  html.js .grid > .card:not(.is-in) { transform: none; }
+}
+@media print {
+  html.js .grid > .card:not(.is-in), html.js img:not([data-loaded]) { opacity: 1; transform: none; }
+}

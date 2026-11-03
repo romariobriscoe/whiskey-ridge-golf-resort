@@ -25,7 +25,7 @@
 
   --wr-white:         #FFFFFF;
   --wr-soft:          #F5F5F5;  /* alternating light band */
-  --wr-line:          #DEDEDE;  /* hairline on light */
+  --wr-line:          #D6D6D6;  /* hairline on light */
   --wr-line-dark:     rgba(255, 255, 255, 0.14);
 
   --wr-ink:           #231F20;  /* body text on light */
@@ -80,7 +80,7 @@
   --duration-fast: 120ms;
   --duration-base: 180ms;
   --duration-slow: 400ms;
-  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
   /* --- band defaults (light register) ------------------------------- */
   --band-bg:     var(--wr-white);

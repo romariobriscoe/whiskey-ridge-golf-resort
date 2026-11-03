@@ -15,7 +15,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 img, picture, svg, video { display: block; max-width: 100%; }
-img { background: var(--wr-soft); }
+img { background: var(--wr-soft); transition: opacity 320ms ease; }
+/* A photo fades up when it arrives. The head script marks each image on load
+   or error, so this can't strand one, and without JS html.js never applies. */
+html.js img:not([data-loaded]) { opacity: 0; }
 /* A photo on a dark band loads against the band's own dark, never a light grey
    flash. Under a hero scrim, grey reads as a washed-out photo until it decodes. */
 .band--char img, .band--forest img { background: var(--wr-char-deep); }
@@ -35,7 +38,7 @@ button { background: none; border: 0; cursor: pointer; }
   font-weight: 500;              /* never heavier — Phase 0 rule */
   font-size: var(--text-hero);
   line-height: var(--leading-hero);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;       /* large type wants tighter tracking than body */
   font-variation-settings: 'SOFT' 0, 'WONK' 0;
   text-wrap: balance;   /* keeps 'No dress code.' off its own orphan line */
 }
@@ -45,6 +48,7 @@ h2.heading, .heading {
   font-weight: 500;
   font-size: var(--text-h2);
   line-height: var(--leading-head);
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 h3.subhead, .subhead {
@@ -78,7 +82,9 @@ a:hover { color: var(--wr-forest-mid); }
 .band--char a:hover, .band--forest a:hover { color: var(--wr-gold-tint); }
 .link-arrow { font-weight: 600; font-size: var(--text-ui); display: inline-flex; gap: 0.4em; align-items: center; }
 .link-arrow::after { content: '\2192'; transition: transform var(--duration-base) var(--ease-out); }
-.link-arrow:hover::after { transform: translateX(3px); }
+@media (hover: hover) and (pointer: fine) {
+  .link-arrow:hover::after { transform: translateX(3px); }
+}
 
 /* ---------- buttons ---------- */
 .btn {
@@ -90,14 +96,15 @@ a:hover { color: var(--wr-forest-mid); }
   transition: background-color var(--duration-base) var(--ease-out),
               color var(--duration-base) var(--ease-out),
               border-color var(--duration-base) var(--ease-out),
-              opacity var(--duration-base) var(--ease-out);
+              opacity var(--duration-base) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
 }
 .btn--primary { background: var(--wr-amber); color: var(--wr-char); }
 .btn--primary:hover { background: var(--wr-amber-hover); color: var(--wr-char); }
 .btn--ghost { border: 1px solid var(--band-rule); color: var(--band-text); }
 .band--char .btn--ghost, .band--forest .btn--ghost { border-color: var(--wr-brass); color: #fff; }
 .btn--ghost:hover { border-color: var(--band-accent); color: var(--band-accent); }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: scale(0.98); }
 .btn[disabled], [aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 
 /* ---------- forms ---------- */
@@ -137,10 +144,25 @@ a:hover { color: var(--wr-forest-mid); }
 .rule-top { border-top: 2px solid var(--band-mark); padding-top: var(--space-2); }
 
 /* ---------- motion ---------- */
+/* The page-load settle: once per page, per session. Never blocks a click. */
+@keyframes wr-intro { from { opacity: 0; transform: translateY(10px); } }
+@keyframes wr-intro-fade { from { opacity: 0; } }
+html:not(.intro-seen) .intro > *,
+html:not(.intro-seen) .intro-tail { animation: wr-intro 520ms var(--ease-out) both; }
+html:not(.intro-seen) .intro > :nth-child(2) { animation-delay: 60ms; }
+html:not(.intro-seen) .intro > :nth-child(3) { animation-delay: 120ms; }
+html:not(.intro-seen) .intro > :nth-child(4) { animation-delay: 180ms; }
+html:not(.intro-seen) .intro > :nth-child(5) { animation-delay: 240ms; }
+html:not(.intro-seen) .intro-tail { animation-delay: 300ms; }
+
+/* Reduced motion means gentler, not nothing: movement goes, while fades and color
+   changes stay because they carry meaning and don't trigger vestibular issues. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
-    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: opacity, color, background-color, border-color, box-shadow, visibility !important;
   }
+  :active { transform: none !important; }
+  html:not(.intro-seen) .intro > *,
+  html:not(.intro-seen) .intro-tail { animation: wr-intro-fade 260ms ease both; animation-delay: 0ms !important; }
 }

@@ -28,7 +28,7 @@ const { eyebrow, title, em, lead, image, alt = '' } = Astro.props;
       <div class="phero__scrim" aria-hidden="true"></div>
     </>
   )}
-  <div class="shell phero__inner">
+  <div class="shell phero__inner intro">
     <p class="eyebrow">{eyebrow}</p>
     <h1 id="page-h" class="display phero__h">{title}{em && <> <em>{em}</em></>}</h1>
     {lead && <p class="lead phero__lead">{lead}</p>}

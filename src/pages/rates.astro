@@ -437,11 +437,13 @@ const label: Record<string, string> = {
   .time {
     width: 100%; min-height: 56px; padding: 0.875rem 0.625rem; text-align: center;
     background: var(--wr-white); border: 1px solid var(--wr-mauve); border-radius: var(--radius-sm);
-    transition: border-color var(--duration-base) var(--ease-out), background-color var(--duration-base) var(--ease-out);
+    transition: border-color var(--duration-base) var(--ease-out), background-color var(--duration-base) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
   }
+  .time:active:not([aria-disabled='true']) { transform: scale(0.98); }
   .time:hover:not([aria-disabled='true']) { border-color: var(--wr-emerald); }
-  .time__t { display: block; font-weight: 700; font-size: 1rem; color: var(--wr-ink); }
-  .time__s { display: block; font-size: 0.75rem; color: var(--wr-plum); margin-top: 4px; }
+  .time__t { display: block; font-weight: 700; font-size: 1rem; color: var(--wr-ink); transition: color var(--duration-base) var(--ease-out); }
+  .time__s { display: block; font-size: 0.75rem; color: var(--wr-plum); margin-top: 4px; transition: color var(--duration-base) var(--ease-out); }
   .time--selected { background: var(--wr-char); border-color: var(--wr-char); }
   .time--selected .time__t { color: #fff; }
   .time--selected .time__s { color: var(--wr-brass); }

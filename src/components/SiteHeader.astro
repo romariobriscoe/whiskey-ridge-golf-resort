@@ -9,7 +9,8 @@ const isCurrent = (href: string) => {
   return path === target || (href !== '/' && path.startsWith(target));
 };
 ---
-<header class="hdr band band--char">
+<div class="hdr-sentinel" data-hdr-sentinel aria-hidden="true"></div>
+<header class="hdr band band--char" data-hdr>
   <div class="hdr__inner shell">
     <Wordmark />
 
@@ -49,7 +50,34 @@ const isCurrent = (href: string) => {
 </header>
 
 <style>
-  .hdr { position: sticky; top: 0; z-index: 50; }
+  .hdr {
+    position: sticky; top: 0; z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition: background-color var(--duration-base) var(--ease-out),
+                border-color var(--duration-base) var(--ease-out);
+  }
+  /* Past the first 48px the bar becomes a material: the page scrolls under it. Alpha
+     is held at 0.92 so the small brass wordmark line keeps AA over a white band. */
+  .hdr.is-scrolled {
+    background: rgba(35, 31, 32, 0.92);
+    border-bottom-color: var(--wr-line-dark);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+  :global(html[data-drawer-open]) .hdr.is-scrolled {
+    background: var(--wr-char);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .hdr.is-scrolled {
+      background: var(--wr-char);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+  /* Watched instead of a scroll listener, so scrolling does no work on the main thread. */
+  .hdr-sentinel { position: absolute; top: 48px; left: 0; width: 1px; height: 1px; pointer-events: none; }
   .hdr__inner { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.75rem); min-height: 78px; }
   .hdr__nav { display: flex; gap: 1.25rem; margin-left: auto; font-size: 0.84375rem; font-weight: 500; }
   .hdr__nav a { color: var(--wr-line); padding-block: 0.25rem; }
@@ -122,6 +150,14 @@ const isCurrent = (href: string) => {
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const drawer = document.querySelector<HTMLElement>('[data-drawer]');
   const label = document.querySelector<HTMLElement>('[data-menu-label]');
+
+  const header = document.querySelector<HTMLElement>('[data-hdr]');
+  const sentinel = document.querySelector('[data-hdr-sentinel]');
+  if (header && sentinel) {
+    new IntersectionObserver(([entry]) => {
+      header.classList.toggle('is-scrolled', !entry.isIntersecting);
+    }).observe(sentinel);
+  }
 
   if (toggle && drawer) {
     const setOpen = (open: boolean) => {
