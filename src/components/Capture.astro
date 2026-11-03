@@ -1,0 +1,52 @@
+---
+/* "First on the sheet" email capture. Short on purpose: one sentence, one field
+   that matters. Wiring and demo state live in src/scripts/capture.ts. */
+import { url } from '../data/site';
+
+interface Props {
+  /** Where this form sits. Becomes the Klaviyo custom source, and keeps ids unique. */
+  source: string;
+  level?: 'h2' | 'h3';
+}
+const { source, level: Heading = 'h2' } = Astro.props;
+const id = `capture-${source}`;
+---
+<div class="capture">
+  <div>
+    <Heading id={`${id}-h`} class={Heading === 'h2' ? 'heading' : 'subhead'}>First on the sheet.</Heading>
+    <p class="prose capture__p">When passes, lodging and founding-member pricing are set, you hear first.</p>
+  </div>
+  <form class="capture__form" data-capture data-source={source} aria-labelledby={`${id}-h`}>
+    <div class="field">
+      <label for={`${id}-email`}>Email</label>
+      <input class="input" id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="email" required />
+    </div>
+    <div class="field">
+      <label for={`${id}-zip`}>ZIP (optional)</label>
+      <input class="input" id={`${id}-zip`} name="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" />
+    </div>
+    <button class="btn btn--primary capture__btn" type="submit">Count me in</button>
+    <p class="meta capture__consent">Whiskey Ridge email only. Unsubscribe anytime. <a href={url('/privacy/')}>Privacy</a></p>
+  </form>
+</div>
+
+<script>
+  import '../scripts/capture';
+</script>
+
+<style>
+  .capture { display: grid; gap: var(--space-3); align-items: center; }
+  .capture__p { margin-top: 0.5rem; }
+  .capture__form { display: grid; gap: var(--space-2); align-items: start; }
+  .capture__consent { grid-column: 1 / -1; }
+  .capture__consent a { text-decoration: underline; text-underline-offset: 2px; }
+  .capture__btn { min-height: 48px; }
+  @media (min-width: 560px) {
+    .capture__form { grid-template-columns: minmax(0, 1fr) 7.5rem auto; }
+    /* Line up with the inputs, past the label above them. */
+    .capture__btn { margin-top: 1.675rem; }
+  }
+  @media (min-width: 1000px) {
+    .capture { grid-template-columns: 1fr 1.25fr; gap: var(--space-8); }
+  }
+</style>

@@ -150,7 +150,8 @@ import { teeSheet, booking, url } from '../data/site';
         const corner = new IntersectionObserver(track, {
           rootMargin: `${gap - Math.round(r.top)}px ${gap - Math.round(vw - r.right)}px ${gap - Math.round(vh - r.bottom)}px ${gap - Math.round(r.left)}px`,
         });
-        document.querySelectorAll('main a, main button, main input, main select, main textarea')
+        // Gallery tiles are excepted: each is a huge target, and they fill the page.
+        document.querySelectorAll('main a:not(.gal__link), main button, main input, main select, main textarea')
           .forEach((el) => corner.observe(el));
         observers.push(corner);
       };

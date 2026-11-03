@@ -1,0 +1,201 @@
+---
+/* Photo viewer for any `[data-gallery]` list of links. A native dialog, so focus
+   handling, Escape and the top layer come from the browser. Each link points at
+   the full-size file, so without JavaScript it simply opens the photo. */
+---
+<dialog class="lb" data-lb aria-label="Photo viewer">
+  <div class="lb__stage" data-lb-stage>
+    <figure class="lb__fig" data-lb-fig>
+      <img class="lb__img" data-lb-img alt="" />
+      <figcaption class="lb__cap" aria-live="polite">
+        <span data-lb-cap></span>
+        <span class="lb__n" data-lb-n></span>
+      </figcaption>
+    </figure>
+  </div>
+  <button class="lb__ctl lb__close" type="button" data-lb-close>Close</button>
+  <button class="lb__ctl lb__prev" type="button" data-lb-prev aria-label="Previous photo">
+    <span aria-hidden="true">←</span>
+  </button>
+  <button class="lb__ctl lb__next" type="button" data-lb-next aria-label="Next photo">
+    <span aria-hidden="true">→</span>
+  </button>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lb]');
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-gallery] a')];
+
+  if (dialog && links.length) {
+    const stage = dialog.querySelector<HTMLElement>('[data-lb-stage]')!;
+    const fig = dialog.querySelector<HTMLElement>('[data-lb-fig]')!;
+    const img = dialog.querySelector<HTMLImageElement>('[data-lb-img]')!;
+    const cap = dialog.querySelector<HTMLElement>('[data-lb-cap]')!;
+    const count = dialog.querySelector<HTMLElement>('[data-lb-n]')!;
+    let index = 0;
+    let closeTimer: number | undefined;
+
+    const at = (i: number) => (i + links.length) % links.length;
+    const fill = (target: HTMLImageElement, link: HTMLAnchorElement) => {
+      target.sizes = '92vw';
+      target.srcset = link.dataset.srcset ?? '';
+      target.src = link.href;
+    };
+
+    const show = (i: number) => {
+      index = at(i);
+      const link = links[index];
+      fill(img, link);
+      img.alt = link.querySelector('img')?.alt ?? '';
+      cap.textContent = link.dataset.cap ?? '';
+      count.textContent = `${index + 1} of ${links.length}`;
+      // Next and previous are ready before anyone asks for them.
+      [index + 1, index - 1].forEach((n) => fill(new Image(), links[at(n)]));
+    };
+
+    const open = (i: number, link: HTMLAnchorElement) => {
+      window.clearTimeout(closeTimer);
+      dialog.classList.remove('is-closing');
+      // Grows out of the tile that was clicked.
+      const r = link.getBoundingClientRect();
+      stage.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
+      show(i);
+      dialog.showModal();
+    };
+
+    const close = () => {
+      if (!dialog.open || dialog.classList.contains('is-closing')) return;
+      dialog.classList.add('is-closing');
+      closeTimer = window.setTimeout(() => dialog.close(), 160);
+    };
+
+    links.forEach((link, i) => {
+      link.addEventListener('click', (event) => {
+        // Let modified clicks open the file in a new tab as usual.
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        open(i, link);
+      });
+    });
+
+    dialog.addEventListener('close', () => {
+      window.clearTimeout(closeTimer);
+      dialog.classList.remove('is-closing');
+    });
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      close();
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') show(index + 1);
+      if (event.key === 'ArrowLeft') show(index - 1);
+    });
+    dialog.querySelector('[data-lb-close]')?.addEventListener('click', close);
+    dialog.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-lb-next]')?.addEventListener('click', () => show(index + 1));
+
+    // A click anywhere that isn't the photo or a control closes it.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog || event.target === stage) close();
+    });
+
+    /* ---- swipe: the photo follows the finger, a flick is enough ---- */
+    let finger: number | null = null;
+    let startX = 0;
+    let startT = 0;
+    let dx = 0;
+
+    fig.addEventListener('pointerdown', (event) => {
+      // Touch only, and only the first finger: a second one must not make it jump.
+      if (event.pointerType !== 'touch' || finger !== null) return;
+      finger = event.pointerId;
+      startX = event.clientX;
+      startT = event.timeStamp;
+      dx = 0;
+      fig.setPointerCapture(event.pointerId);
+      fig.style.transition = 'none';
+    });
+    fig.addEventListener('pointermove', (event) => {
+      if (event.pointerId !== finger) return;
+      dx = event.clientX - startX;
+      fig.style.transform = `translateX(${dx}px)`;
+    });
+    const release = (event: PointerEvent) => {
+      if (event.pointerId !== finger) return;
+      finger = null;
+      const velocity = Math.abs(dx) / Math.max(event.timeStamp - startT, 1);
+      const commit = event.type === 'pointerup' && (Math.abs(dx) > 60 || (velocity > 0.11 && Math.abs(dx) > 10));
+      if (commit) {
+        const dir = dx < 0 ? 1 : -1;
+        show(index + dir);
+        // The new photo arrives from the side the swipe is heading toward.
+        fig.style.transform = `translateX(${dir * 48}px)`;
+        void fig.offsetWidth;
+      }
+      fig.style.transition = '';
+      fig.style.transform = '';
+    };
+    fig.addEventListener('pointerup', release);
+    fig.addEventListener('pointercancel', release);
+  }
+</script>
+
+<style>
+  .lb {
+    position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; overflow: hidden; background: transparent; color: #fff;
+  }
+  .lb::backdrop { background: rgba(20, 17, 15, 0.94); transition: opacity 220ms var(--ease-out); }
+  .lb__stage {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 4.25rem var(--gutter) 1.5rem;
+    transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+  .lb__ctl { transition: opacity 220ms var(--ease-out), background-color var(--duration-base) var(--ease-out); }
+  @starting-style {
+    .lb[open]::backdrop { opacity: 0; }
+    .lb[open] .lb__stage { opacity: 0; transform: scale(0.96); }
+    .lb[open] .lb__ctl { opacity: 0; }
+  }
+  /* Closing is quicker than opening: the system responding, not the user deciding. */
+  .lb.is-closing::backdrop { opacity: 0; transition-duration: 160ms; }
+  .lb.is-closing .lb__stage { opacity: 0; transform: scale(0.96); transition-duration: 160ms; }
+  .lb.is-closing .lb__ctl { opacity: 0; transition-duration: 160ms; }
+
+  .lb__fig {
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem; max-width: 100%; margin: 0;
+    touch-action: pan-y pinch-zoom; transition: transform 200ms var(--ease-out);
+  }
+  .lb__img {
+    max-width: min(100%, 1376px); max-height: calc(100dvh - 9.5rem); width: auto; height: auto;
+    object-fit: contain; background: transparent; border-radius: var(--radius-sm); user-select: none; -webkit-user-drag: none;
+  }
+  .lb__cap {
+    display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; justify-content: center; text-align: center;
+    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .lb__n { color: var(--wr-brass); }
+
+  .lb__ctl {
+    position: absolute; min-width: 44px; min-height: 44px; padding: 0.625rem 0.875rem;
+    color: #fff; background: rgba(35, 31, 32, 0.72); border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--radius-sm); font-size: 1.125rem; line-height: 1;
+  }
+  .lb__ctl:focus-visible { outline-color: var(--wr-brass); }
+  .lb__close {
+    top: 1rem; right: var(--gutter);
+    font-family: var(--font-label); font-weight: 600; font-size: 0.8125rem;
+    letter-spacing: var(--track-label); text-transform: uppercase;
+  }
+  .lb__prev { left: var(--gutter); top: 50%; transform: translateY(-50%); }
+  .lb__next { right: var(--gutter); top: 50%; transform: translateY(-50%); }
+  @media (hover: hover) and (pointer: fine) {
+    .lb__ctl:hover { background: var(--wr-char); }
+  }
+  /* Phones swipe. The arrows would sit on the photo. */
+  @media (max-width: 640px) {
+    .lb__prev, .lb__next { display: none; }
+  }
+  :global(html:has(.lb[open])) { overflow: hidden; }
+</style>

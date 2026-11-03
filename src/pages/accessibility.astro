@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import { contact } from '../data/site';
+---
+
+<BaseLayout
+  title="Accessibility | Whiskey Ridge Golf Resort"
+  description="How Whiskey Ridge Golf Resort approaches accessibility on this website, and how to reach a person if something gets in your way."
+>
+  <PageHero eyebrow="Accessibility" title="If something's in your way," em="tell us.">
+    <p class="legal__flag"><Pending label="Draft · pending legal review" /></p>
+  </PageHero>
+
+  <section class="section band">
+    <div class="shell legal">
+      <h2 class="subhead">What we're aiming for</h2>
+      <p class="prose">We build this site toward WCAG 2.1 AA. That covers keyboard access, readable contrast, labeled forms and controls, and respect for your device's reduced motion and reduced transparency settings.</p>
+
+      <h2 class="subhead">Where it stands</h2>
+      <p class="prose">This is a work in progress. We have checked contrast, keyboard behavior and motion settings as we built. The site has not had a full audit, and it has not yet been tested with screen readers such as VoiceOver or NVDA. There will be things we've missed.</p>
+
+      <h2 class="subhead">Reach a person</h2>
+      <p class="prose">If any part of the site is hard to use, call <a href={contact.phoneHref}>{contact.phone}</a> and we'll get you what you need and fix what we can.</p>
+    </div>
+  </section>
+</BaseLayout>

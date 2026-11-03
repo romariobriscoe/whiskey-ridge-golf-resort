@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import Capture from '../components/Capture.astro';
 import { contact, url } from '../data/site';
 
 import cabinsImg from '../assets/photos/stay_on_site_lodging_concept_cabins.jpg';
@@ -93,6 +94,12 @@ const nearby = [
       <Image class="split__img" src={dawnImg}
              alt="Dawn over the valley course, mist on the ridges beyond the fairways"
              widths={[480, 720, 960]} sizes="(max-width: 1000px) 100vw, 45vw" quality={72} />
+    </div>
+  </section>
+
+  <section class="section band band--forest">
+    <div class="shell">
+      <Capture source="stay" />
     </div>
   </section>
 </BaseLayout>

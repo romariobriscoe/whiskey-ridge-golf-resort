@@ -119,14 +119,18 @@ export const rateCard = [
 export const experientialTiers = [
   {
     name: 'Range & a round of drinks',
+    line: 'No tee time, no scorecard, no reason to be good at golf.',
+    noTeeTime: true,
     body: 'An hour on the range with the bar open behind you. No tee time, no scorecard, no reason to be good at golf.',
   },
   {
     name: 'Nine and dine',
+    line: 'The weeknight version of a golf trip.',
     body: 'Nine holes late in the day, a table held for afterward. The weeknight version of a golf trip.',
   },
   {
     name: 'The full day',
+    line: 'Eighteen, lunch at the turn, and the bar when you are done.',
     body: 'Eighteen, lunch at the turn, and the bar when you are done. Built for groups who want the day handled.',
   },
 ] as const;
@@ -225,6 +229,33 @@ export const teeSheet = [
   { when: 'Saturday · 9:40 AM', note: 'Open foursome · walking', low: false },
   { when: 'Sunday · 7:30 AM', note: 'First off the tee · 3 spots', low: false },
 ] as const;
+
+/* Email capture. Both are public values, meant to ship in the browser: the company
+   ID is Klaviyo's public key, and neither can read anything back. A private Klaviyo
+   key must never go here. While `enabled` is false the form validates and then says
+   plainly that it is a demo.
+
+   Off for now: on 2026-11-02 Klaviyo answered 403 permission_denied to every client
+   endpoint on this account, so a live form would only show visitors an error. Flip
+   this once a test signup with a real address lands on the list. */
+export const klaviyo = {
+  enabled: false,
+  companyId: 'S5Ghjp', // Tennessee Hills Distillery account
+  listId: 'UaeEGV',    // "Whiskey Ridge" list, single opt-in
+} as const;
+
+/* Slots that stay invisible until there is something true to put in them. An
+   empty list renders nothing at all: no empty section, no "coming soon". */
+export interface PressItem { outlet: string; title: string; url: string; date: string }
+export const press: PressItem[] = [];
+
+/* A dated line under the homepage stats. Leave `when` off and the date shows
+   as a pending chip, e.g. { label: 'Clubhouse bar' }. */
+export interface Milestone { label: string; when?: string }
+export const milestones: Milestone[] = [];
+
+/* Full profile URL. Blank renders nothing, so no dead link ships before the account exists. */
+export const social = { instagram: '' };
 
 export const booking = {
   provider: TBD, // TBD: foreUP / Lightspeed / GolfNow / Supreme

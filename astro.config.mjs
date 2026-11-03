@@ -23,4 +23,7 @@ export default defineConfig({
     layout: 'constrained',
   },
   build: { inlineStylesheets: 'auto' },
+  // Scripts of any real size ship as files the browser caches between pages,
+  // rather than repeated inside every page's HTML.
+  vite: { build: { assetsInlineLimit: 1024 } },
 });
