@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import { contact, site } from '../data/site';
+---
+
+<BaseLayout
+  title="Terms | Whiskey Ridge Golf Resort"
+  description="The terms for using the Whiskey Ridge Golf Resort website."
+>
+  <PageHero eyebrow="Terms" title="The fine print," em="kept short.">
+    <p class="legal__flag"><Pending label="Draft · pending legal review" /></p>
+  </PageHero>
+
+  <section class="section band">
+    <div class="shell legal">
+      <p class="prose">These terms cover your use of the {site.name} website. They are a draft and will change before the resort opens.</p>
+
+      <h2 class="subhead">Plans can change</h2>
+      <p class="prose">{site.name} is being developed. Rates, passes, lodging, menus, attractions and hours on this site show direction and are not offers. Anything marked as pending, or as a concept, has not been confirmed.</p>
+
+      <h2 class="subhead">Nothing books here yet</h2>
+      <p class="prose">The booking and inquiry forms are demonstrations and do not reserve anything. To hold a real tee time, call <a href={contact.phoneHref}>{contact.phone}</a>.</p>
+
+      <h2 class="subhead">Alcohol</h2>
+      <p class="prose">Alcohol is served only to guests of legal drinking age. Please drink responsibly.</p>
+
+      <h2 class="subhead">Photos and content</h2>
+      <p class="prose">The photos, text and branding on this site belong to their owners. Some images are concepts or illustrations rather than photographs of something that exists today, and they are labeled where that matters most.</p>
+
+      <h2 class="subhead">Links to other sites</h2>
+      <p class="prose">We link to partners and neighbors, including Tennessee Hills Distillery. Those sites have their own terms, and we are not responsible for them.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Pending from '../components/Pending.astro';
+import { contact, site } from '../data/site';
+---
+
+<BaseLayout
+  title="Privacy | Whiskey Ridge Golf Resort"
+  description="What Whiskey Ridge Golf Resort collects through this website, and what happens to it."
+>
+  <PageHero eyebrow="Privacy" title="What we collect," em="and what we do with it.">
+    <p class="legal__flag"><Pending label="Draft · pending legal review" /></p>
+  </PageHero>
+
+  <section class="section band">
+    <div class="shell legal">
+      <p class="prose">This describes the {site.name} website as it runs today. It is a draft and will change before the resort opens.</p>
+
+      <h2 class="subhead">Email sign-ups</h2>
+      <p class="prose">If you join the "First on the sheet" list, we collect your email address and, if you give it, your ZIP code. We use them to send news about Whiskey Ridge. The list is managed through Klaviyo, our email provider. You can unsubscribe from any email. That form is still being connected, so for now what you enter is not sent or stored.</p>
+
+      <h2 class="subhead">Booking and inquiry forms</h2>
+      <p class="prose">The tee time, group and event forms on this site are demonstrations for now, and what you type into them is not sent anywhere. This page gets updated before that changes.</p>
+
+      <h2 class="subhead">Browsing</h2>
+      <p class="prose">The site is hosted on GitHub Pages, which keeps standard server logs, including IP addresses. We run no advertising or analytics scripts on the site. Your browser stores two small preferences for the length of your visit: which pages have already played their opening animation, and whether you hid the tee sheet.</p>
+
+      <h2 class="subhead">We do not sell your information</h2>
+      <p class="prose">We share it only with the providers named here, so they can do the job described.</p>
+
+      <h2 class="subhead">Questions</h2>
+      <p class="prose">Call <a href={contact.phoneHref}>{contact.phone}</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -163,3 +163,16 @@ html.js .grid > .card:not(.is-in) { opacity: 0; transform: translateY(14px); }
 @media print {
   html.js .grid > .card:not(.is-in), html.js img:not([data-loaded]) { opacity: 1; transform: none; }
 }
+
+/* ---------- second line under a table row label ---------- */
+.rate-table__sub { display: block; margin-top: 2px; font-size: var(--text-small); font-weight: 400; color: var(--wr-plum); }
+
+/* ---------- errors on a dark band: oxblood would disappear ---------- */
+.band--char .field__error, .band--forest .field__error { color: var(--wr-gold-tint); }
+
+/* ---------- legal pages ---------- */
+.legal { max-width: calc(var(--measure) + 2 * var(--gutter)); margin-inline: 0; }
+.legal .subhead { margin-top: var(--space-4); }
+.legal .prose { margin-top: 0.75rem; }
+.legal a { text-decoration: underline; text-underline-offset: 2px; }
+.legal__flag { margin-top: var(--space-3); }

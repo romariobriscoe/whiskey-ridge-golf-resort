@@ -1,7 +1,8 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import Lightbox from '../components/Lightbox.astro';
 import { url } from '../data/site';
 
 import dawn from '../assets/photos/homepage_hero_panoramic_valley_dawn.jpg';
@@ -48,6 +49,11 @@ const shots = [
   { src: cabins, cap: 'Lodging concept: not yet built',
     alt: 'Concept rendering of a cabin with a lit fire pit on its deck above the course' },
 ];
+
+/* The larger files the lightbox opens, and what each tile links to without JS. */
+const large = await Promise.all(
+  shots.map((s) => getImage({ src: s.src, widths: [800, 1200, 1376], format: 'webp', quality: 80 })),
+);
 ---
 
 <BaseLayout
@@ -64,9 +70,10 @@ const shots = [
   <section class="section band" aria-labelledby="g-h">
     <div class="shell">
       <h2 id="g-h" class="visually-hidden">Photographs of the course, clubhouse and bar</h2>
-      <ul class="gal">
+      <ul class="gal" data-gallery>
         {shots.map((s, i) => (
           <li class:list={['gal__i', s.tall && 'gal__i--tall']}>
+            <a class="gal__link" href={large[i].src} data-srcset={large[i].srcSet.attribute} data-cap={s.cap}>
             <Image
               class="gal__img"
               src={s.src}
@@ -83,7 +90,8 @@ const shots = [
               loading={i === 0 ? 'eager' : 'lazy'}
               quality={70}
             />
-            <figcaption class="gal__cap">{s.cap}</figcaption>
+            <span class="gal__cap">{s.cap}</span>
+            </a>
           </li>
         ))}
       </ul>
@@ -93,6 +101,8 @@ const shots = [
       </p>
     </div>
   </section>
+
+  <Lightbox />
 
   <section class="section band band--forest" aria-labelledby="g-cta">
     <div class="shell cta-row">
@@ -111,6 +121,8 @@ const shots = [
 <style>
   .gal { display: grid; gap: var(--space-2); list-style: none; padding: 0; grid-auto-rows: 220px; }
   .gal__i { position: relative; overflow: hidden; border-radius: var(--radius-md); background: var(--wr-soft); }
+  .gal__link { display: block; width: 100%; height: 100%; cursor: zoom-in; }
+  .gal__link:focus-visible { outline-offset: -3px; }
   .gal__img { width: 100%; height: 100%; object-fit: cover; }
   .gal__cap {
     position: absolute; left: 0; right: 0; bottom: 0; padding: 2.25rem 1rem 0.875rem;

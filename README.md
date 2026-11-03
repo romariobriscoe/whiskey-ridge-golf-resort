@@ -21,7 +21,7 @@ code."), puts the experience section *before* the course detail so it reframes t
 and keeps Bristol's demand drivers — the casino, the Speedway, State Street — as the reason
 the weekend exists at all.
 
-**All nine pages built.** Phase 1 was the homepage; Phase 2 added the remaining eight.
+**All nine main pages built**, plus three draft legal pages. Phase 1 was the homepage; Phase 2 added the remaining eight.
 
 | Route | Page |
 | --- | --- |
@@ -33,7 +33,8 @@ the weekend exists at all.
 | `/stay/` | Stay — planned lodging, nearby options |
 | `/events/` | Events & Weddings — spaces, date inquiry |
 | `/visit/` | Plan Your Visit — directions, FAQ, review capture |
-| `/gallery/` | Gallery |
+| `/gallery/` | Gallery, with a photo viewer |
+| `/privacy/`, `/terms/`, `/accessibility/` | Draft legal pages, linked from the footer |
 
 ## Stack
 
@@ -113,6 +114,14 @@ anything interactive that scrolls beneath it. Pauses on hover and on keyboard fo
 under `prefers-reduced-motion`, and gives screen readers the times once as a list instead of
 announcing every rotation.
 
+## Email capture
+
+`src/components/Capture.astro` posts to Klaviyo's client subscriptions endpoint, using the public
+company ID and list ID in `klaviyo` in `src/data/site.ts`. Signups go to the "Whiskey Ridge" list
+(single opt-in) in the Tennessee Hills account. **It is switched off (`enabled: false`)**: Klaviyo
+currently answers 403 to every client endpoint on this account, so the form validates and then says
+plainly that it is a demo. Flip the switch once a test signup lands. Never put a private key here.
+
 ## Accessibility
 
 WCAG AA by construction. Every token text pair is verified at AA or better. Two brand colors
@@ -149,6 +158,8 @@ Everything factual lives in `src/data/site.ts`. Anything marked `TBD` renders as
 | **Liquor license** | `partner.license` TBD. No license-dependent language (tastings, sampling, on-site pours as a draw) appears anywhere yet. |
 | **On-site distilling** | `partner.onSite` TBD. Nothing claims distilling or a tasting room at the ridge. |
 | Bar name | The clubhouse bar is unnamed in copy. |
+| Legal pages | `/privacy/`, `/terms/` and `/accessibility/` are drafts. They need a lawyer before launch, and the privacy page must be updated when any form starts sending. |
+| Press, milestones, Instagram | `press`, `milestones` and `social` in `site.ts` ship empty and render nothing until filled. |
 | **Experiential attractions** | Simulators, short-course and night play are marked TBD on the page itself, not described as existing. |
 
 No awards, rankings, press quotes, testimonials or heritage claims appear anywhere, and the

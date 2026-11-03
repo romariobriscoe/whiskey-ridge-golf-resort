@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Pending from '../components/Pending.astro';
-import { site, contact, course, rates, bristol, booking, experience, featuredExperience, partner, url } from '../data/site';
+import Capture from '../components/Capture.astro';
+import { site, contact, course, rates, experientialTiers, bristol, booking, experience, featuredExperience, partner, press, milestones, url } from '../data/site';
 
 import heroImg from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
 import fogImg from '../assets/photos/homepage_course_morning_fog_7th_tee.jpg';
@@ -77,6 +78,12 @@ const stats = [
     <ul class="stats shell intro-tail" aria-label="Course at a glance">
       {stats.map((s) => <li>{s}</li>)}
     </ul>
+
+    {milestones.length > 0 && (
+      <ul class="shell milestones intro-tail" aria-label="Milestones">
+        {milestones.map((m) => <li>{m.label} {m.when ?? <Pending label="Date pending" />}</li>)}
+      </ul>
+    )}
   </section>
 
   <!-- ░░ FOUR WAYS ░░ -->
@@ -214,7 +221,7 @@ const stats = [
   <section class="section band band--soft" aria-labelledby="rates-h">
     <div class="shell split">
       <div>
-        <p class="eyebrow">Rates at a glance</p>
+        <p class="eyebrow">Passes at a glance</p>
         <h2 id="rates-h" class="heading">Priced like a course you will actually play twice.</h2>
         <p class="prose split__p">
           {rates.note} {rates.promise}
@@ -223,10 +230,13 @@ const stats = [
       </div>
       <div class="table-wrap">
         <table class="rate-table">
-          <caption class="visually-hidden">Green fees: pricing pending confirmation</caption>
+          <caption class="visually-hidden">Day passes: pricing pending confirmation</caption>
           <tbody>
-            {rates.rows.map((r) => (
-              <tr><th scope="row">{r.label}</th><td class="price"><Pending /></td></tr>
+            {experientialTiers.map((x) => (
+              <tr>
+                <th scope="row">{x.name}<span class="rate-table__sub">{x.line}</span></th>
+                <td class="price"><Pending /></td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -249,6 +259,24 @@ const stats = [
     </div>
   </section>
 
+  {press.length > 0 && (
+    <section class="section band band--soft" aria-labelledby="press-h">
+      <div class="shell">
+        <p class="eyebrow">Featured in</p>
+        <h2 id="press-h" class="heading">What they're saying.</h2>
+        <ul class="facts facts--3 lede">
+          {press.map((p) => (
+            <li>
+              <h3 class="label facts__t">{p.outlet}</h3>
+              <p class="prose facts__b"><a href={p.url} rel="noopener">{p.title}</a></p>
+              <p class="meta">{p.date}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
   <!-- ░░ REVIEW CAPTURE ░░ the site has to do a review base's job ░░ -->
   <section class="section band" aria-labelledby="review-h">
     <div class="shell callout callout--split">
@@ -260,6 +288,12 @@ const stats = [
         </p>
       </div>
       <a class="btn btn--ghost" href={url('/visit/#review')}>Leave a review</a>
+    </div>
+  </section>
+
+  <section class="section band band--forest">
+    <div class="shell">
+      <Capture source="home" />
     </div>
   </section>
 </BaseLayout>
@@ -308,6 +342,13 @@ const stats = [
   .stats li::before {
     content: ''; flex: none; width: 4px; height: 4px;
     border-radius: 50%; background: var(--wr-brass);
+  }
+
+  .milestones {
+    display: flex; flex-wrap: wrap; gap: 0.625rem 1.5rem; list-style: none;
+    padding-block: 0 1.125rem; line-height: 1.3;
+    font-family: var(--font-label); font-weight: 500; font-size: 0.8125rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--wr-brass);
   }
 
   .ways__h { margin-top: var(--space-2); margin-bottom: var(--space-6); max-width: 18ch; }

@@ -1,6 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
-import { nav, contact, course, partner, url } from '../data/site';
+import { nav, contact, course, partner, social, url } from '../data/site';
 const half = Math.ceil(nav.length / 2);
 const cols = [nav.slice(0, half), nav.slice(half)];
 ---
@@ -31,9 +31,23 @@ const cols = [nav.slice(0, half), nav.slice(half)];
       <p class="ftr__muted">
         <a href={partner.url} rel="noopener">{partner.name}</a>, est. {partner.established}.
       </p>
+      {social.instagram && (
+        <a class="ftr__social" href={social.instagram} rel="noopener" aria-label="Whiskey Ridge on Instagram">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false">
+            <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17" cy="7" r="0.6" fill="currentColor" />
+          </svg>
+        </a>
+      )}
       <p class="ftr__fine">
         {`Whiskey Ridge Golf Resort is the new name of the course at ${contact.street}, formerly Cedars Golf Course. ${course.ratingsNote} Rates shown are placeholders pending confirmation.`}
       </p>
+      <nav class="ftr__legal" aria-label="Legal">
+        <a href={url('/privacy/')}>Privacy</a>
+        <a href={url('/terms/')}>Terms</a>
+        <a href={url('/accessibility/')}>Accessibility</a>
+      </nav>
     </div>
   </div>
 </footer>
@@ -53,6 +67,9 @@ const cols = [nav.slice(0, half), nav.slice(half)];
   .ftr__muted { color: var(--wr-line); font-size: var(--text-ui); margin-bottom: var(--space-3); }
   .ftr__muted a { color: var(--wr-brass); }
   .ftr__fine { color: var(--wr-mauve-text); font-size: 0.75rem; line-height: 1.7; }
+  .ftr__social { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin: -0.5rem 0 var(--space-2) -0.75rem; color: var(--wr-brass); }
+  .ftr__legal { display: flex; flex-wrap: wrap; column-gap: 1.25rem; margin-top: var(--space-1); font-size: var(--text-small); }
+  .ftr__legal a { color: var(--wr-line); min-height: 44px; display: inline-flex; align-items: center; }
   /* Room for the docked ticker on small screens. */
   @media (max-width: 640px) { .ftr__inner { padding-bottom: 6.5rem; } }
 </style>
