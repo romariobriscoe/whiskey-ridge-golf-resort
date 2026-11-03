@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Pending from '../components/Pending.astro';
 import { site, contact, course, rates, bristol, booking, experience, featuredExperience, partner, url } from '../data/site';
 
 import heroImg from '../assets/photos/homepage_porch_dusk_9_and_18_below.jpg';
@@ -19,12 +20,12 @@ const ways = [
     alt: 'Morning fog burning off the fairway below the first tee' },
   { n: '02', kicker: 'A group trip', title: 'Bring the whole crew',
     body: 'Four to sixteen players, one booking, one bill. Golf and a pour by day, casino and State Street by night. The easiest buddies trip you will ever plan.',
-    cta: 'Build your trip', href: '/groups/', img: celebrationImg,
+    cta: 'Plan a group trip', href: '/groups/', img: celebrationImg,
     alt: 'A foursome trading high fives on the eighteenth green' },
   { n: '03', kicker: 'An outing', title: 'Outings that run themselves',
-    body: 'Short and forgiving is exactly what a mixed-ability scramble wants. Bring the office, the league or the reunion — we run the day, start to last pour.',
-    cta: 'Plan an outing', href: '/groups/', img: walkingImg,
-    alt: 'Four players walking the fairway with push carts in autumn light' },
+    body: 'Short and forgiving is exactly what a mixed-ability scramble wants. Bring the office, the league or the reunion. We run the day, start to last pour.',
+    cta: 'Plan an outing', href: '/groups/#outings', img: walkingImg,
+    alt: 'Four players walking the fairway with push carts in fall light' },
   { n: '04', kicker: 'A stay', title: 'Make a weekend of it',
     body: 'Lodging on the ridge is in the works. Until it opens, we bundle your rounds with the places people already stay in Bristol.',
     cta: 'See stay options', href: '/stay/', img: cabinsImg,
@@ -33,12 +34,12 @@ const ways = [
 
 const stats = [
   `${course.holes} holes`, `Par ${course.par}`, `${course.greens} greens`,
-  'Under four hours', 'No dress code', 'From $25 for 18*',
+  'Under four hours', 'No dress code',
 ];
 ---
 
 <BaseLayout
-  title="Whiskey Ridge Golf Resort — Golf in Bristol, Tennessee"
+  title="Whiskey Ridge Golf Resort | Golf in Bristol, Tennessee"
   description={site.description}
 >
   <!-- ░░ HERO ░░ one frame that answers what, where and how to book ░░ -->
@@ -55,14 +56,13 @@ const stats = [
     />
     <div class="hero__scrim" aria-hidden="true"></div>
 
-    <div class="shell hero__inner">
+    <div class="shell hero__inner intro">
       <p class="eyebrow">Bristol, Tennessee</p>
       <h1 id="hero-h" class="display hero__h">
         Eighteen holes. Tennessee whiskey. <em>No dress code.</em>
       </h1>
       <p class="lead hero__lead">
-        A short, walkable par 71 above Cedar Creek — built to be played fast and finished with
-        a proper Tennessee pour. Bristol handles the rest: the casino, the Speedway, State Street.
+        A short, walkable par 71 above Cedar Creek, built to be played fast and finished with a proper Tennessee pour. Bristol handles the rest: the casino, the Speedway, State Street.
       </p>
       <div class="hero__cta">
         <a class="btn btn--primary" href={url(booking.href)}>Book a tee time</a>
@@ -74,7 +74,7 @@ const stats = [
       </p>
     </div>
 
-    <ul class="stats shell" aria-label="Course at a glance">
+    <ul class="stats shell intro-tail" aria-label="Course at a glance">
       {stats.map((s) => <li>{s}</li>)}
     </ul>
   </section>
@@ -110,9 +110,7 @@ const stats = [
           <p class="eyebrow">Experiential golf · Tennessee Hills</p>
           <h2 id="exp-h" class="heading exp__h">Eighteen holes is where the day starts.</h2>
           <p class="prose exp__lead">
-            Whiskey Ridge is built as a day out, not a tee sheet. The round is the reason you
-            come — the pour, the range at dusk and whatever the group talks itself into on the
-            first tee are why you stay, and why you book the next one before you leave.
+            Whiskey Ridge is built as a day out. The round is the reason you come. The pour, the range at dusk and whatever the group talks itself into on the first tee are why you stay, and why you book the next one before you leave.
           </p>
         </div>
         <Image
@@ -165,8 +163,7 @@ const stats = [
         <p class="prose split__p">
           We will save you the brochure talk: 5,886 yards is not championship length and is not
           trying to be. That is the design. Experiential golf starts with a course that does not
-          punish you for turning up — a par 71 you can walk in under four hours, score on, and
-          argue about afterwards over a glass.
+          punish you for showing up: a par 71 you can walk in under four hours, score on, and argue about afterward over a glass.
         </p>
         <p class="prose split__p">
           Bent grass greens, honest par 3s, ridge views the whole way around. Golf the way it was
@@ -220,17 +217,16 @@ const stats = [
         <p class="eyebrow">Rates at a glance</p>
         <h2 id="rates-h" class="heading">Priced like a course you will actually play twice.</h2>
         <p class="prose split__p">
-          The numbers here are placeholders — {rates.note} The rebrand will not price Bristol
-          out of its own golf course.
+          {rates.note} {rates.promise}
         </p>
         <a class="btn btn--primary" href={url(booking.href)}>Full rates &amp; booking</a>
       </div>
       <div class="table-wrap">
         <table class="rate-table">
-          <caption class="visually-hidden">Green fees — placeholder pricing pending confirmation</caption>
+          <caption class="visually-hidden">Green fees: pricing pending confirmation</caption>
           <tbody>
             {rates.rows.map((r) => (
-              <tr><th scope="row">{r.label}</th><td class="price">$ {r.price}</td></tr>
+              <tr><th scope="row">{r.label}</th><td class="price"><Pending /></td></tr>
             ))}
           </tbody>
         </table>
@@ -245,12 +241,11 @@ const stats = [
         <p class="eyebrow">Groups of 4–16</p>
         <h2 id="groups-h" class="heading">Bringing a crew? One booking covers it.</h2>
         <p class="prose cta-row__p">
-          Tee times, carts, food, the bar afterwards and a stay if you want one — handled in a
-          single pass. Tournaments and corporate outings get their own coordinator and a course
+          Tee times, carts, food, the bar afterward and a stay if you want one, handled in a single pass. Tournaments and corporate outings get their own coordinator and a course
           built so the once-a-year golfer finishes the scramble smiling.
         </p>
       </div>
-      <a class="btn btn--primary" href={url('/groups/')}>Start a group booking</a>
+      <a class="btn btn--primary" href={url('/groups/')}>Plan a group trip</a>
     </div>
   </section>
 
@@ -352,8 +347,8 @@ const stats = [
         to bottom,
         rgba(20, 17, 15, 0.74) 0%,
         rgba(20, 17, 15, 0.56) 50%,
-        rgba(20, 17, 15, 0.34) 70%,
-        rgba(20, 17, 15, 0.68) 100%
+        rgba(20, 17, 15, 0.46) 72%,
+        rgba(20, 17, 15, 0.72) 100%
       );
     }
   }

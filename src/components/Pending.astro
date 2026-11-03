@@ -1,0 +1,9 @@
+---
+/* An unconfirmed value, shown as a chip instead of a bracketed [TBD].
+   The honesty stays; it just stops looking like a broken template tag.
+   The data in site.ts keeps its TBD marker, so this changes the rendering
+   and nothing about what is or is not confirmed. */
+interface Props { label?: string }
+const { label = 'Set with ownership' } = Astro.props;
+---
+<span class="pending">{label}</span>

@@ -10,9 +10,9 @@ import barImg from '../assets/photos/clubhouse_bar_golden_hour_in_use.jpg';
 const trips = [
   { k: 'Buddies trip', b: '36 holes, two nights, one tab. Replay rates for the group that cannot get enough of a course this quick.' },
   { k: 'Casino + golf', b: 'Morning tee times built around late casino nights. The round that fixes the night before.' },
-  { k: 'Race weekend', b: 'Speedway weekends sell the town out. Play before the green flag — we plan the day around race traffic.' },
-  { k: 'Bachelor party', b: 'Scramble format, music allowed, bar held afterwards. We have seen worse swings than yours.' },
-  { k: 'Corporate / tourney', b: 'Shotgun starts up to [144]. A forgiving course is the right course for a mixed-ability field.' },
+  { k: 'Race weekend', b: 'Speedway weekends sell the town out. Play before the green flag. We plan the day around race traffic.' },
+  { k: 'Bachelor party', b: 'Scramble format, music allowed, bar held afterward. We have seen worse swings than yours.' },
+  { k: 'Corporate / tourney', b: 'Shotgun starts up to 144†. A forgiving course is the right course for a mixed-ability field.' },
 ];
 
 const included = [
@@ -20,7 +20,7 @@ const included = [
   'Shotgun or tee-time starts, with formats and flights set up for you',
   'Carts, range balls and on-course contests staged before anyone arrives',
   'Food and drink from turn snacks to a full post-round spread',
-  'One itemised bill',
+  'One itemized bill',
 ];
 
 const addons = [
@@ -34,7 +34,7 @@ const addons = [
 ---
 
 <BaseLayout
-  title="Groups & Outings — Whiskey Ridge Golf Resort"
+  title="Groups & Outings | Whiskey Ridge Golf Resort"
   description="Buddies trips, corporate outings, tournaments and bachelor parties in Bristol, Tennessee. Four to 144 players, one coordinator, one bill."
 >
   <PageHero
@@ -46,7 +46,7 @@ const addons = [
     alt="A foursome trading high fives on the eighteenth green with the clubhouse behind"
   >
     <div class="phero__cta">
-      <a class="btn btn--primary" href="#builder">Build your trip</a>
+      <a class="btn btn--primary" href="#builder">Plan a group trip</a>
       <a class="btn btn--ghost" href="#outings">Corporate &amp; tournaments</a>
     </div>
   </PageHero>
@@ -66,6 +66,7 @@ const addons = [
           </li>
         ))}
       </ul>
+      <p class="meta split__fine">† Field size to be confirmed with ownership.</p>
     </div>
   </section>
 
@@ -86,7 +87,7 @@ const addons = [
         </ol>
       </div>
 
-      <form class="form" aria-labelledby="builder-h">
+      <form class="form" aria-labelledby="builder-h" data-demo-form data-done-body="A real person replies within one business day with a priced itinerary and one total. Book it or tweak it.">
         <div class="form__row form__row--2">
           <div class="field">
             <label for="g-size">Group size</label>
@@ -97,7 +98,7 @@ const addons = [
           </div>
           <div class="field">
             <label for="g-dates">Dates</label>
-            <input class="input" id="g-dates" name="dates" type="text" placeholder="17–19 April, flexible" autocomplete="off" />
+            <input class="input" id="g-dates" name="dates" type="text" placeholder="April 17–19, flexible" autocomplete="off" />
           </div>
         </div>
 
@@ -111,17 +112,17 @@ const addons = [
               </label>
             ))}
           </div>
-          <p class="meta tbd-note">Lodging bundles depend on partner hotels — not yet signed.</p>
+          <p class="meta tbd-note">Lodging bundles depend on partner hotels, which are not signed yet.</p>
         </fieldset>
 
         <div class="form__row form__row--2">
           <div class="field">
             <label for="g-name">Your name</label>
-            <input class="input" id="g-name" name="name" type="text" autocomplete="name" />
+            <input class="input" id="g-name" name="name" type="text" autocomplete="name" required />
           </div>
           <div class="field">
             <label for="g-email">Email</label>
-            <input class="input" id="g-email" name="email" type="email" inputmode="email" autocomplete="email" />
+            <input class="input" id="g-email" name="email" type="email" inputmode="email" autocomplete="email" required />
           </div>
         </div>
         <div class="field">
@@ -129,7 +130,7 @@ const addons = [
           <input class="input" id="g-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" />
         </div>
 
-        <button class="btn btn--primary" type="button">Request my package</button>
+        <button class="btn btn--primary" type="submit">Request my package</button>
         <p class="meta">Replies within one business day. Nothing is charged at this step.</p>
       </form>
     </div>
@@ -166,7 +167,7 @@ const addons = [
         <p class="prose split__p">
           Bundled rates with Bristol hotels are being lined up now. On-site lodging at the ridge
           is in the works. Until either is signed we will say so plainly rather than imply a
-          partnership we do not have — and your rounds and rooms still land on one confirmation.
+          partnership we do not have. Your rounds and rooms still land on one confirmation.
         </p>
         <div class="phero__cta">
           <a class="btn btn--ghost" href={url('/stay/')}>See stay options</a>
@@ -179,6 +180,10 @@ const addons = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import '../scripts/demo-form';
+</script>
 
 <style>
   .phero__cta { display: flex; flex-wrap: wrap; gap: 0.875rem; margin-top: var(--space-4); }

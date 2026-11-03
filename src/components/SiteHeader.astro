@@ -9,7 +9,8 @@ const isCurrent = (href: string) => {
   return path === target || (href !== '/' && path.startsWith(target));
 };
 ---
-<header class="hdr band band--char">
+<div class="hdr-sentinel" data-hdr-sentinel aria-hidden="true"></div>
+<header class="hdr band band--char" data-hdr>
   <div class="hdr__inner shell">
     <Wordmark />
 
@@ -30,7 +31,7 @@ const isCurrent = (href: string) => {
       data-menu-toggle
     >
       <span class="hdr__bars" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="hdr__menu-label">Menu</span>
+      <span class="hdr__menu-label" data-menu-label>Menu</span>
     </button>
   </div>
 
@@ -49,7 +50,34 @@ const isCurrent = (href: string) => {
 </header>
 
 <style>
-  .hdr { position: sticky; top: 0; z-index: 50; }
+  .hdr {
+    position: sticky; top: 0; z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition: background-color var(--duration-base) var(--ease-out),
+                border-color var(--duration-base) var(--ease-out);
+  }
+  /* Past the first 48px the bar becomes a material: the page scrolls under it. Alpha
+     is held at 0.92 so the small brass wordmark line keeps AA over a white band. */
+  .hdr.is-scrolled {
+    background: rgba(35, 31, 32, 0.92);
+    border-bottom-color: var(--wr-line-dark);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+  :global(html[data-drawer-open]) .hdr.is-scrolled {
+    background: var(--wr-char);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .hdr.is-scrolled {
+      background: var(--wr-char);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+  /* Watched instead of a scroll listener, so scrolling does no work on the main thread. */
+  .hdr-sentinel { position: absolute; top: 48px; left: 0; width: 1px; height: 1px; pointer-events: none; }
   .hdr__inner { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.75rem); min-height: 78px; }
   .hdr__nav { display: flex; gap: 1.25rem; margin-left: auto; font-size: 0.84375rem; font-weight: 500; }
   .hdr__nav a { color: var(--wr-line); padding-block: 0.25rem; }
@@ -67,15 +95,37 @@ const isCurrent = (href: string) => {
     border: 1px solid var(--wr-plum); border-radius: var(--radius-sm);
   }
   .hdr__bars { display: flex; flex-direction: column; gap: 4px; }
-  .hdr__bars i { display: block; width: 20px; height: 2px; background: #fff; }
+  .hdr__bars i {
+    display: block; width: 20px; height: 2px; background: #fff;
+    transition: transform 200ms var(--ease-out), opacity 120ms var(--ease-out);
+  }
   .hdr__bars i:last-child { background: var(--wr-brass); }
+  /* Open: the outer bars cross, the middle one drops out. 6px = 2px bar + 4px gap. */
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(2) { opacity: 0; }
+  .hdr__menu[aria-expanded='true'] .hdr__bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
   .hdr__menu-label {
     font-family: var(--font-label); font-weight: 600; font-size: 0.8125rem;
     letter-spacing: var(--track-label); text-transform: uppercase;
+    min-width: 3.25em; text-align: left; /* Menu and Close hold the same width */
   }
 
-  .drawer { border-top: 1px solid var(--wr-line-dark); background: var(--wr-char); padding: var(--space-2) var(--gutter) var(--space-4); }
-  .drawer[hidden] { display: none; }
+  .drawer {
+    border-top: 1px solid var(--wr-line-dark); background: var(--wr-char);
+    padding: var(--space-2) var(--gutter) var(--space-4);
+    /* The page behind is scroll-locked, so a short screen scrolls the drawer itself. */
+    max-height: calc(100dvh - 78px); overflow-y: auto;
+    transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  @starting-style {
+    .drawer { opacity: 0; transform: translateY(-8px); }
+  }
+  /* Closing is quicker than opening. allow-discrete keeps it rendered until the
+     fade ends; a browser without it just closes instantly. */
+  .drawer[hidden] {
+    opacity: 0; transform: translateY(-8px);
+    transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out), display 150ms allow-discrete;
+  }
   .drawer__nav { display: flex; flex-direction: column; }
   .drawer__nav a {
     color: var(--wr-line); font-size: 1.0625rem; padding: 0.9375rem 0;
@@ -99,12 +149,24 @@ const isCurrent = (href: string) => {
   // page remains reachable from the footer sitemap.
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const label = document.querySelector<HTMLElement>('[data-menu-label]');
+
+  const header = document.querySelector<HTMLElement>('[data-hdr]');
+  const sentinel = document.querySelector('[data-hdr-sentinel]');
+  if (header && sentinel) {
+    new IntersectionObserver(([entry]) => {
+      header.classList.toggle('is-scrolled', !entry.isIntersecting);
+    }).observe(sentinel);
+  }
 
   if (toggle && drawer) {
     const setOpen = (open: boolean) => {
       drawer.hidden = !open;
       toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? 'Close' : 'Menu';
       document.body.style.overflow = open ? 'hidden' : '';
+      // The docked tee sheet would sit on top of the drawer's own Book button.
+      document.documentElement.toggleAttribute('data-drawer-open', open);
     };
     toggle.addEventListener('click', () => {
       setOpen(toggle.getAttribute('aria-expanded') !== 'true');

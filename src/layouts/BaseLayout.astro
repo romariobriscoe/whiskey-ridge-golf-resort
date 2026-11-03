@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/fraunces';
+import '@fontsource-variable/fraunces/wght-italic.css';
 import '@fontsource/barlow-condensed/500.css';
 import '@fontsource/barlow-condensed/600.css';
 import '@fontsource-variable/archivo';
@@ -51,6 +52,25 @@ const schema = {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- Runs before anything paints. Sets html.js, so motion that starts hidden can
+         never hide content without JavaScript; plays the page-load settle once per
+         page per session; and marks each image as it arrives. -->
+    <script is:inline>
+      (function (d) {
+        var h = d.documentElement;
+        h.classList.add('js');
+        try {
+          var k = 'wr-intro:' + location.pathname;
+          if (sessionStorage.getItem(k)) h.classList.add('intro-seen');
+          else sessionStorage.setItem(k, '1');
+        } catch (e) {}
+        function mark(e) {
+          if (e.target && e.target.tagName === 'IMG') e.target.setAttribute('data-loaded', '');
+        }
+        d.addEventListener('load', mark, true);
+        d.addEventListener('error', mark, true);
+      })(document);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -73,5 +93,8 @@ const schema = {
     <main id="main"><slot /></main>
     <SiteFooter />
     {ticker && <TeeSheetTicker />}
+    <script>
+      import '../scripts/reveal';
+    </script>
   </body>
 </html>

@@ -24,7 +24,7 @@ export const site = {
   shortName: 'Whiskey Ridge',
   tagline: 'Golf Resort · Bristol TN',
   description:
-    'Experiential golf in Bristol, Tennessee — a short, walkable par 71 above Cedar Creek, a Tennessee Hills pour at the end of it, and the whole of Bristol around it. Book a round or a group weekend.',
+    'Experiential golf in Bristol, Tennessee: a short, walkable par 71 above Cedar Creek, a Tennessee Hills pour at the end of it, and the whole of Bristol around it. Book a round or a group weekend.',
   url: 'https://whiskeyridgegolf.com', // TBD: confirm final domain
 } as const;
 
@@ -91,15 +91,15 @@ export const signatureHoles = [
   },
 ] as const;
 
-/* No rate is published until ownership sets the new card.
-   The ~$25 reference is the current green fee at the existing course. */
+/* No rate is published until ownership sets the new card. The current course charges about $25 for 18; that is deliberately not on the site, so the rebrand is not anchored to it before the card is set. */
 export const rates = {
-  note: 'The new rate card is being set with ownership. The course charges about $25 for 18 today.',
+  note: 'Rates publish when ownership sets the card.',
+  promise: 'The promise stands: the rebrand won\u2019t price Bristol out of its own golf course.',
   rows: [
     { label: '18 holes · walking · weekday', price: TBD },
     { label: '18 holes · walking · weekend', price: TBD },
     { label: 'Cart · per rider', price: TBD },
-    { label: 'Twilight · after 3 pm', price: TBD },
+    { label: 'Twilight · after 3 PM', price: TBD },
   ],
 } as const;
 
@@ -123,7 +123,7 @@ export const experientialTiers = [
   },
   {
     name: 'Nine and dine',
-    body: 'Nine holes late in the day, a table held for afterwards. The weeknight version of a golf trip.',
+    body: 'Nine holes late in the day, a table held for afterward. The weeknight version of a golf trip.',
   },
   {
     name: 'The full day',
@@ -136,7 +136,7 @@ export const experientialTiers = [
 export const bristol = [
   {
     title: 'Hard Rock Hotel & Casino',
-    body: 'A $515M resort casino, open since late 2024 — with zero golf on the property. That part is our job.',
+    body: 'A $515M resort casino, open since late 2024, with zero golf on the property. That part is our job.',
   },
   {
     title: 'Bristol Motor Speedway',
@@ -170,7 +170,7 @@ export const positioning = {
   theme: 'Tennessee Hills',
   /* Confirmed: a partnership. The copy may name Tennessee Hills as a
      partner and treat the pour as a co-brand. It still may NOT claim an
-     on-site distillery, a tasting licence, a barrel programme or any
+     on-site distillery, a tasting license, a barrel program or any
      specific product line — none of that is settled. */
   themeScope: 'partnership',
 } as const;
@@ -185,8 +185,8 @@ export const partner = {
   url: 'https://tennesseehills.com', // confirm the link target before launch
   credit: 'In partnership with Tennessee Hills Distillery',
   /* Still open — do not write these as fact: */
-  programme: TBD,   // TBD: tastings, barrel programme, exclusive pours, events
-  licence: TBD,     // TBD: liquor licence status and what it permits on site
+  program: TBD,   // TBD: tastings, barrel program, exclusive pours, events
+  license: TBD,   // TBD: liquor license status and what it permits on site
   onSite: TBD,      // TBD: whether any distilling or tasting happens at the ridge
 } as const;
 
@@ -197,8 +197,8 @@ export const partner = {
 export const featuredExperience = {
   kicker: 'The pour',
   title: 'Tennessee Hills pours the nineteenth',
-  body: 'The whiskey is not an afterthought stocked behind the register. Tennessee Hills Distillery is a partner in this place, which is half the reason it is called what it is — poured honestly, priced like a handshake, and waiting the moment you walk off eighteen.',
-  note: 'Tastings, barrel programme and the bar\u2019s own name are still being settled.',
+  body: 'Tennessee Hills Distillery is a partner in this place, which is half the reason it is called what it is. The whiskey is poured honestly, priced like a handshake, and waiting the moment you walk off eighteen.',
+  note: 'Tastings, barrel program and the bar\u2019s own name are still being settled.',
 } as const;
 
 export const experience = [
@@ -214,7 +214,7 @@ export const experience = [
     title: 'Formats worth arguing over',
     body: 'Scrambles, skins, nine-and-dine, whatever the group talks itself into on the first tee. A forgiving course is the one that makes those games fun instead of grim.',
     confirmed: false,
-    note: 'Additional attractions — simulators, short-course and night play — TBD.',
+    note: 'Additional attractions (simulators, short-course and night play) TBD.',
   },
 ] as const;
 
